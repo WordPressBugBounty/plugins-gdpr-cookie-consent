@@ -60,12 +60,11 @@ GDPR_CCPA_COOKIE_EXPIRE =
 
   var GDPR_Cookie = {
     set: function (name, value, days) {
+      var expires = "";
       if (days) {
         var date = new Date();
         date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
-        var expires = "; expires=" + date.toGMTString();
-      } else {
-        var expires = "";
+        var expires = "; expires=" + date.toUTCString();
       }
       document.cookie =
         name + "=" + encodeURIComponent(value) + expires + "; path=/";
@@ -94,12 +93,23 @@ GDPR_CCPA_COOKIE_EXPIRE =
       var pairs_length = pairs.length;
       for (var i = 0; i < pairs_length; i++) {
         var pair = pairs[i].split("=");
-        cookieslist[(pair[0] + "").trim()] = unescape(pair[1]);
+        cookieslist[(pair[0] + "").trim()] = decodeURIComponent(pair[1]);
       }
       return cookieslist;
     },
     erase: function (name) {
-      this.set(name, "", -10);
+      var domain = window.location.hostname;
+      var topDomain = domain.split(".").slice(-2).join(".");
+      document.cookie =
+        name +
+        "=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=" +
+        domain +
+        ";";
+      document.cookie =
+        name +
+        "=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=." +
+        topDomain +
+        ";";
     },
   };
 
@@ -3177,7 +3187,7 @@ GDPR_CCPA_COOKIE_EXPIRE =
 
           // Continue with your existing logic
         }
-      }, 2000);
+      }, 1000);
     },
 
     disableAllCookies: function () {
@@ -3396,14 +3406,16 @@ GDPR_CCPA_COOKIE_EXPIRE =
     },
     removeCookieByCategory: function () {
       if (GDPR_Blocker.blockingStatus == true) {
-        for (var key in GDPR_Blocker.cookies) {
-          var cookie = GDPR_Blocker.cookies[key];
+        var cookiesList = JSON.parse(GDPR_Blocker.cookies);
+        for (var i = 0; i < cookiesList.length; i++) {
+          var cookie = cookiesList[i];
           var current_category = cookie["gdpr_cookie_category_slug"];
           if (GDPR.allowed_categories.indexOf(current_category) === -1) {
             var cookies = cookie["data"];
             if (cookies && cookies.length != 0) {
               for (var c_key in cookies) {
                 var c_cookie = cookies[c_key];
+
                 GDPR_Cookie.erase(c_cookie["name"]);
               }
             }
