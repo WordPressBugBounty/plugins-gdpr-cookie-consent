@@ -432,10 +432,27 @@ jQuery(document).ready(function () {
       window.location.href = pluginsPageURL;
       location.reload();
     });
+    setTimeout(function(){
+      $(".gdpr-start-auth").on("click", gdprStartAuth);
+      $(".gdpr-dashboard-start-auth").on("click", gdprStartAuth);
+    }, 3000);  
   });
   // connection overlay in compliance settings.
   jQuery(document).ready(function () {
     var gdprTimer, ccpaTimer, bothTimer;
+
+    //GACM hover function
+    jQuery(".gacm-slider").hover(
+      function () {
+        gdprTimer = setTimeout(function () {
+          jQuery(".gdpr-gacm_message-gdpr").css("display", "block");
+        }, 250); // 250ms delay
+      },
+      function () {
+        clearTimeout(gdprTimer); // Clear the timer to prevent delayed show
+        jQuery(".gdpr-gacm_message-gdpr").css("display", "none");
+      }
+    );
 
     // GDPR hover function
     jQuery("#gdpr-visitors-condition-radio-btn-disabled-gdpr").hover(

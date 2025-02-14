@@ -8,10 +8,10 @@ import VueModal from "@kouts/vue-modal";
 import "@kouts/vue-modal/dist/vue-modal.css";
 import AB_Testing_Chart from "./vue-components/AB_Testing_Chart";
 import Tooltip from "./vue-components/tooltip";
-import Datepicker from "vuejs-datepicker";
 import VueApexCharts from "vue-apexcharts";
 // Main JS (in UMD format)
 import VueTimepicker from "vue2-timepicker";
+import { TCModel, TCString, GVL } from "@iabtechlabtcf/core";
 // CSS
 import "vue2-timepicker/dist/VueTimepicker.css";
 import VueIntro from "vue-introjs";
@@ -35,18 +35,11 @@ Vue.component("v-select", vSelect);
 Vue.component("vue-editor", VueEditor);
 Vue.component("v-modal", VueModal);
 Vue.component("tooltip", Tooltip);
-Vue.component("datepicker", Datepicker);
 Vue.component("vue-timepicker", VueTimepicker);
 Vue.component("aceeditor", AceEditor);
 Vue.component("ab-testing-chart", AB_Testing_Chart);
 
 const j = jQuery.noConflict();
-// new Vue({
-//   el: "#ab-testing-chart", // Ensure this matches the ID in your HTML
-//   //   components: {
-//   //     ComparisonChart,
-//   //   },
-// });
 var gen = new Vue({
   el: "#gdpr-cookie-consent-settings-app",
   data() {
@@ -72,6 +65,8 @@ var gen = new Vue({
       save_loading: false,
       edit_discovered_cookie: {},
       edit_discovered_cookie_on: false,
+      cookie_scanner_data: '',
+      ab_testing_data: '',
       appendField: ".gdpr-cookie-consent-settings-container",
       configure_image_url: require("../admin/images/configure-icon.png"),
       progress_bar: require("../admin/images/progress_bar.svg"),
@@ -102,6 +97,7 @@ var gen = new Vue({
       confirm_button_popup2: false,
       cancel_button_popup2: false,
       opt_out_link_popup2: false,
+      show_more_cookie_design_popup: false,
       show_more_cookie_design_popup: false,
       schedule_scan_show: false,
       show_custom_cookie_popup: false,
@@ -138,6 +134,16 @@ var gen = new Vue({
           1 === settings_obj.the_options["is_iabtcf_on"])
           ? true
           : false,
+      gacm_is_on:
+        settings_obj.the_options.hasOwnProperty("is_gacm_on") &&
+        (true === settings_obj.the_options["is_gacm_on"] ||
+          1 === settings_obj.the_options["is_gacm_on"] ||
+          "true" === settings_obj.the_options["is_gacm_on"])
+          ? true
+          : false,
+      gacm_key: settings_obj.ab_options.hasOwnProperty("gacm_key")
+        ? settings_obj.ab_options["gacm_key"]
+        : "",
       iabtcf_msg: `We and our <a id = "vendor-link" href = "#" data-toggle = "gdprmodal" data-target = "#gdpr-gdprmodal">836 partners</a> use cookies and other tracking technologies to improve your experience on our website. We may store and/or access information on a device and process personal data, such as your IP address and browsing data, for personalised advertising and content, advertising and content measurement, audience research and services development. Additionally, we may utilize precise geolocation data and identification through device scanning.\n\nPlease note that your consent will be valid across all our subdomains. You can change or withdraw your consent at any time by clicking the “Cookie Settings” button at the bottom of your screen. We respect your choices and are committed to providing you with a transparent and secure browsing experience.`,
       dynamic_lang_is_on:
         settings_obj.the_options.hasOwnProperty("is_dynamic_lang_on") &&
@@ -2272,7 +2278,33 @@ var gen = new Vue({
     };
   },
 
-  methods: {
+  methods: {  
+    refreshCookieScannerData(html) {
+      this.cookie_scanner_data = html;
+      const container = document.querySelector('#cookie-scanner-container');
+      this.$nextTick(() => {
+                new Vue({
+                    el: container,
+                    data: this.$data, // Reuse the existing Vue instance data
+                    methods: this.$options.methods, // Reuse the existing methods
+                    mounted: this.$options.mounted, // Reuse the original mounted logic
+                    icons: this.$options.icons, // Optionally reuse created lifecycle hook
+                });
+            });
+    },
+    refreshABTestingData(html) {
+      this.ab_testing_data = html;
+      const container = document.querySelector('#ab-testing-container');
+      this.$nextTick(() => {
+                new Vue({
+                    el: container,
+                    data: this.$data, // Reuse the existing Vue instance data
+                    methods: this.$options.methods, // Reuse the existing methods
+                    mounted: this.$options.mounted, // Reuse the original mounted logic
+                    icons: this.$options.icons, // Optionally reuse created lifecycle hook
+                });
+            });
+    },
     isPluginVersionLessOrEqual(version) {
       return this.pluginVersion && this.pluginVersion <= version;
     },
@@ -2397,6 +2429,7 @@ var gen = new Vue({
       let navLinks = j(".nav-link").map(function () {
         return this.getAttribute("href");
       });
+      if(this.$refs.active_tab === undefined) this.$refs.active_tab = {};
       for (let i = 0; i < navLinks.length; i++) {
         let re = new RegExp(navLinks[i]);
         if (window.location.href.match(re)) {
@@ -2593,6 +2626,9 @@ var gen = new Vue({
     },
     onSwitchDynamicLang() {
       this.dynamic_lang_is_on = !this.dynamic_lang_is_on;
+    },
+    onSwitchGacmEnable() {
+      this.gacm_is_on = !this.gacm_is_on;
     },
     onSwitchCookieAcceptEnable() {
       this.cookie_accept_on = !this.cookie_accept_on;
@@ -4519,6 +4555,7 @@ var gen = new Vue({
         this.is_ccpa_on = false;
         this.selectedRadioCountry = false;
         this.is_selectedCountry_on = false;
+        this.gacm_is_on = false;
       } else if (value === "gdpr") {
         this.is_gdpr = true;
         this.is_ccpa = false;
@@ -4540,6 +4577,7 @@ var gen = new Vue({
         this.show_revoke_card = true;
         this.show_visitor_conditions = true;
         this.iabtcf_is_on = false;
+        this.gacm_is_on = false;
       } else {
         this.is_eprivacy = true;
         this.is_gdpr = false;
@@ -4548,6 +4586,7 @@ var gen = new Vue({
         this.show_visitor_conditions = false;
         this.show_revoke_card = true;
         this.iabtcf_is_on = false;
+        this.gacm_is_on = false;
       }
       if (this.iabtcf_is_on) {
         this.gdpr_message = `We and our <a id = "vendor-link" href = "#" data-toggle = "gdprmodal" data-target = "#gdpr-gdprmodal">836 partners</a> use cookies and other tracking technologies to improve your experience on our website. We may store and/or access information on a device and process personal data, such as your IP address and browsing data, for personalised advertising and content, advertising and content measurement, audience research and services development. Additionally, we may utilize precise geolocation data and identification through device scanning.\n\nPlease note that your consent will be valid across all our subdomains. You can change or withdraw your consent at any time by clicking the “Cookie Settings” button at the bottom of your screen. We respect your choices and are committed to providing you with a transparent and secure browsing experience.`;
@@ -4982,6 +5021,7 @@ var gen = new Vue({
       this.ab_testing_enabled = false;
       this.ab_testing_auto = false;
       this.ab_testing_period = "30";
+      this.gacm_key = "";
       this.cookie_bar_color = "#ffffff";
       this.cookie_bar_opacity = "0.80";
       this.cookie_bar_border_width = "0";
@@ -5001,6 +5041,7 @@ var gen = new Vue({
       this.open_url = false;
       this.iabtcf_is_on = false;
       this.dynamic_lang_is_on = false;
+      this.gacm_is_on = false;
       this.accept_as_button = true;
       this.accept_size = "medium";
       this.cookie_accept_on = true;
@@ -5449,7 +5490,9 @@ var gen = new Vue({
         this.gdpr_css_text = code;
         editor.setValue(this.gdpr_css_text);
       }
-
+      if(this.is_iabtcf_changed && this.iabtcf_is_on){
+        this.fetchIABData();
+      }
       var that = this;
       var dataV = jQuery("#gcc-save-settings-form").serialize();
       jQuery
@@ -5528,7 +5571,131 @@ var gen = new Vue({
           that.save_loading = false;
         });
     },
+    fetchIABData(){
+      GVL.baseUrl = "https://eadn-wc01-12578700.nxedge.io/cdn/rgh/";
+      const gvl = new GVL();
+      gvl.readyPromise.then(() => {
+      let data = {};
+      let vendorMap = gvl.vendors;
+      let purposeMap = gvl.purposes;
+      let featureMap = gvl.features;
+      let dataCategoriesMap = gvl.dataCategories;
+      let specialPurposeMap = gvl.specialPurposes;
+      let specialFeatureMap = gvl.specialFeatures;
+      let purposeVendorMap = gvl.byPurposeVendorMap;
 
+      var vendor_array = [],
+        vendor_id_array = [],
+        vendor_legint_id_array = [],
+        data_categories_array = [],
+        nayan = [];
+      var feature_array = [],
+        special_feature_id_array = [],
+        special_feature_array = [],
+        special_purpose_array = [];
+      var purpose_id_array = [],
+        purpose_legint_id_array = [],
+        purpose_array = [],
+        purpose_vendor_array = [];
+      var purpose_vendor_count_array = [],
+        feature_vendor_count_array = [],
+        special_purpose_vendor_count_array = [],
+        special_feature_vendor_count_array = [],
+        legint_purpose_vendor_count_array = [],
+        legint_feature_vendor_count_array = [];
+      Object.keys(vendorMap).forEach((key) => {
+        vendor_array.push(vendorMap[key]);
+        vendor_id_array.push(vendorMap[key].id);
+        if (vendorMap[key].legIntPurposes.length)
+          vendor_legint_id_array.push(vendorMap[key].id);
+      });
+      data.vendors = vendor_array;
+      data.allvendors = vendor_id_array;
+      data.allLegintVendors = vendor_legint_id_array;
+
+      Object.keys(featureMap).forEach((key) => {
+        feature_array.push(featureMap[key]);
+        feature_vendor_count_array.push(
+          Object.keys(gvl.getVendorsWithFeature(featureMap[key].id)).length
+        );
+      });
+      data.features = feature_array;
+      data.featureVendorCount = feature_vendor_count_array;
+      data.dataCategories = nayan;
+
+      Object.keys(dataCategoriesMap).forEach((key) => {
+        data_categories_array.push(dataCategoriesMap[key]);
+      });
+      data.dataCategories = data_categories_array;
+
+      var legintCount = 0;
+      const purposeLegint = new Map();
+      Object.keys(purposeMap).forEach((key) => {
+        purpose_array.push(purposeMap[key]);
+        purpose_id_array.push(purposeMap[key].id);
+        purpose_vendor_count_array.push(
+          Object.keys(gvl.getVendorsWithConsentPurpose(purposeMap[key].id)).length
+        );
+        legintCount = Object.keys(
+          gvl.getVendorsWithLegIntPurpose(purposeMap[key].id)
+        ).length;
+        legint_purpose_vendor_count_array.push(legintCount);
+        if (legintCount) {
+          purposeLegint.set(purposeMap[key].id, legintCount);
+          purpose_legint_id_array.push(purposeMap[key].id);
+        }
+      });
+      data.purposes = purpose_array;
+      data.allPurposes = purpose_id_array;
+      data.purposeVendorCount = purpose_vendor_count_array;
+      data.allLegintPurposes = purpose_legint_id_array;
+      data.legintPurposeVendorCount = legint_purpose_vendor_count_array;
+
+      Object.keys(specialFeatureMap).forEach((key) => {
+        special_feature_array.push(specialFeatureMap[key]);
+        special_feature_id_array.push(specialFeatureMap[key].id);
+        special_feature_vendor_count_array.push(
+          Object.keys(gvl.getVendorsWithSpecialFeature(specialFeatureMap[key].id))
+            .length
+        );
+      });
+      data.specialFeatures = special_feature_array;
+      data.allSpecialFeatures = special_feature_id_array;
+      data.specialFeatureVendorCount = special_feature_vendor_count_array;
+
+      Object.keys(specialPurposeMap).forEach((key) => {
+        special_purpose_array.push(specialPurposeMap[key]);
+        special_purpose_vendor_count_array.push(
+          Object.keys(gvl.getVendorsWithSpecialPurpose(purposeMap[key].id)).length
+        );
+      });
+      data.specialPurposes = special_purpose_array;
+      data.specialPurposeVendorCount = special_purpose_vendor_count_array;
+
+      Object.keys(purposeVendorMap).forEach((key) =>
+        purpose_vendor_array.push(purposeVendorMap[key].legInt.size)
+      );
+      data.purposeVendorMap = purpose_vendor_array;
+      data.secret_key = "sending_vendor_data";
+      var that = this;
+      jQuery
+        .ajax({
+          type: "POST",
+          url: settings_obj.ajaxurl,
+          data: {
+            data: JSON.stringify(data), 
+            action: "gcc_enable_iab" 
+          },
+          dataType: "json",
+        })
+        .done(function (data) {
+        })
+        .fail(function () {
+          that.save_loading = false;
+      });
+    });
+
+    },
     openMediaModal() {
       var image_frame = wp.media({
         title: "Select Media for Image 1",
@@ -6803,8 +6970,7 @@ var gen = new Vue({
         .fadeOut(2000);
       this.ab_testing_enabled = !this.ab_testing_enabled;
       if (this.ab_testing_enabled === false) this.active_test_banner_tab = 1;
-
-      var dataV = jQuery("#gcc-save-settings-form").serialize();
+      var that = this;
       // Make the AJAX request to save the new state
       jQuery
         .ajax({
@@ -6816,6 +6982,7 @@ var gen = new Vue({
           },
         })
         .done(function (data) {
+          that.saveCookieSettings();
           window.location.reload();
           // Show success message
           that.success_error_message = "Settings Saved";
@@ -7067,7 +7234,8 @@ var gen = new Vue({
   },
   icons: { cilPencil, cilSettings, cilInfo, cibGoogleKeep },
 });
-var gen = new Vue({
+window.gen = gen;
+var app = new Vue({
   el: "#gdpr-cookie-consent-settings-app-wizard",
   data() {
     return {
@@ -7118,6 +7286,12 @@ var gen = new Vue({
         settings_obj.the_options.hasOwnProperty("is_iabtcf_on") &&
         (true === settings_obj.the_options["is_iabtcf_on"] ||
           1 === settings_obj.the_options["is_iabtcf_on"])
+          ? true
+          : false,
+      gacm_is_on:
+        settings_obj.the_options.hasOwnProperty("is_gacm_on") &&
+        (true === settings_obj.the_options["is_gacm_on"] ||
+          1 === settings_obj.the_options["is_gacm_on"])
           ? true
           : false,
       iabtcf_msg: `We and our <a id = "vendor-link" href = "#" data-toggle = "gdprmodal" data-target = "#gdpr-gdprmodal">836 partners</a> use cookies and other tracking technologies to improve your experience on our website. We may store and/or access information on a device and process personal data, such as your IP address and browsing data, for personalised advertising and content, advertising and content measurement, audience research and services development. Additionally, we may utilize precise geolocation data and identification through device scanning.\n\nPlease note that your consent will be valid across all our subdomains. You can change or withdraw your consent at any time by clicking the “Consent Preferences” button at the bottom of your screen. We respect your choices and are committed to providing you with a transparent and secure browsing experience.`,
@@ -9350,6 +9524,9 @@ var gen = new Vue({
           "Cookies are small text files that can be used by websites to make a user's experience more efficient. The law states that we can store cookies on your device if they are strictly necessary for the operation of this site. For all other types of cookies we need your permission. This site uses different types of cookies. Some cookies are placed by third party services that appear on our pages.";
       }
     },
+    onSwitchGacmEnable() {
+      this.gacm_is_on = !this.gacm_is_on;
+    },
     onEnablesafeSwitch() {
       if (this.enable_safe === "true") {
         this.is_worldwide_on = true;
@@ -11571,6 +11748,7 @@ var gen = new Vue({
       this.button_readmore_button_border_color = "#333333";
       this.button_readmore_button_border_radius = "0";
       this.iabtcf_is_on = false;
+      this.gacm_is_on = false;
       this.decline_text = "Decline";
       this.decline_url = "#";
       this.decline_action = "#cookie_action_settings";
@@ -11796,6 +11974,72 @@ var gen = new Vue({
     saveWizardCookieSettings() {
       var that = this;
       var dataV = jQuery(".gcc-save-wizard-settings-form").serialize();
+      dataV += "&gdpr-cookie-bar-color=" + encodeURIComponent(that.cookie_bar_color);
+      dataV += "&gdpr-cookie-text-color=" + encodeURIComponent(that.cookie_text_color);
+      dataV += "&gdpr-cookie-bar-opacity=" + encodeURIComponent(that.cookie_bar_opacity);
+      dataV += "&gdpr-cookie-bar-border-width=" + encodeURIComponent(that.cookie_bar_border_width);
+      dataV += "&gdpr-cookie-border-style=" + encodeURIComponent(that.border_style);
+      dataV += "&gdpr-cookie-border-color=" + encodeURIComponent(that.cookie_border_color);
+      dataV += "&gdpr-cookie-bar-border-radius=" + encodeURIComponent(that.cookie_bar_border_radius);
+      dataV += "&gdpr-cookie-font=" + encodeURIComponent(that.cookie_font);
+      dataV += "&gdpr-cookie-accept-background-color=" + encodeURIComponent(that.accept_background_color);
+      dataV += "&gdpr-cookie-accept-border-color=" + encodeURIComponent(that.accept_border_color);
+      dataV += "&gdpr-cookie-decline-text-color=" + encodeURIComponent(that.decline_text_color);
+      dataV += "&gdpr-cookie-decline-border-color=" + encodeURIComponent(that.decline_border_color);
+      dataV += "&gdpr-cookie-settings-text-color=" + encodeURIComponent(that.settings_text_color);
+      dataV += "&gdpr-cookie-settings-border-color=" + encodeURIComponent(that.settings_border_color);
+      dataV += "&gdpr-cookie-settings-background-color=" + encodeURIComponent(that.settings_background_color);
+      dataV += "&gdpr-cookie-decline-background-color=" + encodeURIComponent(that.decline_background_color);
+      dataV += "&gdpr-cookie-decline-border-style=" + encodeURIComponent(that.decline_style);
+      dataV += "&gdpr-cookie-decline-border-width=" + encodeURIComponent(that.decline_border_width);
+      dataV += "&gdpr-cookie-settings-border-style=" + encodeURIComponent(that.settings_style);
+      dataV += "&gdpr-cookie-settings-border-width=" + encodeURIComponent(that.settings_border_width);
+      dataV += "&gdpr-cookie-accept-opacity=" + encodeURIComponent(that.accept_opacity);
+      dataV += "&gdpr-cookie-accept-border-style=" + encodeURIComponent(that.accept_style);
+      dataV += "&gdpr-cookie-accept-border-width=" + encodeURIComponent(that.accept_border_width);
+      dataV += "&gdpr-cookie-accept-border-radius=" + encodeURIComponent(that.accept_border_radius);
+      dataV += "&gdpr-cookie-accept-text-color=" + encodeURIComponent(that.accept_text_color);
+      dataV += "&gcc-readmore-link-color=" + encodeURIComponent(that.button_readmore_link_color);
+      dataV += "&gcc-readmore-button-color=" + encodeURIComponent(that.button_readmore_button_color);
+      dataV += "&gcc-readmore-button-opacity=" + encodeURIComponent(that.button_readmore_button_opacity);
+      dataV += "&gcc-readmore-button-border-style=" + encodeURIComponent(that.button_readmore_button_border_style);
+      dataV += "&gcc-readmore-button-border-width=" + encodeURIComponent(that.button_readmore_button_border_width);
+      dataV += "&gcc-readmore-button-border-color=" + encodeURIComponent(that.button_readmore_button_border_color);
+      dataV += "&gcc-readmore-button-border-radius=" + encodeURIComponent(that.button_readmore_button_border_radius);
+      dataV += "&gcc-readmore-button-size=" + encodeURIComponent(that.button_readmore_button_size);
+      dataV += "&gdpr-cookie-decline-opacity=" + encodeURIComponent(that.decline_opacity);
+      dataV += "&gdpr-cookie-decline-border-radius=" + encodeURIComponent(that.decline_border_radius);
+      dataV += "&gdpr-cookie-decline-size=" + encodeURIComponent(that.decline_size);
+      dataV += "&gdpr-cookie-settings-opacity=" + encodeURIComponent(that.settings_opacity);
+      dataV += "&gdpr-cookie-settings-border-radius=" + encodeURIComponent(that.settings_border_radius);
+      dataV += "&gdpr-cookie-settings-size=" + encodeURIComponent(that.settings_size);
+      dataV += "&gdpr-cookie-confirm-text-color=" + encodeURIComponent(that.confirm_text_color);
+      dataV += "&gdpr-cookie-confirm-background-color=" + encodeURIComponent(that.confirm_background_color);
+      dataV += "&gdpr-cookie-confirm-opacity=" + encodeURIComponent(that.confirm_opacity);
+      dataV += "&gdpr-cookie-confirm-border-style=" + encodeURIComponent(that.confirm_style);
+      dataV += "&gdpr-cookie-confirm-border-color=" + encodeURIComponent(that.confirm_border_color);
+      dataV += "&gdpr-cookie-confirm-border-width=" + encodeURIComponent(that.confirm_border_width);
+      dataV += "&gdpr-cookie-confirm-border-radius=" + encodeURIComponent(that.confirm_border_radius);
+      dataV += "&gdpr-cookie-confirm-size=" + encodeURIComponent(that.confirm_size);
+      dataV += "&gdpr-cookie-cancel-text-color=" + encodeURIComponent(that.cancel_text_color);
+      dataV += "&gdpr-cookie-cancel-background-color=" + encodeURIComponent(that.cancel_background_color);
+      dataV += "&gdpr-cookie-cancel-opacity=" + encodeURIComponent(that.cancel_opacity);
+      dataV += "&gdpr-cookie-cancel-border-style=" + encodeURIComponent(that.cancel_style);
+      dataV += "&gdpr-cookie-cancel-border-color=" + encodeURIComponent(that.cancel_border_color);
+      dataV += "&gdpr-cookie-cancel-border-width=" + encodeURIComponent(that.cancel_border_width);
+      dataV += "&gdpr-cookie-cancel-border-radius=" + encodeURIComponent(that.cancel_border_radius);
+      dataV += "&gdpr-cookie-cancel-size=" + encodeURIComponent(that.cancel_size);
+      dataV += "&gdpr-cookie-opt-out-text-color=" + encodeURIComponent(that.opt_out_text_color);
+      dataV += "&gdpr-cookie-accept-all-text-color=" + encodeURIComponent(that.accept_all_text_color);
+      dataV += "&gdpr-cookie-accept-all-background-color=" + encodeURIComponent(that.accept_all_background_color);
+      dataV += "&gdpr-cookie-accept-all-size=" + encodeURIComponent(that.accept_all_size);
+      dataV += "&gdpr-cookie-accept-all-border-style=" + encodeURIComponent(that.accept_all_style);
+      dataV += "&gdpr-cookie-accept-all-border-color=" + encodeURIComponent(that.accept_all_border_color);
+      dataV += "&gdpr-cookie-accept-all-opacity=" + encodeURIComponent(that.accept_all_opacity);
+      dataV += "&gdpr-cookie-accept-all-border-width=" + encodeURIComponent(that.accept_all_border_width);
+      dataV += "&gdpr-cookie-accept-all-border-radius=" + encodeURIComponent(that.accept_all_border_radius);
+      dataV += "&gcc-revoke-consent-text-color=" + encodeURIComponent(that.button_revoke_consent_text_color);
+      dataV += "&gcc-revoke-consent-background-color=" + encodeURIComponent(that.button_revoke_consent_background_color);
       jQuery
         .ajax({
           type: "POST",
