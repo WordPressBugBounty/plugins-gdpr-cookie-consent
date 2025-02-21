@@ -2469,7 +2469,6 @@ var gen = new Vue({
         this.post_cookie_list_length > 0 ? true : false;
 
       this.disableSwitch = false;
-
       // multiple entries of geo targeting countries.
       for (let i = 0; i < this.list_of_countries.length; i++) {
         if (this.select_countries.includes(this.list_of_countries[i].code)) {
@@ -3107,6 +3106,7 @@ var gen = new Vue({
           this.decline_background_color1 = "#ffffff";
           this.decline_style1 = "solid";
           this.decline_border_radius1 = "0";
+          this.multiple_legislation_accept_all_border_radius1 = "0";
           this.decline_border_width1 = "1";
           this.decline_border_color1 = "#C1540C";
           this.decline_text_color1 = "#C1540C";
@@ -3369,6 +3369,7 @@ var gen = new Vue({
           this.decline_background_color1 = "#808080";
           this.decline_style1 = "solid";
           this.decline_border_radius1 = "0";
+          this.multiple_legislation_accept_all_border_radius1 = "0";
           this.decline_border_width1 = "1";
           this.decline_border_color1 = "#D5D2D2";
           this.decline_text_color1 = "#D5D2D2";
@@ -3504,6 +3505,7 @@ var gen = new Vue({
           this.decline_background_color1 = "#ffffff";
           this.decline_style1 = "solid";
           this.decline_border_radius1 = "0";
+          this.multiple_legislation_accept_all_border_radius1 = "0";
           this.decline_border_width1 = "1";
           this.decline_border_color1 = "#C1540C";
           this.decline_text_color1 = "#C1540C";
@@ -3782,6 +3784,7 @@ var gen = new Vue({
           this.decline_background_color1 = "#808080";
           this.decline_style1 = "solid";
           this.decline_border_radius1 = "0";
+          this.multiple_legislation_accept_all_border_radius1 = "0";
           this.decline_border_width1 = "1";
           this.decline_border_color1 = "#D5D2D2";
           this.decline_text_color1 = "#D5D2D2";
@@ -4026,6 +4029,7 @@ var gen = new Vue({
           this.decline_background_color1 = "#ffffff";
           this.decline_style1 = "solid";
           this.decline_border_radius1 = "0";
+          this.multiple_legislation_accept_all_border_radius1 = "0";
           this.decline_border_width1 = "1";
           this.decline_border_color1 = "#C1540C";
           this.decline_text_color1 = "#C1540C";
@@ -4308,6 +4312,7 @@ var gen = new Vue({
           this.decline_background_color1 = "#808080";
           this.decline_style1 = "solid";
           this.decline_border_radius1 = "0";
+          this.multiple_legislation_accept_all_border_radius1 = "0";
           this.decline_border_width1 = "1";
           this.decline_border_color1 = "#D5D2D2";
           this.decline_text_color1 = "#D5D2D2";
@@ -5191,6 +5196,7 @@ var gen = new Vue({
       this.decline_style1 = "none";
       this.decline_border_color1 = "#333333";
       this.decline_border_radius1 = "0";
+      this.multiple_legislation_accept_all_border_radius1 = "0";
       this.settings_text1 = "Cookie Settings";
       this.settings_text_color1 = "#ffffff";
       this.settings_background_color1 = "#333333";
@@ -7043,6 +7049,8 @@ var gen = new Vue({
     },
   },
   mounted() {
+    if (window.vueMounted) return; // Prevent duplicate execution
+    window.vueMounted = true; // Mark as mounted
     j("#gdpr-before-mount").css("display", "none");
 
     if (settings_obj.is_user_connected) {
@@ -9323,6 +9331,11 @@ var app = new Vue({
           break;
         }
       }
+      for (let i = 0; i < this.list_of_countries.length; i++) {
+        if (this.select_countries.includes(this.list_of_countries[i].code)) {
+          this.select_countries_array.push(this.list_of_countries[i]);
+        }
+      }
       for (let i = 0; i < this.scripts_list_total; i++) {
         this.scripts_list_data[i]["script_status"] = Boolean(
           parseInt(this.scripts_list_data[i]["script_status"])
@@ -9898,6 +9911,7 @@ var app = new Vue({
           this.decline_background_color1 = "#ffffff";
           this.decline_style1 = "solid";
           this.decline_border_radius1 = "0";
+          this.multiple_legislation_accept_all_border_radius1 = "0";
           this.decline_border_width1 = "1";
           this.decline_border_color1 = "#C1540C";
           this.decline_text_color1 = "#C1540C";
@@ -10160,6 +10174,7 @@ var app = new Vue({
           this.decline_background_color1 = "#808080";
           this.decline_style1 = "solid";
           this.decline_border_radius1 = "0";
+          this.multiple_legislation_accept_all_border_radius1 = "0";
           this.decline_border_width1 = "1";
           this.decline_border_color1 = "#D5D2D2";
           this.decline_text_color1 = "#D5D2D2";
@@ -10295,6 +10310,7 @@ var app = new Vue({
           this.decline_background_color1 = "#ffffff";
           this.decline_style1 = "solid";
           this.decline_border_radius1 = "0";
+          this.multiple_legislation_accept_all_border_radius1 = "0";
           this.decline_border_width1 = "1";
           this.decline_border_color1 = "#C1540C";
           this.decline_text_color1 = "#C1540C";
@@ -10573,6 +10589,7 @@ var app = new Vue({
           this.decline_background_color1 = "#808080";
           this.decline_style1 = "solid";
           this.decline_border_radius1 = "0";
+          this.multiple_legislation_accept_all_border_radius1 = "0";
           this.decline_border_width1 = "1";
           this.decline_border_color1 = "#D5D2D2";
           this.decline_text_color1 = "#D5D2D2";
@@ -10817,6 +10834,7 @@ var app = new Vue({
           this.decline_background_color1 = "#ffffff";
           this.decline_style1 = "solid";
           this.decline_border_radius1 = "0";
+          this.multiple_legislation_accept_all_border_radius1 = "0";
           this.decline_border_width1 = "1";
           this.decline_border_color1 = "#C1540C";
           this.decline_text_color1 = "#C1540C";
@@ -11099,6 +11117,7 @@ var app = new Vue({
           this.decline_background_color1 = "#808080";
           this.decline_style1 = "solid";
           this.decline_border_radius1 = "0";
+          this.multiple_legislation_accept_all_border_radius1 = "0";
           this.decline_border_width1 = "1";
           this.decline_border_color1 = "#D5D2D2";
           this.decline_text_color1 = "#D5D2D2";
