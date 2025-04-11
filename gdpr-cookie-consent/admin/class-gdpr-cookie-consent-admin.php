@@ -28,7 +28,7 @@ class Gdpr_Cookie_Consent_Admin {
 	 * @access   private
 	 * @var      string    $plugin_name    The ID of this plugin.
 	 */
-	private $plugin_name;
+	private $plugin_name; 
 
 	/**
 	 * The name of the database table storing GDPR cookie scan categories.
@@ -403,6 +403,48 @@ class Gdpr_Cookie_Consent_Admin {
 			$reason = $_POST['reason'];
 
 			if ( $reason === 'gdpr-plugin-deactivate-with-data' ) {
+
+				// Delete fields from database
+					delete_option('gdpr_single_page_scan_url');
+					delete_option('wc_am_product_id_gdpr_cookie_consent');
+					delete_option('wc_am_client_gdpr_cookie_consent');
+					delete_option('gdpr_last_scan');
+					delete_option('gdpr_settings_enabled');
+					delete_option(GDPR_COOKIE_CONSENT_SETTINGS_VENDOR_CONSENT);
+					delete_option('_transient_timeout_gdpr_ab_testing_transient');
+					delete_option('_transient_gdpr_ab_testing_transient');
+					delete_option('_transient_timeout_gdpr_display_message_other_plugin_on_change');
+					delete_option('_transient_gdpr_display_message_other_plugin_on_change');
+	
+					// Delete consent logs from posts table
+					
+					$posts = $wpdb->get_col("
+								SELECT ID FROM {$wpdb->posts} WHERE post_type = 'wplconsentlogs'
+							");
+						if (!empty($posts)) {
+							foreach ($posts as $post_id) {
+								// Delete related post meta
+								delete_post_meta($post_id, '_wplconsentlogs_ip');
+								delete_post_meta($post_id, '_wplconsentlogs_userid');
+								delete_post_meta($post_id, '_wplconsentlogs_details');
+								delete_post_meta($post_id, '_wplconsentlogs_country');
+								delete_post_meta($post_id, '_wplconsentlogs_siteurl');
+								delete_post_meta($post_id, '_wplconsentlogs_consent_forward');
+								wp_delete_post($post_id, true); 
+							}
+						}
+					// Delete policies data from posts table
+					
+					$policy_posts = $wpdb->get_col("
+								SELECT ID FROM {$wpdb->posts} WHERE post_type = 'gdprpolicies'
+							");
+						if (!empty($policy_posts)) {
+							foreach ($policy_posts as $policy_post_id) {
+								delete_post_meta($policy_post_id, '_gdpr_policies_domain');
+								delete_post_meta($policy_post_id, '_gdpr_policies_links_editor');
+								wp_delete_post($policy_post_id, true); 
+							}
+						}
 				delete_option( 'gdpr_admin_modules' );
 				delete_option( 'gdpr_public_modules' );
 				delete_option( 'gdpr_version_number' );
@@ -5989,6 +6031,15 @@ class Gdpr_Cookie_Consent_Admin {
 			'label' => 'Link',
 			'code'  => false,
 		);
+		$gcm_permission_options = array();
+		$gcm_permission_options[0] = array(
+			'label' => 'Granted',
+			'code' => true,
+		);
+		$gcm_permission_options[1] = array(
+			'label' => 'Denied',
+			'code' => false,
+		);
 		$open_url_options            = array();
 		$open_url_options[0]         = array(
 			'label' => 'Yes',
@@ -6080,6 +6131,7 @@ class Gdpr_Cookie_Consent_Admin {
 				'accept_size_options'              => $accept_size_options,
 				'accept_action_options'            => $accept_action_options,
 				'accept_button_as_options'         => $accept_button_as_options,
+				'gcm_permission_options'		   => $gcm_permission_options,
 				'open_url_options'                 => $open_url_options,
 				'widget_position_options'          => $widget_position_options,
 				'decline_action_options'           => $decline_action_options,
@@ -7248,6 +7300,15 @@ class Gdpr_Cookie_Consent_Admin {
 				<?php
 	}
 
+	/**
+	 * Ajax callback for gcm region form.
+	 */
+	public function gdpr_cookie_consent_ajax_save_gcm_region(){
+		$the_options    = Gdpr_Cookie_Consent::gdpr_get_settings();
+		$the_options['gcm_defaults'] = json_encode(json_decode(stripslashes($_POST['regionArray'])));
+		update_option( GDPR_COOKIE_CONSENT_SETTINGS_FIELD, $the_options );
+	}
+
 
 	/**
 	 * Ajax callback for setting page.
@@ -7659,7 +7720,26 @@ class Gdpr_Cookie_Consent_Admin {
 			if($the_options['is_gacm_on']  == "false" || $the_options['is_gacm_on']  == false){
 				$this->deactivate_gacm_updater();
 			}
-			$the_options['is_iabtcf_on']                       = isset( $_POST['gcc-iabtcf-enable'] ) && ( true === $_POST['gcc-iabtcf-enable'] || 'true' === $_POST['gcc-iabtcf-enable'] ) ? 'true' : 'false';
+			if(!isset($the_options['gcm_defaults'])){
+				$the_options['gcm_defaults'] = json_encode([
+					(object)[
+						'region' => 'All',
+						'ad_storage' => 'denied',
+						'analytics_storage' => 'denied',
+						'ad_user_data' => 'denied',
+						'ad_personalization' => 'denied',
+						'functionality_storage' => 'denied',
+						'personalization_storage' => 'denied',
+						'security_storage' => 'granted',
+					]
+				]);
+				
+			}
+			$the_options['is_gcm_on']                       	 = isset( $_POST['gcc-gcm-enable'] ) && ( true === $_POST['gcc-gcm-enable'] || 'true' === $_POST['gcc-gcm-enable'] ) ? 'true' : 'false';
+			$the_options['gcm_wait_for_update_duration']         = isset( $_POST['gcm_wait_for_update_duration_field'] ) ? sanitize_text_field(wp_unslash($_POST['gcm_wait_for_update_duration_field'])) : '500';
+			$the_options['is_gcm_url_passthrough']               = isset( $_POST['gcc-gcm-url-pass'] ) && ( true === $_POST['gcc-gcm-url-pass'] || 'true' === $_POST['gcc-gcm-url-pass'] ) ? 'true' : 'false';
+			$the_options['is_gcm_ads_redact']               	 = isset( $_POST['gcc-gcm-ads-redact'] ) && ( true === $_POST['gcc-gcm-ads-redact'] || 'true' === $_POST['gcc-gcm-ads-redact'] ) ? 'true' : 'false';
+			$the_options['is_iabtcf_on']                         = isset( $_POST['gcc-iabtcf-enable'] ) && ( true === $_POST['gcc-iabtcf-enable'] || 'true' === $_POST['gcc-iabtcf-enable'] ) ? 'true' : 'false';
 			$the_options['is_dynamic_lang_on']                   = isset( $_POST['gcc-dynamic-lang-enable'] ) && ( true === $_POST['gcc-dynamic-lang-enable'] || 'true' === $_POST['gcc-dynamic-lang-enable'] ) ? 'true' : 'false';
 			$the_options['optout_text']                          = isset( $_POST['notify_message_ccpa_optout_field'] ) ? sanitize_text_field( wp_unslash( $_POST['notify_message_ccpa_optout_field'] ) ) : 'Do you really wish to opt-out?';
 			$the_options['is_ccpa_iab_on']                       = isset( $_POST['gcc-iab-enable'] ) && ( true === $_POST['gcc-iab-enable'] || 'true' === $_POST['gcc-iab-enable'] ) ? 'true' : 'false';
@@ -8119,6 +8199,7 @@ class Gdpr_Cookie_Consent_Admin {
 				}
 			}
 			update_option( GDPR_COOKIE_CONSENT_SETTINGS_FIELD, $the_options );
+
 			wp_send_json_success( array( 'form_options_saved' => true ) );
 		}
 		
@@ -9667,6 +9748,8 @@ class Gdpr_Cookie_Consent_Admin {
 		$accept_log          = get_option( 'wpl_cl_accept' );
 		$partially_acc_log   = get_option( 'wpl_cl_partially_accept' );
 		$bypass_log   = get_option( 'wpl_cl_bypass' );
+		$is_legal_page_exist = $this->gdpr_get_legal_page_generated_count() > 0 ? '1' : '0';
+		$all_legal_pages_url = $admin_url . 'admin.php?page=legal-pages#all_legal_pages';
 		$the_options         = Gdpr_Cookie_Consent::gdpr_get_settings();
 		wp_enqueue_style( $this->plugin_name . '-dashboard' );
 		wp_enqueue_script( $this->plugin_name . '-dashboard' );
@@ -9710,7 +9793,10 @@ class Gdpr_Cookie_Consent_Admin {
 				'is_user_connected'     => $is_user_connected,
 				'cookie_policy'			=> $cookie_usage_for,
 				'page_view_options' 	=> $page_view_options,
-				'total_page_views'		=> $total_page_views
+				'total_page_views'		=> $total_page_views,
+				'is_legalpages_active'  => is_plugin_active( 'wplegalpages/wplegalpages.php' ),
+				'is_legal_page_exist'   => $is_legal_page_exist,
+				'all_legal_pages_url'   => $all_legal_pages_url,
 			)
 		);
 		require_once plugin_dir_path( __FILE__ ) . 'views/gdpr-dashboard-page.php';
@@ -10044,6 +10130,9 @@ class Gdpr_Cookie_Consent_Admin {
 		$last_scan_time = $cookie_scan_settings['last_scan']['created_at'];
 
 		$active_plugins = $this->gdpr_cookie_consent_active_plugins();
+
+		$is_other_cookie_plugin_activated = $this->gdpr_ensure_no_other_cookie_plugins_activated( $active_plugins );
+
 		return rest_ensure_response(
 			array(
 				'success' => true,
@@ -10061,7 +10150,7 @@ class Gdpr_Cookie_Consent_Admin {
 				'total_page_views'				   => get_option('wpl_total_page_views'),
 				'ignore_count'					   => get_option('wpl_total_ignore_count') === false ? 0 : get_option('wpl_total_ignore_count'),
 				'client_site_is_on'				   => $the_options['is_on'],
-				'active_plugins'				   => $active_plugins,
+				'is_other_cookie_plugin_activated' => $is_other_cookie_plugin_activated,
 				'client_site_url'                  => get_site_url(),
 				'cookie_usage_for'                 => $gdpr_policy,
 				'user_email_id'					   => $user_email_id,
@@ -10338,5 +10427,69 @@ public function gdpr_support_request_handler() {
     }
 }
 
+	/**
+	 * Retrieves the count of published legal pages.
+	 *
+	 * This function queries for pages that have the 'is_legal' meta key 
+	 * and returns the number of such pages.
+	 *
+	 * @return int The number of legal pages found.
+	 */
+	public function gdpr_get_legal_page_generated_count() {
+
+		$args = array(
+			'post_type'      => 'page',
+			'post_status'    => 'publish',
+			'meta_query'     => array(
+				array(
+					'key'     => 'is_legal',
+					'compare' => 'EXISTS',
+				)
+			),
+			'fields'         => 'ids',
+		);
+		
+		$query      = new WP_Query($args);
+		$post_count = $query->found_posts;
+
+		wp_reset_postdata();
+
+		return apply_filters( 'gdpr_get_legal_page_generated_count', $post_count );
+	}
+
+	public function gdpr_ensure_no_other_cookie_plugins_activated( $active_plugins ) {
+		$other_plugins_active = false;
+		if ( empty( $active_plugins ) ) return;
+		$active_plugins = array_values( $active_plugins ); // Ensure plugins are in an indexed array
+		$plugins_length = count( $active_plugins ); // Get the total number of plugins
+
+		for ( $i = 0; $i < $plugins_length; $i++ ) {
+			$plugin = $active_plugins[$i];
+
+			// Check if the plugin is not one of the two specific ones
+			if (
+				!(
+					$plugin === "gdpr-cookie-consent/gdpr-cookie-consent.php" ||
+					$plugin === "wpl-cookie-consent/wpl-cookie-consent.php"
+				)
+			) {
+				// Check if the plugin name contains one of the keywords
+				if (
+					strpos($plugin, "cookie") !== false ||
+					strpos($plugin, "gdpr") !== false ||
+					strpos($plugin, "ccpa") !== false ||
+					strpos($plugin, "compliance") !== false
+				) {
+					$other_plugins_active = true;
+					break; // Exit the loop as the condition is met
+				}
+			}
+		}
+
+		if ( $other_plugins_active ) {
+			return true;
+		}
+		return false;
+	}
 
 }
