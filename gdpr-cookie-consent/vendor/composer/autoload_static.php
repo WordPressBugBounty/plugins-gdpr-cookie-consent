@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInita4fe0552b099976d0397ab1ee63ff2c8
+class ComposerStaticInitf258e147832ce71790671470171c9ac6
 {
     public static $files = array (
         '320cde22f66dd4f5d3fd621d3e88b98f' => __DIR__ . '/..' . '/symfony/polyfill-ctype/bootstrap.php',
@@ -39,6 +39,16 @@ class ComposerStaticInita4fe0552b099976d0397ab1ee63ff2c8
             'Prophecy\\' => 9,
             'Pelago\\' => 7,
         ),
+        'M' => 
+        array (
+            'MaxMind\\WebService\\' => 19,
+            'MaxMind\\Exception\\' => 18,
+            'MaxMind\\Db\\' => 11,
+        ),
+        'G' => 
+        array (
+            'GeoIp2\\' => 7,
+        ),
         'D' => 
         array (
             'Doctrine\\Instantiator\\' => 22,
@@ -48,6 +58,7 @@ class ComposerStaticInita4fe0552b099976d0397ab1ee63ff2c8
         'C' => 
         array (
             'Composer\\Installers\\' => 20,
+            'Composer\\CaBundle\\' => 18,
         ),
         'B' => 
         array (
@@ -98,6 +109,22 @@ class ComposerStaticInita4fe0552b099976d0397ab1ee63ff2c8
         array (
             0 => __DIR__ . '/..' . '/pelago/emogrifier/src',
         ),
+        'MaxMind\\WebService\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/maxmind/web-service-common/src/WebService',
+        ),
+        'MaxMind\\Exception\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/maxmind/web-service-common/src/Exception',
+        ),
+        'MaxMind\\Db\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/maxmind-db/reader/src/MaxMind/Db',
+        ),
+        'GeoIp2\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/geoip2/geoip2/src',
+        ),
         'Doctrine\\Instantiator\\' => 
         array (
             0 => __DIR__ . '/..' . '/doctrine/instantiator/src/Doctrine/Instantiator',
@@ -113,6 +140,10 @@ class ComposerStaticInita4fe0552b099976d0397ab1ee63ff2c8
         'Composer\\Installers\\' => 
         array (
             0 => __DIR__ . '/..' . '/composer/installers/src/Composer/Installers',
+        ),
+        'Composer\\CaBundle\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/composer/ca-bundle/src',
         ),
         'Bamarni\\Composer\\Bin\\' => 
         array (
@@ -132,21 +163,14 @@ class ComposerStaticInita4fe0552b099976d0397ab1ee63ff2c8
                 0 => __DIR__ . '/..' . '/twig/twig/lib',
             ),
         ),
-        'R' => 
-        array (
-            'Routes' => 
-            array (
-                0 => __DIR__ . '/..' . '/upstatement/routes',
-            ),
-        ),
     );
 
     public static $classMap = array (
-        'AltoRouter' => __DIR__ . '/..' . '/altorouter/altorouter/AltoRouter.php',
         'Bamarni\\Composer\\Bin\\BinCommand' => __DIR__ . '/..' . '/bamarni/composer-bin-plugin/src/BinCommand.php',
         'Bamarni\\Composer\\Bin\\CommandProvider' => __DIR__ . '/..' . '/bamarni/composer-bin-plugin/src/CommandProvider.php',
         'Bamarni\\Composer\\Bin\\Config' => __DIR__ . '/..' . '/bamarni/composer-bin-plugin/src/Config.php',
         'Bamarni\\Composer\\Bin\\Plugin' => __DIR__ . '/..' . '/bamarni/composer-bin-plugin/src/Plugin.php',
+        'Composer\\CaBundle\\CaBundle' => __DIR__ . '/..' . '/composer/ca-bundle/src/CaBundle.php',
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
         'Composer\\Installers\\AglInstaller' => __DIR__ . '/..' . '/composer/installers/src/Composer/Installers/AglInstaller.php',
         'Composer\\Installers\\AimeosInstaller' => __DIR__ . '/..' . '/composer/installers/src/Composer/Installers/AimeosInstaller.php',
@@ -282,6 +306,54 @@ class ComposerStaticInita4fe0552b099976d0397ab1ee63ff2c8
         'File_Iterator' => __DIR__ . '/..' . '/phpunit/php-file-iterator/src/Iterator.php',
         'File_Iterator_Facade' => __DIR__ . '/..' . '/phpunit/php-file-iterator/src/Facade.php',
         'File_Iterator_Factory' => __DIR__ . '/..' . '/phpunit/php-file-iterator/src/Factory.php',
+        'GeoIp2\\Database\\Reader' => __DIR__ . '/..' . '/geoip2/geoip2/src/Database/Reader.php',
+        'GeoIp2\\Exception\\AddressNotFoundException' => __DIR__ . '/..' . '/geoip2/geoip2/src/Exception/AddressNotFoundException.php',
+        'GeoIp2\\Exception\\AuthenticationException' => __DIR__ . '/..' . '/geoip2/geoip2/src/Exception/AuthenticationException.php',
+        'GeoIp2\\Exception\\GeoIp2Exception' => __DIR__ . '/..' . '/geoip2/geoip2/src/Exception/GeoIp2Exception.php',
+        'GeoIp2\\Exception\\HttpException' => __DIR__ . '/..' . '/geoip2/geoip2/src/Exception/HttpException.php',
+        'GeoIp2\\Exception\\InvalidRequestException' => __DIR__ . '/..' . '/geoip2/geoip2/src/Exception/InvalidRequestException.php',
+        'GeoIp2\\Exception\\OutOfQueriesException' => __DIR__ . '/..' . '/geoip2/geoip2/src/Exception/OutOfQueriesException.php',
+        'GeoIp2\\Model\\AbstractModel' => __DIR__ . '/..' . '/geoip2/geoip2/src/Model/AbstractModel.php',
+        'GeoIp2\\Model\\AnonymousIp' => __DIR__ . '/..' . '/geoip2/geoip2/src/Model/AnonymousIp.php',
+        'GeoIp2\\Model\\Asn' => __DIR__ . '/..' . '/geoip2/geoip2/src/Model/Asn.php',
+        'GeoIp2\\Model\\City' => __DIR__ . '/..' . '/geoip2/geoip2/src/Model/City.php',
+        'GeoIp2\\Model\\ConnectionType' => __DIR__ . '/..' . '/geoip2/geoip2/src/Model/ConnectionType.php',
+        'GeoIp2\\Model\\Country' => __DIR__ . '/..' . '/geoip2/geoip2/src/Model/Country.php',
+        'GeoIp2\\Model\\Domain' => __DIR__ . '/..' . '/geoip2/geoip2/src/Model/Domain.php',
+        'GeoIp2\\Model\\Enterprise' => __DIR__ . '/..' . '/geoip2/geoip2/src/Model/Enterprise.php',
+        'GeoIp2\\Model\\Insights' => __DIR__ . '/..' . '/geoip2/geoip2/src/Model/Insights.php',
+        'GeoIp2\\Model\\Isp' => __DIR__ . '/..' . '/geoip2/geoip2/src/Model/Isp.php',
+        'GeoIp2\\ProviderInterface' => __DIR__ . '/..' . '/geoip2/geoip2/src/ProviderInterface.php',
+        'GeoIp2\\Record\\AbstractPlaceRecord' => __DIR__ . '/..' . '/geoip2/geoip2/src/Record/AbstractPlaceRecord.php',
+        'GeoIp2\\Record\\AbstractRecord' => __DIR__ . '/..' . '/geoip2/geoip2/src/Record/AbstractRecord.php',
+        'GeoIp2\\Record\\City' => __DIR__ . '/..' . '/geoip2/geoip2/src/Record/City.php',
+        'GeoIp2\\Record\\Continent' => __DIR__ . '/..' . '/geoip2/geoip2/src/Record/Continent.php',
+        'GeoIp2\\Record\\Country' => __DIR__ . '/..' . '/geoip2/geoip2/src/Record/Country.php',
+        'GeoIp2\\Record\\Location' => __DIR__ . '/..' . '/geoip2/geoip2/src/Record/Location.php',
+        'GeoIp2\\Record\\MaxMind' => __DIR__ . '/..' . '/geoip2/geoip2/src/Record/MaxMind.php',
+        'GeoIp2\\Record\\Postal' => __DIR__ . '/..' . '/geoip2/geoip2/src/Record/Postal.php',
+        'GeoIp2\\Record\\RepresentedCountry' => __DIR__ . '/..' . '/geoip2/geoip2/src/Record/RepresentedCountry.php',
+        'GeoIp2\\Record\\Subdivision' => __DIR__ . '/..' . '/geoip2/geoip2/src/Record/Subdivision.php',
+        'GeoIp2\\Record\\Traits' => __DIR__ . '/..' . '/geoip2/geoip2/src/Record/Traits.php',
+        'GeoIp2\\Util' => __DIR__ . '/..' . '/geoip2/geoip2/src/Util.php',
+        'GeoIp2\\WebService\\Client' => __DIR__ . '/..' . '/geoip2/geoip2/src/WebService/Client.php',
+        'MaxMind\\Db\\Reader' => __DIR__ . '/..' . '/maxmind-db/reader/src/MaxMind/Db/Reader.php',
+        'MaxMind\\Db\\Reader\\Decoder' => __DIR__ . '/..' . '/maxmind-db/reader/src/MaxMind/Db/Reader/Decoder.php',
+        'MaxMind\\Db\\Reader\\InvalidDatabaseException' => __DIR__ . '/..' . '/maxmind-db/reader/src/MaxMind/Db/Reader/InvalidDatabaseException.php',
+        'MaxMind\\Db\\Reader\\Metadata' => __DIR__ . '/..' . '/maxmind-db/reader/src/MaxMind/Db/Reader/Metadata.php',
+        'MaxMind\\Db\\Reader\\Util' => __DIR__ . '/..' . '/maxmind-db/reader/src/MaxMind/Db/Reader/Util.php',
+        'MaxMind\\Exception\\AuthenticationException' => __DIR__ . '/..' . '/maxmind/web-service-common/src/Exception/AuthenticationException.php',
+        'MaxMind\\Exception\\HttpException' => __DIR__ . '/..' . '/maxmind/web-service-common/src/Exception/HttpException.php',
+        'MaxMind\\Exception\\InsufficientFundsException' => __DIR__ . '/..' . '/maxmind/web-service-common/src/Exception/InsufficientFundsException.php',
+        'MaxMind\\Exception\\InvalidInputException' => __DIR__ . '/..' . '/maxmind/web-service-common/src/Exception/InvalidInputException.php',
+        'MaxMind\\Exception\\InvalidRequestException' => __DIR__ . '/..' . '/maxmind/web-service-common/src/Exception/InvalidRequestException.php',
+        'MaxMind\\Exception\\IpAddressNotFoundException' => __DIR__ . '/..' . '/maxmind/web-service-common/src/Exception/IpAddressNotFoundException.php',
+        'MaxMind\\Exception\\PermissionRequiredException' => __DIR__ . '/..' . '/maxmind/web-service-common/src/Exception/PermissionRequiredException.php',
+        'MaxMind\\Exception\\WebServiceException' => __DIR__ . '/..' . '/maxmind/web-service-common/src/Exception/WebServiceException.php',
+        'MaxMind\\WebService\\Client' => __DIR__ . '/..' . '/maxmind/web-service-common/src/WebService/Client.php',
+        'MaxMind\\WebService\\Http\\CurlRequest' => __DIR__ . '/..' . '/maxmind/web-service-common/src/WebService/Http/CurlRequest.php',
+        'MaxMind\\WebService\\Http\\Request' => __DIR__ . '/..' . '/maxmind/web-service-common/src/WebService/Http/Request.php',
+        'MaxMind\\WebService\\Http\\RequestFactory' => __DIR__ . '/..' . '/maxmind/web-service-common/src/WebService/Http/RequestFactory.php',
         'PHPUnit\\Exception' => __DIR__ . '/..' . '/phpunit/phpunit/src/Exception.php',
         'PHPUnit\\Framework\\Assert' => __DIR__ . '/..' . '/phpunit/phpunit/src/Framework/Assert.php',
         'PHPUnit\\Framework\\AssertionFailedError' => __DIR__ . '/..' . '/phpunit/phpunit/src/Framework/AssertionFailedError.php',
@@ -820,7 +892,6 @@ class ComposerStaticInita4fe0552b099976d0397ab1ee63ff2c8
         'Psr\\Container\\ContainerExceptionInterface' => __DIR__ . '/..' . '/psr/container/src/ContainerExceptionInterface.php',
         'Psr\\Container\\ContainerInterface' => __DIR__ . '/..' . '/psr/container/src/ContainerInterface.php',
         'Psr\\Container\\NotFoundExceptionInterface' => __DIR__ . '/..' . '/psr/container/src/NotFoundExceptionInterface.php',
-        'Routes' => __DIR__ . '/..' . '/upstatement/routes/Routes.php',
         'SebastianBergmann\\CodeCoverage\\CodeCoverage' => __DIR__ . '/..' . '/phpunit/php-code-coverage/src/CodeCoverage.php',
         'SebastianBergmann\\CodeCoverage\\CoveredCodeNotExecutedException' => __DIR__ . '/..' . '/phpunit/php-code-coverage/src/Exception/CoveredCodeNotExecutedException.php',
         'SebastianBergmann\\CodeCoverage\\Driver\\Driver' => __DIR__ . '/..' . '/phpunit/php-code-coverage/src/Driver/Driver.php',
@@ -972,8 +1043,10 @@ class ComposerStaticInita4fe0552b099976d0397ab1ee63ff2c8
         'TheSeer\\Tokenizer\\TokenCollectionException' => __DIR__ . '/..' . '/theseer/tokenizer/src/TokenCollectionException.php',
         'TheSeer\\Tokenizer\\Tokenizer' => __DIR__ . '/..' . '/theseer/tokenizer/src/Tokenizer.php',
         'TheSeer\\Tokenizer\\XMLSerializer' => __DIR__ . '/..' . '/theseer/tokenizer/src/XMLSerializer.php',
+        'Timber\\AccessesPostsLazily' => __DIR__ . '/..' . '/timber/timber/lib/AccessesPostsLazily.php',
         'Timber\\Admin' => __DIR__ . '/..' . '/timber/timber/lib/Admin.php',
         'Timber\\Archives' => __DIR__ . '/..' . '/timber/timber/lib/Archives.php',
+        'Timber\\Attachment' => __DIR__ . '/..' . '/timber/timber/lib/Attachment.php',
         'Timber\\Cache\\Cleaner' => __DIR__ . '/..' . '/timber/timber/lib/Cache/Cleaner.php',
         'Timber\\Cache\\KeyGenerator' => __DIR__ . '/..' . '/timber/timber/lib/Cache/KeyGenerator.php',
         'Timber\\Cache\\TimberKeyGeneratorInterface' => __DIR__ . '/..' . '/timber/timber/lib/Cache/TimberKeyGeneratorInterface.php',
@@ -982,6 +1055,14 @@ class ComposerStaticInita4fe0552b099976d0397ab1ee63ff2c8
         'Timber\\CommentThread' => __DIR__ . '/..' . '/timber/timber/lib/CommentThread.php',
         'Timber\\Core' => __DIR__ . '/..' . '/timber/timber/lib/Core.php',
         'Timber\\CoreInterface' => __DIR__ . '/..' . '/timber/timber/lib/CoreInterface.php',
+        'Timber\\DateTimeHelper' => __DIR__ . '/..' . '/timber/timber/lib/DateTimeHelper.php',
+        'Timber\\DatedInterface' => __DIR__ . '/..' . '/timber/timber/lib/DatedInterface.php',
+        'Timber\\Factory\\CommentFactory' => __DIR__ . '/..' . '/timber/timber/lib/Factory/CommentFactory.php',
+        'Timber\\Factory\\MenuFactory' => __DIR__ . '/..' . '/timber/timber/lib/Factory/MenuFactory.php',
+        'Timber\\Factory\\MenuItemFactory' => __DIR__ . '/..' . '/timber/timber/lib/Factory/MenuItemFactory.php',
+        'Timber\\Factory\\PostFactory' => __DIR__ . '/..' . '/timber/timber/lib/Factory/PostFactory.php',
+        'Timber\\Factory\\TermFactory' => __DIR__ . '/..' . '/timber/timber/lib/Factory/TermFactory.php',
+        'Timber\\Factory\\UserFactory' => __DIR__ . '/..' . '/timber/timber/lib/Factory/UserFactory.php',
         'Timber\\FunctionWrapper' => __DIR__ . '/..' . '/timber/timber/lib/FunctionWrapper.php',
         'Timber\\Helper' => __DIR__ . '/..' . '/timber/timber/lib/Helper.php',
         'Timber\\Image' => __DIR__ . '/..' . '/timber/timber/lib/Image.php',
@@ -997,32 +1078,30 @@ class ComposerStaticInita4fe0552b099976d0397ab1ee63ff2c8
         'Timber\\Integrations\\CoAuthorsPlus' => __DIR__ . '/..' . '/timber/timber/lib/Integrations/CoAuthorsPlus.php',
         'Timber\\Integrations\\CoAuthorsPlusUser' => __DIR__ . '/..' . '/timber/timber/lib/Integrations/CoAuthorsPlusUser.php',
         'Timber\\Integrations\\Command' => __DIR__ . '/..' . '/timber/timber/lib/Integrations/Command.php',
-        'Timber\\Integrations\\Timber_WP_CLI_Command' => __DIR__ . '/..' . '/timber/timber/lib/Integrations/Timber_WP_CLI_Command.php',
         'Timber\\Integrations\\WPML' => __DIR__ . '/..' . '/timber/timber/lib/Integrations/WPML.php',
         'Timber\\Loader' => __DIR__ . '/..' . '/timber/timber/lib/Loader.php',
         'Timber\\LocationManager' => __DIR__ . '/..' . '/timber/timber/lib/LocationManager.php',
         'Timber\\Menu' => __DIR__ . '/..' . '/timber/timber/lib/Menu.php',
         'Timber\\MenuItem' => __DIR__ . '/..' . '/timber/timber/lib/MenuItem.php',
+        'Timber\\MetaInterface' => __DIR__ . '/..' . '/timber/timber/lib/MetaInterface.php',
         'Timber\\Pagination' => __DIR__ . '/..' . '/timber/timber/lib/Pagination.php',
         'Timber\\PathHelper' => __DIR__ . '/..' . '/timber/timber/lib/PathHelper.php',
         'Timber\\Post' => __DIR__ . '/..' . '/timber/timber/lib/Post.php',
+        'Timber\\PostArrayObject' => __DIR__ . '/..' . '/timber/timber/lib/PostArrayObject.php',
         'Timber\\PostCollection' => __DIR__ . '/..' . '/timber/timber/lib/PostCollection.php',
-        'Timber\\PostGetter' => __DIR__ . '/..' . '/timber/timber/lib/PostGetter.php',
-        'Timber\\PostPreview' => __DIR__ . '/..' . '/timber/timber/lib/PostPreview.php',
+        'Timber\\PostCollectionInterface' => __DIR__ . '/..' . '/timber/timber/lib/PostCollectionInterface.php',
+        'Timber\\PostExcerpt' => __DIR__ . '/..' . '/timber/timber/lib/PostExcerpt.php',
         'Timber\\PostQuery' => __DIR__ . '/..' . '/timber/timber/lib/PostQuery.php',
         'Timber\\PostType' => __DIR__ . '/..' . '/timber/timber/lib/PostType.php',
         'Timber\\PostsIterator' => __DIR__ . '/..' . '/timber/timber/lib/PostsIterator.php',
-        'Timber\\QueryIterator' => __DIR__ . '/..' . '/timber/timber/lib/QueryIterator.php',
         'Timber\\Request' => __DIR__ . '/..' . '/timber/timber/lib/Request.php',
+        'Timber\\Setupable' => __DIR__ . '/..' . '/timber/timber/lib/Setupable.php',
         'Timber\\Site' => __DIR__ . '/..' . '/timber/timber/lib/Site.php',
         'Timber\\Term' => __DIR__ . '/..' . '/timber/timber/lib/Term.php',
-        'Timber\\TermGetter' => __DIR__ . '/..' . '/timber/timber/lib/TermGetter.php',
         'Timber\\TextHelper' => __DIR__ . '/..' . '/timber/timber/lib/TextHelper.php',
         'Timber\\Theme' => __DIR__ . '/..' . '/timber/timber/lib/Theme.php',
         'Timber\\Timber' => __DIR__ . '/..' . '/timber/timber/lib/Timber.php',
         'Timber\\Twig' => __DIR__ . '/..' . '/timber/timber/lib/Twig.php',
-        'Timber\\Twig_Filter' => __DIR__ . '/..' . '/timber/timber/lib/Twig_Filter.php',
-        'Timber\\Twig_Function' => __DIR__ . '/..' . '/timber/timber/lib/Twig_Function.php',
         'Timber\\URLHelper' => __DIR__ . '/..' . '/timber/timber/lib/URLHelper.php',
         'Timber\\User' => __DIR__ . '/..' . '/timber/timber/lib/User.php',
         'Twig\\CacheExtension\\CacheProviderInterface' => __DIR__ . '/..' . '/twig/cache-extension/lib/Twig/CacheExtension/CacheProviderInterface.php',
@@ -1475,11 +1554,11 @@ class ComposerStaticInita4fe0552b099976d0397ab1ee63ff2c8
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInita4fe0552b099976d0397ab1ee63ff2c8::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInita4fe0552b099976d0397ab1ee63ff2c8::$prefixDirsPsr4;
-            $loader->fallbackDirsPsr4 = ComposerStaticInita4fe0552b099976d0397ab1ee63ff2c8::$fallbackDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInita4fe0552b099976d0397ab1ee63ff2c8::$prefixesPsr0;
-            $loader->classMap = ComposerStaticInita4fe0552b099976d0397ab1ee63ff2c8::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInitf258e147832ce71790671470171c9ac6::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInitf258e147832ce71790671470171c9ac6::$prefixDirsPsr4;
+            $loader->fallbackDirsPsr4 = ComposerStaticInitf258e147832ce71790671470171c9ac6::$fallbackDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInitf258e147832ce71790671470171c9ac6::$prefixesPsr0;
+            $loader->classMap = ComposerStaticInitf258e147832ce71790671470171c9ac6::$classMap;
 
         }, null, ClassLoader::class);
     }

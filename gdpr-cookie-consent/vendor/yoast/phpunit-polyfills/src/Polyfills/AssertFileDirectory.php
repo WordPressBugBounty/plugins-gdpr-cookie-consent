@@ -2,6 +2,7 @@
 
 namespace Yoast\PHPUnitPolyfills\Polyfills;
 
+use PHPUnit_Framework_Exception;
 use PHPUnit_Util_InvalidArgumentHelper;
 
 /**
@@ -14,6 +15,8 @@ use PHPUnit_Util_InvalidArgumentHelper;
  * Introduced in PHPUnit 5.6.0.
  *
  * @link https://github.com/sebastianbergmann/phpunit/pull/2262
+ *
+ * @since 0.2.0
  */
 trait AssertFileDirectory {
 
@@ -25,18 +28,19 @@ trait AssertFileDirectory {
 	 *
 	 * @return void
 	 *
-	 * @throws Exception When the received parameter is not of the expected input type.
+	 * @throws PHPUnit_Framework_Exception When the received parameter is not of the expected input type.
 	 */
 	public static function assertIsReadable( $filename, $message = '' ) {
 		if ( ! \is_string( $filename ) ) {
 			throw PHPUnit_Util_InvalidArgumentHelper::factory( 1, 'string' );
 		}
 
-		if ( $message === '' ) {
-			$message = \sprintf( 'Failed asserting that "%s" is readable', $filename );
+		$msg = \sprintf( 'Failed asserting that "%s" is readable', $filename );
+		if ( $message !== '' ) {
+			$msg = $message . \PHP_EOL . $msg;
 		}
 
-		static::assertTrue( \is_readable( $filename ), $message );
+		static::assertTrue( \is_readable( $filename ), $msg );
 	}
 
 	/**
@@ -47,18 +51,19 @@ trait AssertFileDirectory {
 	 *
 	 * @return void
 	 *
-	 * @throws Exception When the received parameter is not of the expected input type.
+	 * @throws PHPUnit_Framework_Exception When the received parameter is not of the expected input type.
 	 */
 	public static function assertNotIsReadable( $filename, $message = '' ) {
 		if ( ! \is_string( $filename ) ) {
 			throw PHPUnit_Util_InvalidArgumentHelper::factory( 1, 'string' );
 		}
 
-		if ( $message === '' ) {
-			$message = \sprintf( 'Failed asserting that "%s" is not readable', $filename );
+		$msg = \sprintf( 'Failed asserting that "%s" is not readable', $filename );
+		if ( $message !== '' ) {
+			$msg = $message . \PHP_EOL . $msg;
 		}
 
-		static::assertFalse( \is_readable( $filename ), $message );
+		static::assertFalse( \is_readable( $filename ), $msg );
 	}
 
 	/**
@@ -69,18 +74,19 @@ trait AssertFileDirectory {
 	 *
 	 * @return void
 	 *
-	 * @throws Exception When the received parameter is not of the expected input type.
+	 * @throws PHPUnit_Framework_Exception When the received parameter is not of the expected input type.
 	 */
 	public static function assertIsWritable( $filename, $message = '' ) {
 		if ( ! \is_string( $filename ) ) {
 			throw PHPUnit_Util_InvalidArgumentHelper::factory( 1, 'string' );
 		}
 
-		if ( $message === '' ) {
-			$message = \sprintf( 'Failed asserting that "%s" is writable', $filename );
+		$msg = \sprintf( 'Failed asserting that "%s" is writable', $filename );
+		if ( $message !== '' ) {
+			$msg = $message . \PHP_EOL . $msg;
 		}
 
-		static::assertTrue( \is_writable( $filename ), $message );
+		static::assertTrue( \is_writable( $filename ), $msg );
 	}
 
 	/**
@@ -91,18 +97,19 @@ trait AssertFileDirectory {
 	 *
 	 * @return void
 	 *
-	 * @throws Exception When the received parameter is not of the expected input type.
+	 * @throws PHPUnit_Framework_Exception When the received parameter is not of the expected input type.
 	 */
 	public static function assertNotIsWritable( $filename, $message = '' ) {
 		if ( ! \is_string( $filename ) ) {
 			throw PHPUnit_Util_InvalidArgumentHelper::factory( 1, 'string' );
 		}
 
-		if ( $message === '' ) {
-			$message = \sprintf( 'Failed asserting that "%s" is not writable', $filename );
+		$msg = \sprintf( 'Failed asserting that "%s" is not writable', $filename );
+		if ( $message !== '' ) {
+			$msg = $message . \PHP_EOL . $msg;
 		}
 
-		static::assertFalse( \is_writable( $filename ), $message );
+		static::assertFalse( \is_writable( $filename ), $msg );
 	}
 
 	/**
@@ -113,18 +120,19 @@ trait AssertFileDirectory {
 	 *
 	 * @return void
 	 *
-	 * @throws Exception When the received parameter is not of the expected input type.
+	 * @throws PHPUnit_Framework_Exception When the received parameter is not of the expected input type.
 	 */
 	public static function assertDirectoryExists( $directory, $message = '' ) {
 		if ( ! \is_string( $directory ) ) {
 			throw PHPUnit_Util_InvalidArgumentHelper::factory( 1, 'string' );
 		}
 
-		if ( $message === '' ) {
-			$message = \sprintf( 'Failed asserting that directory "%s" exists', $directory );
+		$msg = \sprintf( 'Failed asserting that directory "%s" exists', $directory );
+		if ( $message !== '' ) {
+			$msg = $message . \PHP_EOL . $msg;
 		}
 
-		static::assertTrue( \is_dir( $directory ), $message );
+		static::assertTrue( \is_dir( $directory ), $msg );
 	}
 
 	/**
@@ -135,18 +143,19 @@ trait AssertFileDirectory {
 	 *
 	 * @return void
 	 *
-	 * @throws Exception When the received parameter is not of the expected input type.
+	 * @throws PHPUnit_Framework_Exception When the received parameter is not of the expected input type.
 	 */
 	public static function assertDirectoryNotExists( $directory, $message = '' ) {
 		if ( ! \is_string( $directory ) ) {
 			throw PHPUnit_Util_InvalidArgumentHelper::factory( 1, 'string' );
 		}
 
-		if ( $message === '' ) {
-			$message = \sprintf( 'Failed asserting that directory "%s" does not exist', $directory );
+		$msg = \sprintf( 'Failed asserting that directory "%s" does not exist', $directory );
+		if ( $message !== '' ) {
+			$msg = $message . \PHP_EOL . $msg;
 		}
 
-		static::assertFalse( \is_dir( $directory ), $message );
+		static::assertFalse( \is_dir( $directory ), $msg );
 	}
 
 	/**
