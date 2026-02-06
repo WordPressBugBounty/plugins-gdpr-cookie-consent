@@ -26,6 +26,9 @@
  * @subpackage Gdpr_Cookie_Consent/includes
  * @author     wpeka <https://club.wpeka.com>
  */
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 class Gdpr_Cookie_Consent {
 
 	/**
@@ -82,7 +85,7 @@ class Gdpr_Cookie_Consent {
 		if ( defined( 'GDPR_COOKIE_CONSENT_VERSION' ) ) {
 			$this->version = GDPR_COOKIE_CONSENT_VERSION;
 		} else {
-			$this->version = '4.0.0';
+			$this->version = '4.2.0';
 		}
 		add_action(
 			'current_screen',
@@ -180,7 +183,7 @@ class Gdpr_Cookie_Consent {
 
 		$plugin_i18n = new Gdpr_Cookie_Consent_I18n(GDPR_COOKIE_CONSENT_PLUGIN_FILENAME);
 
-		$this->loader->add_action( 'plugins_loaded', $plugin_i18n, 'load_plugin_textdomain' );
+		$this->loader->add_action( 'plugins_loaded', $plugin_i18n, 'init' );
 	}
 
 	/**
@@ -217,6 +220,8 @@ class Gdpr_Cookie_Consent {
 		 */
 		$plugin_admin->admin_modules();
 		$this->loader->add_action( 'init', $plugin_admin, 'gdpr_register_block_type' );
+		$this->loader->add_filter( 'cron_schedules', $plugin_admin,'add_every_minute_cron_schedule');
+		
 		if ( ! self::is_request( 'admin' ) ) {
 			$this->loader->add_action( 'admin_bar_menu', $plugin_admin, 'gdpr_quick_toolbar_menu', 999 );
 		}
@@ -241,6 +246,11 @@ class Gdpr_Cookie_Consent {
 			$this->loader->add_action( 'wp_ajax_ab_testing_enable', $plugin_admin, 'gdpr_cookie_consent_ab_testing_enable', 10, 1 );
 			$this->loader->add_action( 'wp_ajax_gcc_restore_default_settings', $plugin_admin, 'gdpr_cookie_consent_ajax_restore_default_settings', 10, 1 );
 			$this->loader->add_action( 'wp_ajax_gcc_auto_generated_banner', $plugin_admin, 'gdpr_cookie_consent_ajax_auto_generated_banner', 10, 1 );
+			$this->loader->add_action( 'wp_ajax_gcc_switch_preview_banner', $plugin_admin, 'gdpr_cookie_consent_ajax_switch_preview_banner', 10, 1 );
+			$this->loader->add_action( 'wp_ajax_gcc_get_preview_banner_state', $plugin_admin, 'gdpr_cookie_consent_ajax_get_preview_banner_state', 10, 1 );
+			$this->loader->add_action( 'wp_ajax_gcc_save_schedule_scan', $plugin_admin, 'gdpr_cookie_consent_ajax_save_schedule_scan', 10, 1 );
+			$this->loader->add_action( 'wp_ajax_gcc_get_schedule_scan', $plugin_admin, 'gdpr_cookie_consent_ajax_get_schedule_scan', 10, 1);
+			$this->loader->add_action( 'wp_ajax_gcc_clear_schedule_scan', $plugin_admin, 'gdpr_cookie_consent_ajax_clear_schedule_scan',10,1 );
 			// added ajax callback for wizard.
 			$this->loader->add_action( 'wp_ajax_gcc_save_wizard_settings', $plugin_admin, 'gdpr_cookie_consent_ajax_save_wizard_settings', 10, 1 );
 			// added ajax for import settings.
@@ -406,18 +416,18 @@ class Gdpr_Cookie_Consent {
 			<div class="gdpr-deactivate-popup-form-wrapper">
 				<form class="gdpr-deactivate-popup-form">
 					<div>
-					<p class="gdpr-deactivate-popup-form-title">Deactivate WP Cookie Consent :</p>
+					<p class="gdpr-deactivate-popup-form-title">Deactivate WPLP Cookie Consent :</p>
 					<div class="gdpr-deactivate-popup-form-description">
-					<p class="gdpr-deactivate-popup-form-description-content">You are about to deactivate WP Cookie Consent. Would you like to delete its data or keep it in place?</p>
+					<p class="gdpr-deactivate-popup-form-description-content">You are about to deactivate WPLP Cookie Consent. Would you like to delete its data or keep it in place?</p>
 					</div>
 					<div class="gdpr-deactivate-popup-inputs">
 						<div class="gdpr-deactivate-input-choices">
 						<input type="radio" id="gdpr-plugin-deactivate-without-data" name="reason" value="gdpr-plugin-deactivate-without-data">
-					<label for="gdpr-plugin-deactivate-without-data">Keep all WP Cookie Consent tables and data</label><br>
+					<label for="gdpr-plugin-deactivate-without-data">Keep all WPLP Cookie Consent tables and data</label><br>
 						</div>
 						<div class="gdpr-deactivate-input-choices">
 						<input type="radio" id="gdpr-plugin-deactivate-with-data" name="reason" value="gdpr-plugin-deactivate-with-data">
-					<label for="gdpr-plugin-deactivate-with-data">Delete all WP Cookie Consent tables and data</label><br>
+					<label for="gdpr-plugin-deactivate-with-data">Delete all WPLP Cookie Consent tables and data</label><br>
 						</div>
 					</div>
 					</div>
@@ -1021,12 +1031,12 @@ class Gdpr_Cookie_Consent {
 			'show_again_margin'                      => '5',
 			'show_again_margin1'                      => '5',
 			'show_again_margin2'                      => '5',
-			'button_revoke_consent_text_color'       => '#176CAE',
-			'button_revoke_consent_background_color' => '#ffffff',
-			'button_revoke_consent_text_color1'       => '#176CAE',
-			'button_revoke_consent_background_color1' => '#ffffff',
-			'button_revoke_consent_text_color2'       => '#176CAE',
-			'button_revoke_consent_background_color2' => '#ffffff',
+			'button_revoke_consent_text_color'       => '#ffffff',
+			'button_revoke_consent_background_color' => '#176CAE',
+			'button_revoke_consent_text_color1'       => '#ffffff',
+			'button_revoke_consent_background_color1' => '#176CAE',
+			'button_revoke_consent_text_color2'       => '#ffffff',
+			'button_revoke_consent_background_color2' => '#176CAE',
 			'auto_hide_delay'                        => '10000',
 			'auto_banner_initialize_delay'           => '10000',
 			'auto_scroll_offset'                     => '10',
@@ -1046,7 +1056,7 @@ class Gdpr_Cookie_Consent {
 			'use_color_picker'                       => true,
 			'bar_heading_text'                       => '',
 			'bar_heading_lgpd_text'                  => '',
-			'cookie_bar_as'                          => 'banner', // banner | popup | widget.
+			'cookie_bar_as'                          => 'widget', // banner | popup | widget.
 			'cookie_usage_for'                       => 'gdpr',
 			'popup_overlay'                          => true,
 			'about_message'                          => addslashes( ( 'Cookies are small text files that can be used by websites to make a user\'s experience more efficient. The law states that we can store cookies on your device if they are strictly necessary for the operation of this site. For all other types of cookies we need your permission. This site uses different types of cookies. Some cookies are placed by third party services that appear on our pages.' ) ),
@@ -1268,6 +1278,7 @@ class Gdpr_Cookie_Consent {
 			}
 		}
 		update_option( GDPR_COOKIE_CONSENT_SETTINGS_FIELD, $settings );
+		$settings['scan_in_progress'] = get_option('gdpr_scanning_action_hash') ? true : false;
 		return $settings;
 	}
 

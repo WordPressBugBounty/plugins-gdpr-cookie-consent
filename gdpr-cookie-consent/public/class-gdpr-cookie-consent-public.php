@@ -9,6 +9,10 @@
  * @subpackage Gdpr_Cookie_Consent/public
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 /**
  * The public-facing functionality of the plugin.
  *
@@ -83,16 +87,42 @@ class Gdpr_Cookie_Consent_Public {
 		if ( ! shortcode_exists( 'wpl_cookie_details' ) ) {
 			add_shortcode( 'wpl_cookie_details', array( $this, 'gdprcookieconsent_shortcode_cookie_details' ) );         // a shortcode [wpl_cookie_details].
 		}
-		$min = 0;
-		$max = 1;
-		$randomNumber = mt_rand($min, $max);
-		if($randomNumber < 0.5) $this->chosenBanner = 2;
+
+		add_action( 'init', array( $this, 'init_random_banner' ) );
+		
 		$the_options = Gdpr_Cookie_Consent::gdpr_get_settings();
-		if($the_options['is_gcm_on'] === 'true' || $the_options['is_gcm_on'] === true || $the_options['is_gcm_on'] === 1){
-			add_action('wp_enqueue_scripts', array( $this,'insert_custom_consent_script'), 1);
+		if($this->convert_boolean($the_options['is_gcm_on']) === true ){
+			add_action('wp_head', array( $this,'insert_custom_consent_script'), -9999);
 		}
 		add_action( 'wp_ajax_gdpr_fetch_user_iab_consent', array( $this, 'wplcl_collect_user_iab_consent' ) );
 		add_action( 'wp_ajax_nopriv_gdpr_fetch_user_iab_consent', array( $this, 'wplcl_collect_user_iab_consent' ) );
+	}
+
+	public function init_random_banner() {
+		if ( wp_rand( 0, 1 ) === 0 ) {
+			$this->chosenBanner = 2;
+		}
+	}
+	public function convert_boolean( $value ) {
+		if ( is_bool( $value ) ) {
+			return $value;
+		}
+
+		if ( is_null( $value ) ) {
+			return false;
+		}
+
+		$value = strtolower( trim( ( string ) $value ) );
+
+		if ( in_array( $value, array( '1', 'true' ), true) ) {
+			return true;
+		}
+
+		if ( in_array( $value, array( '0', 'false', '' ), true ) ) {
+			return false;
+		}
+
+		return false;
 	}
 	/* Add defer attribute to scripts */
 	public function register_script_with_defer( $handle, $src, $deps = array(), $ver = false, $in_footer = true ) {
@@ -158,17 +188,17 @@ class Gdpr_Cookie_Consent_Public {
 		$this->register_script_with_defer_async( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/gdpr-cookie-consent-public' . GDPR_CC_SUFFIX . '.js', array( 'jquery' ), $this->version, true );
 		$this->register_script_with_defer( $this->plugin_name.'-tcf', plugin_dir_url( __FILE__ ) . '../admin/js/vue/gdpr-cookie-consent-admin-tcstring.js', array( 'jquery' ), $this->version, true );
 		$this->register_script_with_defer( $this->plugin_name . '-bootstrap-js', plugin_dir_url( __FILE__ ) . 'js/bootstrap/bootstrap.bundle.js', array( 'jquery' ), $this->version, true );
-
 	}
 
 	public function insert_custom_consent_script() {
 		$the_options = Gdpr_Cookie_Consent::gdpr_get_settings();
-		$ads_data_redact = ($the_options['is_gcm_ads_redact'] === 'true' || $the_options['is_gcm_ads_redact'] === true || $the_options['is_gcm_ads_redact'] === 1) ? "true" : "false";
-		$url_pass = ($the_options['is_gcm_url_passthrough'] === 'true' || $the_options['is_gcm_url_passthrough'] === true || $the_options['is_gcm_url_passthrough'] === 1) ? "true" : "false";
+		$ads_data_redact = ( $this->convert_boolean($the_options['is_gcm_ads_redact']) === true ) ? "true" : "false";
+		$url_pass = ( $this->convert_boolean($the_options['is_gcm_url_passthrough']) === true ) ? "true" : "false";
 		$wait_for_update = (int) $the_options['gcm_wait_for_update_duration'];
 		$gcm_defaults = json_decode($the_options['gcm_defaults']) ?? [];
 		foreach ($gcm_defaults as $config) :
-			$regionParam = ($config->region === 'All') ? '' : '"region": ["' . implode('","', explode(',', $config->region)) . '"],';
+			$regions = array_map('trim', explode(',', $config->region));
+			$regionParam = ($config->region === 'All') ? '' : 'region: ["' . implode('","', $regions) . '"]';
     ?>
     <script>
         window.dataLayer = window.dataLayer || [];
@@ -176,18 +206,18 @@ class Gdpr_Cookie_Consent_Public {
             dataLayer.push(arguments);
         }
         gtag("consent", "default", {
-			<?php echo $regionParam; ?>
-            ad_storage: "<?php echo $config->ad_storage; ?>",
-            ad_user_data: "<?php echo $config->ad_user_data; ?>",
-            ad_personalization: "<?php echo $config->ad_personalization; ?>",
-            analytics_storage: "<?php echo $config->analytics_storage; ?>",
-            functionality_storage: "<?php echo $config->functionality_storage; ?>",
-            personalization_storage: "<?php echo $config->personalization_storage; ?>",
-            security_storage: "<?php echo $config->security_storage; ?>",
-            wait_for_update: <?php echo $wait_for_update; ?>,
-        });
-        gtag("set", "ads_data_redaction", <?php echo $ads_data_redact; ?>);
-        gtag("set", "url_passthrough", <?php echo $url_pass; ?>);
+			<?php echo $regionParam !== '' ? wp_kses_data( $regionParam ) . ',' : ''; ?>
+			ad_storage: "<?php echo esc_js( $config->ad_storage ); ?>",
+			ad_user_data: "<?php echo esc_js( $config->ad_user_data ); ?>",
+			ad_personalization: "<?php echo esc_js( $config->ad_personalization ); ?>",
+			analytics_storage: "<?php echo esc_js( $config->analytics_storage ); ?>",
+			functionality_storage: "<?php echo esc_js( $config->functionality_storage ); ?>",
+			personalization_storage: "<?php echo esc_js( $config->personalization_storage ); ?>",
+			security_storage: "<?php echo esc_js( $config->security_storage ); ?>",
+			wait_for_update: <?php echo wp_json_encode( $wait_for_update ); ?>,
+		});
+		gtag("set", "ads_data_redaction", <?php echo wp_json_encode( $ads_data_redact ); ?>);
+		gtag("set", "url_passthrough", <?php echo wp_json_encode( $url_pass ); ?>);
 		gtag("set", "developer_id.dZDM3Yj", true);
     </script>
     <?php
@@ -568,7 +598,6 @@ $selected_script_category = $wpdb->get_var(
 				)
 			);
 			add_filter( 'clean_url', array( $this, 'gdprcookieconsent_clean_async_url' ) );
-			$timber           = new Timber\Timber();
 			$gdpr_message     = '';
 			$ccpa_message     = '';
 			$lgpd_message     = '';
@@ -891,7 +920,7 @@ $selected_script_category = $wpdb->get_var(
 				update_option( 'iabtcfConsent', $iabtcfConsentData );
 			} 
 			//check for translations if dynamic translation is off, becuase when it is on code for automatic translation will translate it.
-			if ( (!isset($the_options["is_dynamic_lang_on"]) || $the_options["is_dynamic_lang_on"] === false || $the_options["is_dynamic_lang_on"] === "false") && true === $the_options['button_settings_is_on'] || true === $the_options['button_accept_all_is_on'] || true === $the_options['button_accept_is_on'] ) {
+			if ( (!isset($the_options["is_dynamic_lang_on"]) || $this->convert_boolean($the_options["is_dynamic_lang_on"]) === false) && true === $the_options['button_settings_is_on'] || true === $the_options['button_accept_all_is_on'] || true === $the_options['button_accept_is_on'] ) {
 				$cookie_data                      = array();
 				$cookie_data['categories']        = $categories_data;
 				$cookie_data['dash_notify_message']               = $about_message;
@@ -1020,7 +1049,7 @@ $selected_script_category = $wpdb->get_var(
 			}
 			
 			//code to change the language according to user's preferences
-			if(isset($the_options["is_dynamic_lang_on"]) && ($the_options["is_dynamic_lang_on"] === true || $the_options["is_dynamic_lang_on"] === "true")){
+			if(isset($the_options["is_dynamic_lang_on"]) && ($this->convert_boolean($the_options["is_dynamic_lang_on"]) === true)){
 				$languages = parseLanguageList($_SERVER['HTTP_ACCEPT_LANGUAGE']);	//user's preffered language
 				$cookie_data                      = array();
 				$cookie_data['categories']        = $categories_data;
@@ -1153,9 +1182,8 @@ $selected_script_category = $wpdb->get_var(
 			}
 			$the_options['credits'] = $the_options['show_credits'] ? $credit_link : '';
 			$ab_options    = get_option( 'wpl_ab_options' );
-			
-			$template_object = json_decode($the_options['selected_template_json'], true);
-			
+						
+			$template_object = json_decode($the_options['selected_template_json'], true);			
 			// include plugin_dir_path( __FILE__ ) . 'templates/default.php';
 			include plugin_dir_path(__FILE__) . 'templates/cookie-notice.php';
 			?>
@@ -1237,8 +1265,8 @@ $selected_script_category = $wpdb->get_var(
 				'button_revoke_consent_background_color2'	=> $the_options['button_revoke_consent_background_color2'],
 				'chosenBanner'								=> $chosenBanner,
 				'is_iabtcf_on'                              => $the_options['is_iabtcf_on'],
-				'is_gcm_on'									=> $the_options['is_gcm_on'],
-				'is_gcm_debug_on'							=> isset($the_options['is_gcm_debug_mode']) ? $the_options['is_gcm_debug_mode'] : 'false' 
+				'is_gcm_on'									=> $this->convert_boolean($the_options['is_gcm_on']),
+				'is_gcm_debug_on'							=> isset($the_options['is_gcm_debug_mode']) ? $this->convert_boolean($the_options['is_gcm_debug_mode']) : false
 			);
 
 

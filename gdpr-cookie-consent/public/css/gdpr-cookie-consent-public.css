@@ -883,7 +883,7 @@ Bootstrap CSS for frontend UI
   position: fixed;
   top: 0;
   left: 0;
-  z-index: 1050;
+  z-index: 999999998;
   display: none;
   width: 100%;
   height: 100%;
@@ -2353,6 +2353,9 @@ Bootstrap CSS for frontend UI
 .hide_show_again_dnt {
   display: none !important;
 }
+.hide_show_again {
+  display: none !important;
+}
 @media (max-width: 990px) {
   .gdprmodal-content {
     width: 75vw !important;
@@ -2411,9 +2414,4 @@ Bootstrap CSS for frontend UI
   display: flex;
   flex-direction: column;
   gap: 20px;
-}
-.elementor-widget-video .elementor-wrapper iframe, 
-.elementor-widget-video .elementor-wrapper video
-{
-  height: 300px;
 }

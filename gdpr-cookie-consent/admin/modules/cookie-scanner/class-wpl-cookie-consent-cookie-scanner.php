@@ -121,12 +121,7 @@ class Gdpr_Cookie_Consent_Cookie_Scanner {
 	public function __construct() {
 		// Creating necessary tables for cookie scanner.
 		register_activation_hook( GDPR_COOKIE_CONSENT_PLUGIN_FILENAME, array( $this, 'wpl_activator' ) );
-		$this->status_labels = array(
-			0 => '',
-			1 => __( 'Incomplete', 'gdpr-cookie-consent' ),
-			2 => __( 'Completed', 'gdpr-cookie-consent' ),
-			3 => __( 'Stopped', 'gdpr-cookie-consent' ),
-		);
+		add_action('admin_init',  array($this, 'set_status_labels'));
 		if ( Gdpr_Cookie_Consent::is_request( 'admin' ) ) {
 			add_filter( 'gdprcookieconsent_cookie_sub_tabs', array( $this, 'wpl_cookie_sub_tabs' ), 10, 1 );
 			add_action( 'gdpr_module_settings_cookielist', array( $this, 'wpl_cookie_scanned_cookies' ), 10 );
@@ -150,6 +145,14 @@ class Gdpr_Cookie_Consent_Cookie_Scanner {
 		$this->class_for_blur_content = $this->is_user_connected ? '' : 'gdpr-blur-background'; // Add a class for styling purposes
 		$this->class_for_card_body_blur_content = $this->is_user_connected ? '' : 'gdpr-body-blur-background'; // Add a class for styling purposes
 
+	}
+	public function set_status_labels(){
+		$this->status_labels = array(
+			0 => '',
+			1 => __( 'Incomplete', 'gdpr-cookie-consent' ),
+			2 => __( 'Completed', 'gdpr-cookie-consent' ),
+			3 => __( 'Stopped', 'gdpr-cookie-consent' ),
+		);
 	}
 	public function register_cookie_scanner_script(){
 		//getting scan data 
@@ -1057,10 +1060,10 @@ class Gdpr_Cookie_Consent_Cookie_Scanner {
 			$scan_table    = $wpdb->prefix . 'wpl_cookie_scan'; // Replace with your actual scan table name
 		
 			// Get the latest scan ID with current_action = 'scan_pages'
-			$latest_scan_id = $wpdb->get_var("SELECT id_wpl_cookie_scan FROM $scan_table WHERE current_action = 'scan_pages' ORDER BY created_at DESC LIMIT 1");
+			$latest_scan_id = $wpdb->get_var("SELECT id_wpl_cookie_scan FROM $scan_table WHERE status = '2' ORDER BY created_at DESC LIMIT 1");
 		
 			if ($latest_scan_id) {
-				$count_sql     = $wpdb->prepare("SELECT COUNT(id_wpl_cookie_scan_cookies) AS ttnum FROM $cookies_table WHERE id_wpl_cookie_scan = %d", $latest_scan_id);
+				$count_sql     = "SELECT COUNT(id_wpl_cookie_scan_cookies) AS ttnum FROM $cookies_table";
 				$count_arr     = $wpdb->get_row($count_sql, ARRAY_A);
 				if ( $count_arr ) {
 					$out['total'] = $count_arr['ttnum'];
@@ -1069,9 +1072,8 @@ class Gdpr_Cookie_Consent_Cookie_Scanner {
 				$sql      = $wpdb->prepare(
 					"SELECT * FROM $cookies_table 
 					 INNER JOIN $cat_table ON $cookies_table.category_id = $cat_table.id_gdpr_cookie_category 
-					 WHERE $cookies_table.id_wpl_cookie_scan = %d 
 					 ORDER BY id_wpl_cookie_scan_cookies ASC" . ( $limit > 0 ? " LIMIT %d,%d" : '' ),
-					$latest_scan_id, $offset, $limit
+					$offset, $limit
 				);
 		
 				$data_arr = $wpdb->get_results($sql, ARRAY_A);
@@ -1079,6 +1081,7 @@ class Gdpr_Cookie_Consent_Cookie_Scanner {
 					$out['data'] = $data_arr;
 				}
 			}
+			
 		
 			return $out;
 		}

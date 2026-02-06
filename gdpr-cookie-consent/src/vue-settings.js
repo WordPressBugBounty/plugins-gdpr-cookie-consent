@@ -9,6 +9,7 @@ import "@kouts/vue-modal/dist/vue-modal.css";
 import AB_Testing_Chart from "./vue-components/AB_Testing_Chart";
 import Tooltip from "./vue-components/tooltip";
 import VueApexCharts from "vue-apexcharts";
+import vuejsDatepicker from "vuejs-datepicker";
 // Main JS (in UMD format)
 import VueTimepicker from "vue2-timepicker";
 import { TCModel, TCString, GVL } from "@iabtechlabtcf/core";
@@ -38,7 +39,7 @@ Vue.component("tooltip", Tooltip);
 Vue.component("vue-timepicker", VueTimepicker);
 Vue.component("aceeditor", AceEditor);
 Vue.component("ab-testing-chart", AB_Testing_Chart);
-
+Vue.component("datepicker", vuejsDatepicker);
 const j = jQuery.noConflict();
 var gen = new Vue({
   el: "#gdpr-cookie-consent-settings-app",
@@ -115,7 +116,7 @@ var gen = new Vue({
       show_more_cookie_design_popup: false,
       schedule_scan_show: false,
       show_custom_cookie_popup: false,
-      scan_in_progress: false,
+      scan_in_progress: settings_obj.the_options["scan_in_progress"],
 
       gcm_scan_result: settings_obj.ab_options.hasOwnProperty("wpl_gcm_latest_scan_result")
         ? settings_obj.ab_options["wpl_gcm_latest_scan_result"]
@@ -156,7 +157,8 @@ var gen = new Vue({
         settings_obj.the_options.hasOwnProperty("is_gacm_on") &&
         (true === settings_obj.the_options["is_gacm_on"] ||
           1 === settings_obj.the_options["is_gacm_on"] ||
-          "true" === settings_obj.the_options["is_gacm_on"])
+          "true" === settings_obj.the_options["is_gacm_on"] ||
+          "1" === settings_obj.the_options["is_gacm_on"])
           ? true
           : false,
       gacm_key: settings_obj.ab_options.hasOwnProperty("gacm_key")
@@ -166,7 +168,8 @@ var gen = new Vue({
       gcm_is_on: settings_obj.the_options.hasOwnProperty("is_gcm_on") && 
         (true === settings_obj.the_options["is_gcm_on"] || 
           "true" === settings_obj.the_options["is_gcm_on"] ||
-          1 === settings_obj.the_options["is_gcm_on"])
+          1 === settings_obj.the_options["is_gcm_on"]||
+          "1" === settings_obj.the_options["is_gcm_on"])
           ? true
           : false,
       gcm_wait_for_update_duration: settings_obj.the_options.hasOwnProperty(
@@ -177,25 +180,29 @@ var gen = new Vue({
       gcm_url_passthrough: settings_obj.the_options.hasOwnProperty("is_gcm_url_passthrough") && 
         (true === settings_obj.the_options["is_gcm_url_passthrough"] ||
           "true" === settings_obj.the_options["is_gcm_url_passthrough"] ||
-          1 === settings_obj.the_options["is_gcm_url_passthrough"])
+          1 === settings_obj.the_options["is_gcm_url_passthrough"] ||
+          "1" === settings_obj.the_options["is_gcm_url_passthrough"])
           ? true
           : false,
       gcm_ads_redact: settings_obj.the_options.hasOwnProperty("is_gcm_ads_redact") && 
         (true === settings_obj.the_options["is_gcm_ads_redact"] ||
           "true" === settings_obj.the_options["is_gcm_ads_redact"] ||
-          1 === settings_obj.the_options["is_gcm_ads_redact"])
+          1 === settings_obj.the_options["is_gcm_ads_redact"] ||
+          "1" === settings_obj.the_options["is_gcm_ads_redact"])
           ? true
           : false,
       gcm_debug_mode: settings_obj.the_options.hasOwnProperty("is_gcm_debug_mode") && 
         (true === settings_obj.the_options["is_gcm_debug_mode"] ||
           "true" === settings_obj.the_options["is_gcm_debug_mode"] ||
-          1 === settings_obj.the_options["is_gcm_debug_mode"])
+          1 === settings_obj.the_options["is_gcm_debug_mode"] ||
+          "1" === settings_obj.the_options["is_gcm_debug_mode"])
           ? true
           : false,
       gcm_advertiser_mode: settings_obj.the_options.hasOwnProperty("is_gcm_advertiser_mode") && 
         (true === settings_obj.the_options["is_gcm_advertiser_mode"] ||
           "true" === settings_obj.the_options["is_gcm_advertiser_mode"] ||
-          1 === settings_obj.the_options["is_gcm_advertiser_mode"])
+          1 === settings_obj.the_options["is_gcm_advertiser_mode"] ||
+          "1" === settings_obj.the_options["is_gcm_advertiser_mode"])
           ? true
           : false,
       regions: settings_obj.the_options.hasOwnProperty('gcm_defaults') ? JSON.parse(settings_obj.the_options["gcm_defaults"]) : [
@@ -224,14 +231,12 @@ var gen = new Vue({
         settings_obj.the_options.hasOwnProperty("is_dynamic_lang_on") &&
         (true === settings_obj.the_options["is_dynamic_lang_on"] ||
           1 === settings_obj.the_options["is_dynamic_lang_on"] ||
-          "true" === settings_obj.the_options["is_dynamic_lang_on"])
+          "true" === settings_obj.the_options["is_dynamic_lang_on"] ||
+          "1" === settings_obj.the_options["is_dynamic_lang_on"])
           ? true
           : false,
       banner_preview_is_on:
-        "true" == settings_obj.the_options["banner_preview_enable"] ||
-        1 === settings_obj.the_options["banner_preview_enable"]
-          ? true
-          : false,
+        false,
       policy_options: settings_obj.policies,
       gdpr_policy: settings_obj.the_options.hasOwnProperty("cookie_usage_for")
         ? settings_obj.the_options["cookie_usage_for"]
@@ -2249,6 +2254,7 @@ var gen = new Vue({
       //Do not track
       do_not_track_on:
         "true" == settings_obj.the_options["do_not_track_on"] ||
+        true == settings_obj.the_options["do_not_track_on"] ||
         1 === settings_obj.the_options["do_not_track_on"]
           ? true
           : false,
@@ -2285,7 +2291,9 @@ var gen = new Vue({
       enable_safe:
         settings_obj.the_options.hasOwnProperty("enable_safe") &&
         ("true" === settings_obj.the_options["enable_safe"] ||
-          1 === settings_obj.the_options["enable_safe"])
+          true === settings_obj.the_options["enable_safe"] ||
+          1 === settings_obj.the_options["enable_safe"] ||
+          '1' === settings_obj.the_options["enable_safe"])
           ? true
           : false,
       usage_data: settings_obj.hasOwnProperty("is_usage_tracking_allowed")
@@ -2808,6 +2816,21 @@ var gen = new Vue({
       this.isVendorsActive = false;
       //changing the value of banner_preview_swicth_value enable/disable
       this.banner_preview_is_on = !this.banner_preview_is_on;
+      //make AJAX call to show/hide the banner on front end
+      jQuery.ajax({
+          url: settings_obj.ajaxurl,
+          type: "POST",
+          dataType: "json",
+          data: {
+            action: "gcc_switch_preview_banner",
+            banner_preview_state: this.banner_preview_is_on,
+          },
+          success: function (response) {
+          },
+          error: function (error) {
+            console.error("Error:", error);
+          },
+      })
     },
     onSwitchDataReqsEnable() {
       //changing the value of data_reqs_on enable/disable
@@ -3026,9 +3049,10 @@ var gen = new Vue({
 
       // // Check if the auto_generated_banner is being switched on
       // if (data) {
+      this.is_template_changed = false;
       // Open a new tab
       let newTab = window.open(window.location.origin, "_blank");
-
+      var that = this;
       // Wait for the new tab to load and fetch the required data
       newTab.onload = function () {
         // Array to store elements with a background color
@@ -3062,6 +3086,8 @@ var gen = new Vue({
             if (
               backgroundColor &&
               backgroundColor !== "rgba(0, 0, 0, 0)" &&
+              backgroundColor !== "rgb(255, 255, 255)" &&
+              backgroundColor !== "rgba(255, 255, 255, 1)" &&
               backgroundColor !== "transparent"
             ) {
               elementsWithButton.push({
@@ -3135,14 +3161,30 @@ var gen = new Vue({
             background_color: hexColor,
             is_auto_generated_banner_done: true, // Send the hex color
           },
-          success: function (response) {},
+          success: function (response) {
+            that.auto_generated_banner = true;
+             jQuery.ajax({
+                url: settings_obj.ajaxurl,
+                type: "POST",
+                dataType: "json",
+                data: {
+                  action: "gcc_switch_preview_banner",
+                  banner_preview_state: true
+                },
+                success: function(previewResponse) {
+                  location.reload();
+                },
+                error: function(error) {
+                  console.error("Error enabling banner preview:", error);
+                  location.reload();
+                }
+              });
+          },
           error: function (error) {
             console.error("Error:", error);
           },
         });
       };
-      this.banner_preview_is_on = true;
-      // }
     },
     //consent forward.
     onSwitchConsentForward() {
@@ -3243,16 +3285,28 @@ var gen = new Vue({
     },
     turnOffPreviewBanner() {
       this.banner_preview_is_on = false;
+      jQuery.ajax({
+        url: settings_obj.ajaxurl,
+        type: "POST",
+        dataType: "json",
+        data: {
+            action: "gcc_switch_preview_banner",
+            banner_preview_state: false
+        }
+    });
     },
     onTemplateChange(value) {
       this.template = value;
-      this.auto_generated_banner = false;
+      console.log("Selected template:", value);
       let selectedTemplate
       if(value == "default"){
         selectedTemplate = this.default_template_json;
       }
       else{
         selectedTemplate = this.json_templates[value];
+      }
+      if (this.auto_generated_banner) {
+        this.auto_generated_banner = false;
       }
       this.cookie_bar_color =                       selectedTemplate['styles']['background-color'];
       this.cookie_bar_opacity =                     selectedTemplate['styles']['opacity'];
@@ -3739,26 +3793,35 @@ var gen = new Vue({
     onSwitchCookieDeclineEnable1() {
       this.cookie_decline_on1 = !this.cookie_decline_on1;
     },
-    onSwitchCookieSettingsEnable() {
-      this.cookie_settings_on = !this.cookie_settings_on;
+    onSwitchCookieSettingsEnable(val) {
+      this.cookie_settings_on = val;
+      if (!val) {
+        this.cookie_on_frontend = false;
+      }
     },
-    onSwitchCookieSettingsEnable1() {
-      this.cookie_settings_on1 = !this.cookie_settings_on1;
+    onSwitchCookieSettingsEnable1(val) {
+      this.cookie_settings_on1 = val;
+      if (!val) {
+        this.cookie_on_frontend1 = false;
+      }
     },
-    onSwitchCookieOnFrontend() {
-      this.cookie_on_frontend = !this.cookie_on_frontend;
+    onSwitchCookieOnFrontend(val) {
+      this.cookie_on_frontend = val;
     },
-    onSwitchCookieOnFrontend1() {
-      this.cookie_on_frontend1 = !this.cookie_on_frontend1;
+    onSwitchCookieOnFrontend1(val) {
+        this.cookie_on_frontend1 = val;
     },
     onSwitchCookieDeclineEnable2() {
       this.cookie_decline_on2 = !this.cookie_decline_on2;
     },
-    onSwitchCookieSettingsEnable2() {
-      this.cookie_settings_on2 = !this.cookie_settings_on2;
+    onSwitchCookieSettingsEnable2(val) {
+      this.cookie_settings_on2 = val;
+      if (!val) {
+        this.cookie_on_frontend2 = false;
+      }
     },
-    onSwitchCookieOnFrontend2() {
-      this.cookie_on_frontend2 = !this.cookie_on_frontend2;
+    onSwitchCookieOnFrontend2(val) {
+      this.cookie_on_frontend2 = val;
     },
     editCookie(cookie) {
       this.edit_discovered_cookie_on = true;
@@ -4244,6 +4307,7 @@ var gen = new Vue({
         }
         var that = this;
         var dataV = jQuery("#gcc-save-settings-form").serialize();
+        const shouldResetAutoGenerated = (that.is_template_changed && that.auto_generated_banner);
         jQuery
           .ajax({
             type: "POST",
@@ -4256,7 +4320,10 @@ var gen = new Vue({
               "&logo_removed=" +
               that.is_logo_removed +"&logo_removed1=" + that.is_logo_removed1 +"&logo_removed2="+ that.is_logo_removed2 +"&logo_removedML1=" + that.is_logo_removedML1 +
               "&gdpr_css_text_field=" +
-              that.gdpr_css_text,
+              that.gdpr_css_text+
+              "&auto_generated_banner=" + (that.auto_generated_banner ? '1' : '0') +
+              "&is_template_changed=" + (that.is_template_changed ? '1' : '0') +
+              "&reset_auto_generated=" + (shouldResetAutoGenerated ? '1' : '0'),
           })
           .done(function (data) {
             that.success_error_message = "Settings Saved";
@@ -4268,6 +4335,9 @@ var gen = new Vue({
             j("#gdpr-cookie-consent-save-settings-alert").fadeOut(2500);
             if (that.is_template_changed) {
               that.is_template_changed = false;
+               if (that.auto_generated_banner) {
+                  that.auto_generated_banner = false;
+              }
               location.reload();
             }
             if (that.is_iabtcf_changed) {
@@ -4979,6 +5049,23 @@ var gen = new Vue({
 
       setTimeout(() => clearInterval(timeInterval), 7000);
     });
+
+    //PREVIEW BANNER STATE
+    var that = this;
+      jQuery.ajax({
+        url: settings_obj.ajaxurl,
+        type: "POST",
+        dataType: "json",
+        data: {
+          action: "gcc_get_preview_banner_state"
+        },
+        success: function(response){
+          if (response.success) {
+            that.banner_preview_is_on = response.data === 'true';
+          }
+        }
+      });
+
   },
   icons: { cilPencil, cilSettings, cilInfo, cibGoogleKeep },
 });
@@ -5050,13 +5137,17 @@ var app = new Vue({
       gacm_is_on:
         settings_obj.the_options.hasOwnProperty("is_gacm_on") &&
         (true === settings_obj.the_options["is_gacm_on"] ||
-          1 === settings_obj.the_options["is_gacm_on"])
+          1 === settings_obj.the_options["is_gacm_on"]||
+          "1" === settings_obj.the_options["is_gacm_on"]||
+          "true" === settings_obj.the_options["is_gacm_on"])
           ? true
           : false,
       iabtcf_msg: `We and our <a id = "vendor-link" href = "#" data-toggle = "gdprmodal" data-target = "#gdpr-gdprmodal">836 partners</a> use cookies and other tracking technologies to improve your experience on our website. We may store and/or access information on a device and process personal data, such as your IP address and browsing data, for personalised advertising and content, advertising and content measurement, audience research and services development. Additionally, we may utilize precise geolocation data and identification through device scanning.\n\nPlease note that your consent will be valid across all our subdomains. You can change or withdraw your consent at any time by clicking the “Consent Preferences” button at the bottom of your screen. We respect your choices and are committed to providing you with a transparent and secure browsing experience.`,
       gcm_is_on: settings_obj.the_options.hasOwnProperty("is_gcm_on") && 
         (true === settings_obj.the_options["is_gcm_on"] ||
-          1 === settings_obj.the_options["is_gcm_on"])
+          1 === settings_obj.the_options["is_gcm_on"]||
+          "1" === settings_obj.the_options["is_gcm_on"]||
+          "true" === settings_obj.the_options["is_gcm_on"])
           ? true
           : false,
       gcm_wait_for_update_duration: settings_obj.the_options.hasOwnProperty(
@@ -5066,24 +5157,28 @@ var app = new Vue({
         : "500",
       gcm_url_passthrough: settings_obj.the_options.hasOwnProperty("is_gcm_url_passthrough") && 
         (true === settings_obj.the_options["is_gcm_url_passthrough"] ||
-          1 === settings_obj.the_options["is_gcm_url_passthrough"])
+          1 === settings_obj.the_options["is_gcm_url_passthrough"] ||
+          "1" === settings_obj.the_options["is_gcm_url_passthrough"])
           ? true
           : false,
       gcm_ads_redact: settings_obj.the_options.hasOwnProperty("is_gcm_ads_redact") && 
         (true === settings_obj.the_options["is_gcm_ads_redact"] ||
-          1 === settings_obj.the_options["is_gcm_ads_redact"])
+          1 === settings_obj.the_options["is_gcm_ads_redact"] ||
+          "1" === settings_obj.the_options["is_gcm_ads_redact"])
           ? true
           : false,
       gcm_debug_mode: settings_obj.the_options.hasOwnProperty("is_gcm_debug_mode") && 
         (true === settings_obj.the_options["is_gcm_debug_mode"] ||
           "true" === settings_obj.the_options["is_gcm_debug_mode"] ||
-          1 === settings_obj.the_options["is_gcm_debug_mode"])
+          1 === settings_obj.the_options["is_gcm_debug_mode"] ||
+          "1" === settings_obj.the_options["is_gcm_debug_mode"])
           ? true
           : false,
       gcm_advertiser_mode: settings_obj.the_options.hasOwnProperty("is_gcm_advertiser_mode") && 
         (true === settings_obj.the_options["is_gcm_advertiser_mode"] ||
           "true" === settings_obj.the_options["is_gcm_advertiser_mode"] ||
-          1 === settings_obj.the_options["is_gcm_advertiser_mode"])
+          1 === settings_obj.the_options["is_gcm_advertiser_mode"] ||
+          "1" === settings_obj.the_options["is_gcm_advertiser_mode"])
           ? true
           : false,
       banner_preview_is_on:
@@ -6952,6 +7047,7 @@ var app = new Vue({
       //Do not track
       do_not_track_on:
         "true" == settings_obj.the_options["do_not_track_on"] ||
+        true == settings_obj.the_options["do_not_track_on"] ||
         1 === settings_obj.the_options["do_not_track_on"]
           ? true
           : false,
@@ -6988,6 +7084,8 @@ var app = new Vue({
       enable_safe:
         settings_obj.the_options.hasOwnProperty("enable_safe") &&
         ("true" === settings_obj.the_options["enable_safe"] ||
+          true === settings_obj.the_options["enable_safe"] ||
+          '1' === settings_obj.the_options["enable_safe"] ||
           1 === settings_obj.the_options["enable_safe"])
           ? true
           : false,
@@ -8620,7 +8718,8 @@ var adv = new Vue({
         settings_obj.the_options.hasOwnProperty("is_gacm_on") &&
         (true === settings_obj.the_options["is_gacm_on"] ||
           1 === settings_obj.the_options["is_gacm_on"] ||
-          "true" === settings_obj.the_options["is_gacm_on"])
+          "true" === settings_obj.the_options["is_gacm_on"]||
+          "1" === settings_obj.the_options["is_gacm_on"])
           ? true
           : false,
       gacm_key: settings_obj.ab_options.hasOwnProperty("gacm_key")
@@ -8630,7 +8729,8 @@ var adv = new Vue({
       gcm_is_on: settings_obj.the_options.hasOwnProperty("is_gcm_on") && 
         (true === settings_obj.the_options["is_gcm_on"] || 
           "true" === settings_obj.the_options["is_gcm_on"] ||
-          1 === settings_obj.the_options["is_gcm_on"])
+          1 === settings_obj.the_options["is_gcm_on"]||
+          "1" === settings_obj.the_options["is_gcm_on"])
           ? true
           : false,
       gcm_wait_for_update_duration: settings_obj.the_options.hasOwnProperty(
@@ -8641,25 +8741,29 @@ var adv = new Vue({
       gcm_url_passthrough: settings_obj.the_options.hasOwnProperty("is_gcm_url_passthrough") && 
         (true === settings_obj.the_options["is_gcm_url_passthrough"] ||
           "true" === settings_obj.the_options["is_gcm_url_passthrough"] ||
-          1 === settings_obj.the_options["is_gcm_url_passthrough"])
+          1 === settings_obj.the_options["is_gcm_url_passthrough"] ||
+          "1" === settings_obj.the_options["is_gcm_url_passthrough"])
           ? true
           : false,
       gcm_ads_redact: settings_obj.the_options.hasOwnProperty("is_gcm_ads_redact") && 
         (true === settings_obj.the_options["is_gcm_ads_redact"] ||
           "true" === settings_obj.the_options["is_gcm_ads_redact"] ||
-          1 === settings_obj.the_options["is_gcm_ads_redact"])
+          1 === settings_obj.the_options["is_gcm_ads_redact"] ||
+          "1" === settings_obj.the_options["is_gcm_ads_redact"])
           ? true
           : false,
       gcm_debug_mode: settings_obj.the_options.hasOwnProperty("is_gcm_debug_mode") && 
         (true === settings_obj.the_options["is_gcm_debug_mode"] ||
           "true" === settings_obj.the_options["is_gcm_debug_mode"] ||
-          1 === settings_obj.the_options["is_gcm_debug_mode"])
+          1 === settings_obj.the_options["is_gcm_debug_mode"] ||
+          "1" === settings_obj.the_options["is_gcm_debug_mode"])
           ? true
           : false,
       gcm_advertiser_mode: settings_obj.the_options.hasOwnProperty("is_gcm_advertiser_mode") && 
         (true === settings_obj.the_options["is_gcm_advertiser_mode"] ||
           "true" === settings_obj.the_options["is_gcm_advertiser_mode"] ||
-          1 === settings_obj.the_options["is_gcm_advertiser_mode"])
+          1 === settings_obj.the_options["is_gcm_advertiser_mode"] ||
+          "1" === settings_obj.the_options["is_gcm_advertiser_mode"])
           ? true
           : false,
       regions: settings_obj.the_options.hasOwnProperty('gcm_defaults') ? JSON.parse(settings_obj.the_options["gcm_defaults"]) : [
@@ -8688,7 +8792,8 @@ var adv = new Vue({
         settings_obj.the_options.hasOwnProperty("is_dynamic_lang_on") &&
         (true === settings_obj.the_options["is_dynamic_lang_on"] ||
           1 === settings_obj.the_options["is_dynamic_lang_on"] ||
-          "true" === settings_obj.the_options["is_dynamic_lang_on"])
+          "true" === settings_obj.the_options["is_dynamic_lang_on"] ||
+          "1" === settings_obj.the_options["is_dynamic_lang_on"] )
           ? true
           : false,
       banner_preview_is_on:
@@ -10713,6 +10818,7 @@ var adv = new Vue({
       //Do not track
       do_not_track_on:
         "true" == settings_obj.the_options["do_not_track_on"] ||
+        true == settings_obj.the_options["do_not_track_on"] ||
         1 === settings_obj.the_options["do_not_track_on"]
           ? true
           : false,
@@ -10749,6 +10855,8 @@ var adv = new Vue({
       enable_safe:
         settings_obj.the_options.hasOwnProperty("enable_safe") &&
         ("true" === settings_obj.the_options["enable_safe"] ||
+          true === settings_obj.the_options["enable_safe"] ||
+          '1' === settings_obj.the_options["enable_safe"] ||
           1 === settings_obj.the_options["enable_safe"])
           ? true
           : false,
@@ -12095,6 +12203,8 @@ var scb = new Vue({
       enable_safe:
         settings_obj.the_options.hasOwnProperty("enable_safe") &&
         ("true" === settings_obj.the_options["enable_safe"] ||
+          true === settings_obj.the_options["enable_safe"] ||
+          '1' === settings_obj.the_options["enable_safe"] ||
           1 === settings_obj.the_options["enable_safe"])
           ? true
           : false,
@@ -12199,9 +12309,8 @@ var scb = new Vue({
       }
 
       for (let i = 0; i < this.scripts_list_total; i++) {
-        this.scripts_list_data[i]["script_status"] = Boolean(
-          parseInt(this.scripts_list_data[i]["script_status"])
-        );
+        var rawStatus = this.scripts_list_data[i]["script_status"];
+        this.scripts_list_data[i]["script_status"] = rawStatus === true || rawStatus === "1" || rawStatus === 1;
         for (let j = 0; j < this.category_list_options.length; j++) {
           if (
             this.category_list_options[j].code ===
@@ -12512,12 +12621,12 @@ var ckm = new Vue({
         ? settings_obj.cookie_list_settings["cookie_list_types"]
         : [],
       custom_cookie_category: 1,
-      custom_cookie_type: "HTTP Cookie",
+      custom_cookie_type: "HTTP",
       custom_cookie_name: "",
       custom_cookie_domain: "",
       custom_cookie_duration: "",
       custom_cookie_description: "",
-      is_custom_cookie_duration_disabled: this.custom_cookie_type === "HTTP Cookie" ? false : true,
+      is_custom_cookie_duration_disabled: this.custom_cookie_type === "HTTP" ? false : true,
       custom_cookie_duration_placeholder: "Duration(days/session)",
       scan_history_list_tab: true,
       post_cookie_list_length: settings_obj.cookie_list_settings.hasOwnProperty(
@@ -12555,7 +12664,7 @@ var ckm = new Vue({
       pollCount: 0,
       onPrg: 0,
       discovered_cookies_list_tab: true,
-      scan_in_progress: false,
+      scan_in_progress: settings_obj.the_options["scan_in_progress"],
       schedule_scan_show: false,
       schedule_scan_options: settings_obj.schedule_scan_options,
       schedule_scan_as: settings_obj.the_options.hasOwnProperty(
@@ -12583,6 +12692,7 @@ var ckm = new Vue({
       progress_bar: require("../admin/images/progress_bar.svg"),
       edit_discovered_cookie_on: false,
       edit_discovered_cookie: {},
+      close_round_img: require("../admin/images/Close_round.svg"),
     }
   },
   methods: {
@@ -12823,6 +12933,7 @@ var ckm = new Vue({
     onUpdateScannedCookieCategory(value) {
       const id = value.split(",")[1];
       const cat = value.split(",")[0];
+      this.edit_discovered_cookie.category_id = parseInt(cat);
       for (let i = 0; i < this.scan_cookie_list_length; i++) {
         if (this.scan_cookie_list[i]["id_wpl_cookie_scan_cookies"] == id) {
           for (let j = 0; j < this.custom_cookie_categories.length; j++) {
@@ -13059,8 +13170,41 @@ var ckm = new Vue({
       } else if (this.schedule_scan_as == "never") {
         this.next_scan_is_when = "Not Scheduled";
       }
+      jQuery.ajax({
+        url: settings_obj.ajaxurl,
+        type: "POST",
+        data: {
+          action: "gcc_save_schedule_scan",
+          schedule_scan_as: this.schedule_scan_as,
+          schedule_scan_date: this.schedule_scan_date,
+          schedule_scan_time_value: this.schedule_scan_time_value,
+          schedule_scan_day: this.schedule_scan_day,
+          next_scan_is_when: this.next_scan_is_when,
+        },
+      });
+    },
+    clearScheduleAfterScan() {
+      var that = this;
+      jQuery.ajax({
+        url: settings_obj.ajaxurl,
+        type: "POST",
+        data: {
+          action: "gcc_clear_schedule_scan"
+        },
+        success: function(response) {
+          that.next_scan_is_when = "Not Scheduled";
+          that.schedule_scan_as = "never";
+          console.log("Schedule cleared after successful scan");
+        }, error: function() {
+          console.error("Error clearing schedule after scan");
+        }
+      });
     },
     scheduleScanOnce() {
+      if (this.schedule_scan_as !== "once") {
+          return;
+        }
+
       // Define the date and time when you want the function to execute
       let targetDate = new Date(this.schedule_scan_date);
 
@@ -13088,14 +13232,31 @@ var ckm = new Vue({
 
       // Calculate the time difference between now and the target date
       const timeUntilExecution = targetDate - new Date();
-
+      // Extract date components
+      const targetYear = targetDate.getFullYear();
+      const targetMonth = targetDate.getMonth();
+      const targetDay = targetDate.getDate();
+      const targetHour = targetDate.getHours();
+      const targetMinute = targetDate.getMinutes();
+        
       // Check if the target date is in the future
-      if (timeUntilExecution > 0) {
-        // Use setTimeout to delay the execution of scan
-        setTimeout(() => {
-          // start the scanning here
+       if (timeUntilExecution > 0) {
+          setInterval(() => {
+            // Use setInterval to delay the execution of scan
+            const now = new Date();
+            // Check ALL date components
+            if (now.getFullYear() === targetYear &&
+                now.getMonth() === targetMonth &&
+                now.getDate() === targetDay &&
+                now.getHours() === targetHour &&
+                now.getMinutes() === targetMinute) {      
+          // after the scan is completed successfully, clear the schedule
           this.onClickStartScan();
-        }, timeUntilExecution);
+          this.clearScheduleAfterScan();
+          this.next_scan_is_when = "Not Scheduled";
+          this.schedule_scan_as = "never";
+          }
+        }, 60000); // Check every minute
       } else {
         // if the target date is in the past
         alert("Selected date is in the past. Please select a vaild date.");
@@ -13148,6 +13309,31 @@ var ckm = new Vue({
         ) {
           // The conditions are met; execute the scan
           this.onClickStartScan();
+          const nextMonthDate = new Date(currentDate);
+          nextMonthDate.setMonth(nextMonthDate.getMonth() + 1);
+          nextMonthDate.setDate(targetDayOfMonth);
+
+          const formattedDate = nextMonthDate.toLocaleDateString("en-US", {
+            year: "numeric",
+            month: "short",
+            day: "numeric",
+          });
+
+          jQuery.ajax({
+            url: settings_obj.ajaxurl,
+            type: "POST",
+            data: {
+              action: "gcc_save_schedule_scan",
+              schedule_scan_as: "monthly",
+              schedule_scan_date: formattedDate,
+              schedule_scan_time_value: this.schedule_scan_time_value,
+              schedule_scan_day: this.schedule_scan_day,
+              next_scan_is_when: formattedDate,
+            },
+            success: () => {
+              this.next_scan_is_when = formattedDate;
+            }
+          });
         }
       };
 
@@ -13155,9 +13341,51 @@ var ckm = new Vue({
       setInterval(checkAndRunScan, 60000);
     },
     onClickStartScan(singlePageScan = false) {
-      this.scan_in_progress = true;
-      this.continue_scan = 1;
-      this.doScan(singlePageScan);
+      var that = this;
+      var hash = Math.random().toString( 36 ).replace( '0.', '' );
+      var data = {
+        action: "wpl_cookie_start_scanning",
+        security: settings_obj.cookie_scan_settings.nonces.wpl_cookie_scanner,
+        hash: hash,
+      };
+      j.ajax({
+        url: settings_obj.cookie_scan_settings.ajax_url,
+        data: data,
+        dataType: "json",
+        type: "POST",
+        success: function (data) {
+          if (!data.success) {
+            // This is actually an "error"
+            if (data.data?.message === 'Scanning already in progress'){
+              that.success_error_message = "A scanning is already in progress. Please wait for it to complete.";
+            }
+            else if (data.data?.message === 'Failed to contact scanner server'){
+              that.success_error_message = "Failed to contact the scanning server, please refresh and try. If the problem persists, please raise a support ticket."
+            }
+            else if (data.data.server_response?.status === 'Pages limit reached') {
+              that.success_error_message = "You have exhausted your pages limit. Please upgrade your plan to continue scanning.";
+            } else if (data.data.server_response?.status === 'Monthly scan limit reached') {
+              that.success_error_message = "You have exhausted your monthly scan limit. Either wait for a month or upgrade your plan to continue scanning.";
+            } else {
+              that.success_error_message = data.data.message;
+            }
+
+            j("#gdpr-cookie-consent-save-settings-alert-ckm").css("background-color", "#e55353");
+            j("#gdpr-cookie-consent-save-settings-alert-ckm").fadeIn(400);
+            j("#gdpr-cookie-consent-save-settings-alert-ckm").fadeOut(4500);
+          } else {
+            
+            that.success_error_message = "Scanning has started. You will be notified via mail once scan is completed.";
+            that.scan_in_progress = true;
+            j("#gdpr-cookie-consent-save-settings-alert-ckm").css("background-color", "#72b85c");
+            j("#gdpr-cookie-consent-save-settings-alert-ckm").fadeIn(400);
+            j("#gdpr-cookie-consent-save-settings-alert-ckm").fadeOut(4500);
+          }
+        },
+        error: function (e) {
+          console.log("Error: ", e);
+        },
+      });
     },
     doScan(singlePageScan = false) {
       var that = this;
@@ -13658,20 +13886,22 @@ var ckm = new Vue({
     onClickDeleteCookie() {
       var that = this;
       var data = {
-        action: "wpl_cookies_deletion",
+        
       };
       j.ajax({
         url: settings_obj.cookie_scan_settings.ajax_url,
-        data: data,
-        dataType: "json",
         type: "POST",
-        success: function (data) {
+        data: {
+          action: "wpl_cookies_deletion",
+          security: settings_obj.cookie_list_settings.nonces.gdpr_cookie_custom,  
+        },
+        success: function (response) {
           that.showSuccessScreen("Cookies Cleared Successfully!");
           window.location.reload();
         },
         error: function () {
           // error function.
-          that.showErrorScreen("Some error occuered");
+          that.showErrorScreen("Some error occurred");
         },
       });
     },
@@ -13812,6 +14042,16 @@ var ckm = new Vue({
       });
     },
     updateScannedCookies() {
+      // Update the specific cookie in scan_cookie_list with the edited values
+      for (let i = 0; i < this.scan_cookie_list.length; i++) {
+        if (this.scan_cookie_list[i]["id_wpl_cookie_scan_cookies"] === this.edit_discovered_cookie["id_wpl_cookie_scan_cookies"]) {
+          // Update the cookie in the list with the edited values
+          this.scan_cookie_list[i]["description"] = this.edit_discovered_cookie["description"];
+          this.scan_cookie_list[i]["category_id"] = this.edit_discovered_cookie["category_id"];
+          this.scan_cookie_list[i]["category"] = this.edit_discovered_cookie["category"];
+          break;
+        }
+      }
       var cookie_scan_arr = [];
       for (let i = 0; i < this.scan_cookie_list_length; i++) {
         var cid = this.scan_cookie_list[i]["id_wpl_cookie_scan_cookies"];
@@ -13957,6 +14197,47 @@ var ckm = new Vue({
     }
 
     this.activateTabFromHash();
+    //SAVE SCHEDULE SCAN SETTINGS
+    var that = this;
+    jQuery.ajax({
+      url: settings_obj.ajaxurl,
+      type: "POST",
+      data: {
+        action: "gcc_get_schedule_scan"
+      },
+      success: function(response) {
+        if (response.success && response.data) {
+          that.schedule_scan_as = response.data.schedule_scan_as || 'never';
+          that.schedule_scan_date = response.data.schedule_scan_date || '';
+          that.schedule_scan_time_value = response.data.schedule_scan_time_value || '';
+          that.schedule_scan_day = response.data.schedule_scan_day || '';
+          that.next_scan_is_when = response.data.next_scan_is_when || 'Not Scheduled';
+          // RESTART SCHEDULED SCANS AFTER PAGE LOAD
+          if (that.schedule_scan_as === 'once' && that.schedule_scan_date && that.schedule_scan_time_value) {
+
+            const targetDate = new Date(that.schedule_scan_date);
+            const timeParts = that.schedule_scan_time_value.split(':');
+            let hours = parseInt(timeParts[0], 10);
+            const minutes = parseInt(timeParts[1], 10);
+            if (that.schedule_scan_time_value.toUpperCase().includes('PM') && hours < 12) hours += 12;
+            if (that.schedule_scan_time_value.toUpperCase().includes('AM') && hours === 12) hours = 0;
+            targetDate.setHours(hours);
+            targetDate.setMinutes(minutes);
+
+            const now = new Date();
+
+            if (targetDate > now) {
+              that.scheduleScanOnce(); // schedule normally
+            } else {
+              that.clearScheduleAfterScan();
+            }
+          }
+          else if (that.schedule_scan_as === 'monthly') {
+                        that.scanMonthly();
+          }
+        }
+      }
+    });
   },
 });
 window.ckm = ckm;

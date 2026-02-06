@@ -225,11 +225,24 @@ GDPR_CCPA_COOKIE_EXPIRE =
   } else {
     browser_dnt_value = false;
   }
+  var browser_gpc_value = "";
+  if(navigator.globalPrivacyControl === true){
+    // User has enabled Global Privacy Control
+    browser_gpc_value = true;
+  } else if (navigator.globalPrivacyControl === false){
+    browser_gpc_value = false;
+  }else{
+    browser_gpc_value = false;
+  }
    // Run this check when the DOM is ready and when debug mode is on.
-   if(is_gcm_debug_on == 'true'){
-     document.addEventListener("DOMContentLoaded", function() {
-       setTimeout(debugConsentState, 1000);
-     });
+   if(is_gcm_debug_on == 'true' || is_gcm_debug_on == true){
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', function () {
+          setTimeout(debugConsentState, 1000);
+        });
+      } else {
+        setTimeout(debugConsentState, 1000);
+      }
    }
   var GDPR = {
     allowed_categories: [],
@@ -281,7 +294,7 @@ GDPR_CCPA_COOKIE_EXPIRE =
       });
 
       // hide banner.
-      window.addEventListener("load", function () {
+      // window.addEventListener("load", function () {
         for (var id = 0; id < gdpr_select_pages.length; id++) {
           var pageToHideBanner = gdpr_select_pages[id];
           if (document.body.classList.contains("page-id-" + pageToHideBanner)) {
@@ -299,14 +312,16 @@ GDPR_CCPA_COOKIE_EXPIRE =
               );
               if (GDPR.settings.cookie_bar_as == "popup") {
                 $("#gdpr-popup").gdprmodal("hide");
+                $(".gdprmodal").remove(); // remove the whole modal
               }
               if (banner || insidebanner) {
                 banner.style.display = "none";
+                $("#gdpr-cookie-consent-show-again").addClass("hide_show_again");
                 insidebanner.style.display = "none";
               }
             } else if (GDPR.settings.cookie_usage_for == "ccpa") {
               if (GDPR.settings.cookie_bar_as == "popup") {
-                $("#gdpr-popup").gdprmodal("hide");
+                $("#gdpr-popup").gdprmodal("hide");  // remove the whole modal
               }
               var insidebanner = document.getElementById(
                 "gdpr-cookie-consent-bar"
@@ -317,10 +332,10 @@ GDPR_CCPA_COOKIE_EXPIRE =
             }
           }
         }
-      });
+      // });
       // if DNT request is true then hide the banner and auto decline the consent
 
-      if (gdpr_do_not_track == "true" && browser_dnt_value) {
+      if ((gdpr_do_not_track == "true" && browser_dnt_value ) || (gdpr_do_not_track == "true" && browser_gpc_value)) {
         // hide the banner
         this.bar_elm.hide();
         // Decline the cookies
@@ -356,7 +371,7 @@ GDPR_CCPA_COOKIE_EXPIRE =
             },
           });
           window.dispatchEvent(event);
-        } else if (GDPR.settings.cookie_usage_for == "both") {
+        } else if (GDPR.settings.cookie_usage_for == "both" || GDPR.settings.cookie_usage_for === "ccpa") {
           GDPR.ccpa_cancel_close();
           var gdpr_optout_cookie = "";
           gdpr_optout_cookie = GDPR_Cookie.read("wpl_optout_cookie");
@@ -905,7 +920,7 @@ banner.style.display = "none";
               wp_set_consent('functional', 'allow' );
           }
           
-          if(is_gcm_on == 'true'){
+          if(is_gcm_on == 'true' || is_gcm_on == true){
             gtag('consent', 'update', {
               'ad_user_data': marketing_consent ? 'granted' : 'denied',
               'ad_personalization': marketing_consent ? 'granted' : 'denied',
@@ -924,7 +939,7 @@ banner.style.display = "none";
             callback(consent);
           });
           
-          if(is_gcm_debug_on == 'true'){debugUpdateConsentState();}
+          if(is_gcm_debug_on == 'true' || is_gcm_debug_on == true){debugUpdateConsentState();}
 
           // Update the user preference cookie
           gdpr_user_preference_val = JSON.stringify(gdpr_user_preference_arr);
@@ -1038,7 +1053,7 @@ banner.style.display = "none";
             wp_set_consent('functional', 'allow' );
           }
 
-          if(is_gcm_on == 'true'){
+          if(is_gcm_on == 'true' || is_gcm_on == true){
             gtag('consent', 'update', {
               'ad_user_data': 'granted',
               'ad_personalization': 'granted',
@@ -1057,7 +1072,7 @@ banner.style.display = "none";
             callback(consent);
           });
 
-          if(is_gcm_debug_on == 'true'){debugUpdateConsentState();}
+          if(is_gcm_debug_on == 'true' || is_gcm_debug_on == true){debugUpdateConsentState();}
 
           var cookie_data = {
             necessary: "yes",
@@ -1160,7 +1175,7 @@ banner.style.display = "none";
             wp_set_consent('statistics-anonymous', 'deny' ) ;
             wp_set_consent('preferences', 'deny' ) ;
           }
-          if(is_gcm_on == 'true'){
+          if(is_gcm_on == 'true' || is_gcm_on == true){
               gtag('consent', 'update', {
                 'ad_user_data': 'denied',
                 'ad_personalization': 'denied',
@@ -1179,7 +1194,7 @@ banner.style.display = "none";
               callback(consent);
             });
 
-            if(is_gcm_debug_on == 'true'){debugUpdateConsentState();}
+            if(is_gcm_debug_on == 'true' || is_gcm_debug_on == true){debugUpdateConsentState();}
 
 
           GDPR.reject_close();
@@ -1938,9 +1953,9 @@ banner.style.display = "none";
       }
       this.show_again_elm.slideDown(this.settings.animate_speed_hide);
       if (
-        (this.settings.decline_reload == true && !browser_dnt_value) ||
-        (this.settings.decline_reload == true && gdpr_do_not_track == "false")
-      ) {
+        this.settings.decline_reload == true &&
+        !(gdpr_do_not_track == "true" && (browser_dnt_value || browser_gpc_value))
+    ) {
         setTimeout(function () {
           window.location.reload();
         }, 1100);
@@ -2000,9 +2015,9 @@ banner.style.display = "none";
       }
       this.show_again_elm.slideDown(this.settings.animate_speed_hide);
       if (
-        (this.settings.decline_reload == true && !browser_dnt_value) ||
-        (this.settings.decline_reload == true && gdpr_do_not_track == "false")
-      ) {
+        this.settings.decline_reload == true &&
+        !(gdpr_do_not_track == "true" && (browser_dnt_value || browser_gpc_value))
+    ) {
         setTimeout(function () {
           window.location.reload();
         }, 1100);
@@ -2451,6 +2466,9 @@ banner.style.display = "none";
             if (cookies && cookies.length != 0) {
               for (var c_key in cookies) {
                 var c_cookie = cookies[c_key];
+                if (c_cookie["name"] === "consent_version") {
+                  continue; // Skip the consent_version cookie as it is Unclassified
+                }
                 GDPR_Cookie.erase(c_cookie["name"]);
               }
             }
@@ -2894,79 +2912,79 @@ banner.style.display = "none";
 
 
   // For adding placeholder for blocked Youtube scripts
- document.addEventListener("DOMContentLoaded", function () {
+//  document.addEventListener("DOMContentLoaded", function () {
 
-   var observer = new MutationObserver(function (mutations) {
-  mutations.forEach(function (mutation) {
-    mutation.addedNodes.forEach(function (node) {
-      if (node.nodeType === Node.ELEMENT_NODE) {
-        var iframes = (node.matches && node.matches("iframe"))
-          ? [node]
-          : (node.querySelectorAll ? node.querySelectorAll("iframe") : []);
+//    var observer = new MutationObserver(function (mutations) {
+//   mutations.forEach(function (mutation) {
+//     mutation.addedNodes.forEach(function (node) {
+//       if (node.nodeType === Node.ELEMENT_NODE) {
+//         var iframes = (node.matches && node.matches("iframe"))
+//           ? [node]
+//           : (node.querySelectorAll ? node.querySelectorAll("iframe") : []);
 
-        iframes.forEach(function (iframe) {
-          var src =
-            iframe.getAttribute("src") ||
-            iframe.getAttribute("data-src") ||
-            "";
+//         iframes.forEach(function (iframe) {
+//           var src =
+//             iframe.getAttribute("src") ||
+//             iframe.getAttribute("data-src") ||
+//             "";
 
-          if (
-            src.indexOf("youtube.com") !== -1 &&
-            !iframe.hasAttribute("data-wpl-placeholder")
-          ) {
-            // add replacement iframe with data-wpl-* attributes
-            var wrapper = document.createElement("div");
-            wrapper.style.display = "none"; // prevent flash
-            iframe.parentNode.insertBefore(wrapper, iframe);
-            iframe.parentNode.removeChild(iframe);
+//           if (
+//             src.indexOf("youtube.com") !== -1 &&
+//             !iframe.hasAttribute("data-wpl-placeholder")
+//           ) {
+//             // add replacement iframe with data-wpl-* attributes
+//             var wrapper = document.createElement("div");
+//             wrapper.style.display = "none"; // prevent flash
+//             iframe.parentNode.insertBefore(wrapper, iframe);
+//             iframe.parentNode.removeChild(iframe);
 
-            var placeholderIframe = document.createElement("iframe");
-            placeholderIframe.setAttribute(
-              "width",
-              iframe.getAttribute("width") || "625"
-            );
-            placeholderIframe.setAttribute(
-              "height",
-              iframe.getAttribute("height") || "300"
-            );
-            placeholderIframe.setAttribute(
-              "data-wpl-placeholder",
-              "Accept <a class='wpl_manage_current_consent'>" +
-                log_obj.selected_script_category +
-                "</a> cookies to view the content."
-            );
-            placeholderIframe.setAttribute("data-wpl-src", src);
-            placeholderIframe.setAttribute(
-              "data-wpl-class",
-              "wpl-blocker-script"
-            );
-            placeholderIframe.setAttribute(
-              "data-wpl-script-type",
-              "marketing"
-            );
+//             var placeholderIframe = document.createElement("iframe");
+//             placeholderIframe.setAttribute(
+//               "width",
+//               iframe.getAttribute("width") || "625"
+//             );
+//             placeholderIframe.setAttribute(
+//               "height",
+//               iframe.getAttribute("height") || "300"
+//             );
+//             placeholderIframe.setAttribute(
+//               "data-wpl-placeholder",
+//               "Accept <a class='wpl_manage_current_consent'>" +
+//                 log_obj.selected_script_category +
+//                 "</a> cookies to view the content."
+//             );
+//             placeholderIframe.setAttribute("data-wpl-src", src);
+//             placeholderIframe.setAttribute(
+//               "data-wpl-class",
+//               "wpl-blocker-script"
+//             );
+//             placeholderIframe.setAttribute(
+//               "data-wpl-script-type",
+//               "marketing"
+//             );
 
-            wrapper.appendChild(placeholderIframe);
-            wrapper.style.display = ""; // show again
+//             wrapper.appendChild(placeholderIframe);
+//             wrapper.style.display = ""; // show again
 
-            // Calling placeholder logic
-            if (
-              typeof GDPR !== "undefined" &&
-              typeof GDPR.addPlaceholder === "function"
-            ) {
-              GDPR.addPlaceholder(placeholderIframe);
-            }
-          }
-        });
-      }
-    });
-  });
-});
+//             // Calling placeholder logic
+//             if (
+//               typeof GDPR !== "undefined" &&
+//               typeof GDPR.addPlaceholder === "function"
+//             ) {
+//               GDPR.addPlaceholder(placeholderIframe);
+//             }
+//           }
+//         });
+//       }
+//     });
+//   });
+// });
 
 
-   observer.observe(document.body, {
-     childList: true,
-     subtree: true,
-   });
- });
+//    observer.observe(document.body, {
+//      childList: true,
+//      subtree: true,
+//    });
+//  });
   
 })(jQuery);

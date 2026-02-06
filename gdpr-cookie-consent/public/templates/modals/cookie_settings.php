@@ -7,6 +7,9 @@
  * @package    Gdpr_Cookie_Consent
  * @subpackage Gdpr_Cookie_Consent/public
  */
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
  
 	$data = Gdpr_Cookie_Consent::gdpr_get_all_vendors();
@@ -118,7 +121,7 @@
 							<?php elseif ( $the_options['cookie_usage_for']==='both' ) :?>
 								<div class="gdpr-about-cookies"><?php echo $the_options['is_iabtcf_on'] ? esc_html__( $cookie_data['dash_about_message_iabtcf'], 'gdpr-cookie-consent' ) : esc_html__( $cookie_data['dash_about_message'], 'gdpr-cookie-consent' ); // phpcs:ignore ?></div>
 							<?php endif; 
-							if($the_options['is_gcm_on'] == 'true') : ?>
+							if($the_options['is_gcm_on'] == 'true' || $the_options['is_gcm_on'] == true || $the_options['is_gcm_on'] == '1') : ?>
 								<div class="gdpr-about-cookies"><?php echo esc_html("For more information on how Google's third party cookies operate and handle your data, see: "); // phpcs:ignore ?><a style="color: <?php echo $the_options['cookie_usage_for'] == 'ccpa' ?  esc_html($the_options['button_donotsell_link_color' . $suffix]) : ((bool)$the_options['button_accept_all_as_button' . $suffix] === 'true' || (bool)$the_options['button_accept_all_as_button' . $suffix] === true || (bool)$the_options['button_accept_all_as_button' . $suffix] === 1 ? esc_html($the_options['button_accept_all_button_color' . $suffix]) : esc_html($the_options["button_accept_all_link_color" . $suffix]));?>;" href="https://business.safety.google/privacy" target="blank"><?php echo esc_html("Google's Privacy Policy"); ?></a></div>
 							<?php endif;
 						if ( $the_options['is_iabtcf_on']) :
@@ -189,7 +192,7 @@
 									</div>
 								</div>
 								<div class="description-container hide">
-									<div class="group-description" tabindex="0"><?php echo esc_html__( $category['gdpr_cookie_category_description'], 'gdpr-cookie-consent' ); // phpcs:ignore ?></div>
+									<div class="group-description" tabindex="0"><?php echo esc_html( $category['gdpr_cookie_category_description'] ); // phpcs:ignore ?></div>
 									<!-- sub groups -->
 									<?php
 									if( $ab_options['ab_testing_enabled'] === true || $ab_options['ab_testing_enabled'] === 'true' ) {
@@ -270,81 +273,161 @@
 											<?php
 										}
 									} else {
-										if ( ( $the_options['button_settings_display_cookies'] === true || $the_options['button_settings_display_cookies'] === 'true' ) ) {
-											?>
-											<div class="category-cookies-list-container">
-												<?php
-												if ( $category['total'] >= '1' ) {
-													?>
-													<table class="table table-striped">
-													<thead class="thead-dark">
-													<tr>
-														<th><?php echo esc_html( $cookie_data['name'] ); ?></th>
-														<th><?php echo esc_html( $cookie_data['domain'] ); ?></th>
-														<th><?php echo esc_html( $cookie_data['purpose'] ); ?></th>
-														<th><?php echo esc_html( $cookie_data['expiry'] ); ?></th>
-														<th><?php echo esc_html( $cookie_data['type'] ); ?></th>
-													</tr>
-													</thead>
-													<tbody>
-														<?php
-														foreach ( $category['data'] as $cookie ) {
-															?>
-															<tr><td>
-																<?php
-																if ( $cookie['name'] ) {
-																	echo esc_html( $cookie['name'] );
-																} else {
-																	echo esc_html( '---' );
-																}
-																?>
-																</td>
-																<td>
-																<?php
-																if ( ! empty( $cookie['domain'] ) ) {
-																	echo esc_html( $cookie['domain'] );
-																} else {
-																	echo esc_html( '---' );
-																}
-																?>
-																</td>
-																<td>
-																<?php
-																if ( ! empty( $cookie['description'] ) ) {
-																	echo esc_html( $cookie['description'] );
-																} else {
-																	echo esc_html( '---' );
-																}
-																?>
-																</td>
-																<td>
-																<?php
-																if ( ! empty( $cookie['duration'] ) ) {
-																	echo esc_html( $cookie['duration'] );
-																} else {
-																	echo esc_html( '---' );
-																}
-																?>
-																</td>
-																<td>
-																<?php
-																if ( ! empty( $cookie['type'] ) ) {
-																	echo esc_html( $cookie['type'] );
-																} else {
-																	echo esc_html( '---' );
-																}
-																?>
-																</td></tr>
-															<?php
-														}
-														?>
-													</tbody>
-												</table>
-													<?php
-												}
+										//check if law is gdpr&ccpa (both)
+										if ( $the_options['cookie_usage_for'] === 'both'){
+											if ( ( $the_options['button_settings_display_cookies1'] === true || $the_options['button_settings_display_cookies1'] === 'true' ) ) {
 												?>
-										</div>
+												<div class="category-cookies-list-container">
+													<?php
+													if ( $category['total'] >= '1' ) {
+														?>
+														<table class="table table-striped">
+														<thead class="thead-dark">
+														<tr>
+															<th><?php echo esc_html( $cookie_data['name'] ); ?></th>
+															<th><?php echo esc_html( $cookie_data['domain'] ); ?></th>
+															<th><?php echo esc_html( $cookie_data['purpose'] ); ?></th>
+															<th><?php echo esc_html( $cookie_data['expiry'] ); ?></th>
+															<th><?php echo esc_html( $cookie_data['type'] ); ?></th>
+														</tr>
+														</thead>
+														<tbody>
+															<?php
+															foreach ( $category['data'] as $cookie ) {
+																?>
+																<tr><td>
+																	<?php
+																	if ( $cookie['name'] ) {
+																		echo esc_html( $cookie['name'] );
+																	} else {
+																		echo esc_html( '---' );
+																	}
+																	?>
+																	</td>
+																	<td>
+																	<?php
+																	if ( ! empty( $cookie['domain'] ) ) {
+																		echo esc_html( $cookie['domain'] );
+																	} else {
+																		echo esc_html( '---' );
+																	}
+																	?>
+																	</td>
+																	<td>
+																	<?php
+																	if ( ! empty( $cookie['description'] ) ) {
+																		echo esc_html( $cookie['description'] );
+																	} else {
+																		echo esc_html( '---' );
+																	}
+																	?>
+																	</td>
+																	<td>
+																	<?php
+																	if ( ! empty( $cookie['duration'] ) ) {
+																		echo esc_html( $cookie['duration'] );
+																	} else {
+																		echo esc_html( '---' );
+																	}
+																	?>
+																	</td>
+																	<td>
+																	<?php
+																	if ( ! empty( $cookie['type'] ) ) {
+																		echo esc_html( $cookie['type'] );
+																	} else {
+																		echo esc_html( '---' );
+																	}
+																	?>
+																	</td></tr>
+																<?php
+															}
+															?>
+														</tbody>
+													</table>
+														<?php
+													}
+													?>
+												</div>
 											<?php
+											}
+										}else{
+											if ( ( $the_options['button_settings_display_cookies'] === true || $the_options['button_settings_display_cookies'] === 'true' ) ) {
+												?>
+												<div class="category-cookies-list-container">
+													<?php
+													if ( $category['total'] >= '1' ) {
+														?>
+														<table class="table table-striped">
+														<thead class="thead-dark">
+														<tr>
+															<th><?php echo esc_html( $cookie_data['name'] ); ?></th>
+															<th><?php echo esc_html( $cookie_data['domain'] ); ?></th>
+															<th><?php echo esc_html( $cookie_data['purpose'] ); ?></th>
+															<th><?php echo esc_html( $cookie_data['expiry'] ); ?></th>
+															<th><?php echo esc_html( $cookie_data['type'] ); ?></th>
+														</tr>
+														</thead>
+														<tbody>
+															<?php
+															foreach ( $category['data'] as $cookie ) {
+																?>
+																<tr><td>
+																	<?php
+																	if ( $cookie['name'] ) {
+																		echo esc_html( $cookie['name'] );
+																	} else {
+																		echo esc_html( '---' );
+																	}
+																	?>
+																	</td>
+																	<td>
+																	<?php
+																	if ( ! empty( $cookie['domain'] ) ) {
+																		echo esc_html( $cookie['domain'] );
+																	} else {
+																		echo esc_html( '---' );
+																	}
+																	?>
+																	</td>
+																	<td>
+																	<?php
+																	if ( ! empty( $cookie['description'] ) ) {
+																		echo esc_html( $cookie['description'] );
+																	} else {
+																		echo esc_html( '---' );
+																	}
+																	?>
+																	</td>
+																	<td>
+																	<?php
+																	if ( ! empty( $cookie['duration'] ) ) {
+																		echo esc_html( $cookie['duration'] );
+																	} else {
+																		echo esc_html( '---' );
+																	}
+																	?>
+																	</td>
+																	<td>
+																	<?php
+																	if ( ! empty( $cookie['type'] ) ) {
+																		echo esc_html( $cookie['type'] );
+																	} else {
+																		echo esc_html( '---' );
+																	}
+																	?>
+																	</td></tr>
+																<?php
+															}
+															?>
+														</tbody>
+													</table>
+														<?php
+													}
+													?>
+											</div>
+												<?php
+											}
 										}
 									}
 									?>
@@ -569,7 +652,7 @@
 
 															<!-- Uncomment this later -->
 																<div class="gdpr-ad-purpose-details">
-																	<p class="gdpr-ad-purpose-details-desc"><?php echo esc_html__( $value->description, 'gdpr-cookie-consent' );?></p>
+																	<p class="gdpr-ad-purpose-details-desc"><?php echo esc_html( $value->description );?></p>
 																	<?php if($value->illustrations) {?>
 																	<div class="gdpr-ad-purpose-illustrations">
 																		<p class="gdpr-ad-purpose-illustrations-title"><?php echo esc_html__( "Illustrations", 'gdpr-cookie-consent' );  ?></p>
@@ -577,15 +660,20 @@
 																			<?php 
 																			$illustrations = $value->illustrations;
 																			foreach ( $illustrations as $key => $value ) { ?>
-																			<li><?php echo esc_html__( $value, 'gdpr-cookie-consent' );  ?></li>
+																			<li><?php echo esc_html( $value );  ?></li>
 																			<?php } ?>
 																		</ul>
 																	</div>
 																	<?php } ?>
 																	<p class="gdpr-ad-purpose-vendor-count-wrapper">
 																		<?php
-																			if(!$legInt) echo "Number of vendors seeking consent: ".$count[$key];
-																			else echo "Number of Vendors seeking consent or relying on legitimate interest: ".$count[$key]+$legintcount[$key];
+																			if ( ! $legInt ) {
+																				/* translators: %d: number of vendors */
+																				printf(esc_html__( 'Number of vendors seeking consent: %d', 'gdpr-cookie-consent' ), (int) $count[ $key ]);
+																			} else {
+																				/* translators: %d: number of vendors */
+																				printf(esc_html__( 'Number of vendors seeking consent or relying on legitimate interest: %d', 'gdpr-cookie-consent' ), (int) ( $count[ $key ] + $legintcount[ $key ] ));
+																			}
 																		?>
 																	</p>	
 																</div>
@@ -756,20 +844,20 @@
 																				<div class="gdpr-vendor-wrapper">
 																					<p class="gdpr-vendor-privacy-link">
 																						<span class="gdpr-vendor-privacy-link-title"><?php echo esc_html("Privacy Policy: ", "gdpr-cookie-consent");?></span>
-																						<a href=<?php echo $vendor->urls[0]->privacy;?> target="_blank" rel="noopener noreferrer" aria-label="Privacy Policy"><?php echo $vendor->urls[0]->privacy;?></a>
+																						<a href="<?php echo esc_url($vendor->urls[0]->privacy);?>" target="_blank" rel="noopener noreferrer" aria-label="Privacy Policy"><?php echo esc_html($vendor->urls[0]->privacy);?></a>
 																					</p>
 																					<p class="gdpr-vendor-legitimate-link">
 																						<span class="gdpr-vendor-legitimate-link-title"><?php echo esc_html("Legitimate Interest Claim: ", "gdpr-cookie-consent");?></span>
-																						<a href=<?php echo isset($vendor->urls[0]->legIntClaim)? $vendor->urls[0]->legIntClaim : esc_html("#", "gdpr-cookie-consent");?> target="_blank" rel="noopener noreferrer" aria-label="Legitimate Interest Claim"><?php echo isset($vendor->urls[0]->legIntClaim)? $vendor->urls[0]->legIntClaim : esc_html("Not Available", "gdpr-cookie-consent");?></a>
+																						<a href="<?php echo isset( $vendor->urls[0]->legIntClaim ) ? esc_url( $vendor->urls[0]->legIntClaim ) : '#'; ?>" target="_blank" rel="noopener noreferrer" aria-label="<?php esc_attr_e( 'Legitimate Interest Claim', 'gdpr-cookie-consent' ); ?>"><?php echo isset($vendor->urls[0]->legIntClaim)? esc_html( $vendor->urls[0]->legIntClaim ) : esc_html__("Not Available", "gdpr-cookie-consent");?></a>
 																					</p>
 																					<p class="gdpr-vendor-data-retention-section">
-																						<span class="gdpr-vendor-data-retention-value"><?php echo esc_html("Data Retention Period: ", "gdpr-cookie-consent");echo isset($vendor->dataRetention->stdRetention) ? $vendor->dataRetention->stdRetention : esc_html("Not Available", "gdpr-cookie-consent");echo esc_html(" Days", "gdpr-cookie-consent");?></span>
+																						<span class="gdpr-vendor-data-retention-value"><?php echo esc_html("Data Retention Period: ", "gdpr-cookie-consent");echo isset($vendor->dataRetention->stdRetention) ? esc_html( $vendor->dataRetention->stdRetention ) : esc_html__("Not Available", "gdpr-cookie-consent");echo esc_html__(" Days", "gdpr-cookie-consent");?></span>
 																					</p>
 																					<div class="gdpr-vendor-purposes-section">
 																						<p class="gdpr-vendor-purposes-title"><?php echo esc_html("Purposes (Consent) ", "gdpr-cookie-consent");?></p>
 																						<ul class="gdpr-vendor-purposes-list">
 																							<?php foreach ( $vendor->purposes as $key => $value ) {?>
-																							<li><?php echo esc_html__( $data->purposes[$value-1]->name, 'gdpr-cookie-consent' );  ?></li>
+																							<li><?php echo esc_html( $data->purposes[$value-1]->name );  ?></li>
 																							<?php } ?>
 																						</ul>
 																					</div>
@@ -778,7 +866,7 @@
 																							<p class="gdpr-vendor-purposes-legint-title"><?php echo esc_html("Purposes (Legitimate Interest) ", "gdpr-cookie-consent");?></p>
 																							<ul class="gdpr-vendor-purposes-legint-list">
 																								<?php foreach ( $vendor->legIntPurposes as $key => $value ) {?>
-																								<li><?php echo esc_html__( $data->purposes[$value-1]->name, 'gdpr-cookie-consent' );  ?></li>
+																								<li><?php echo esc_html( $data->purposes[$value-1]->name );  ?></li>
 																								<?php } ?>
 																							</ul>
 																						</div>
@@ -788,7 +876,7 @@
 																					<p class="gdpr-vendor-special-purposes-title"><?php echo esc_html("Special Purposes ", "gdpr-cookie-consent");?></p>
 																						<ul class="gdpr-vendor-special-purposes-list">
 																							<?php foreach ( $vendor->specialPurposes as $key => $value ) {?>
-																							<li><?php echo esc_html__( $data->specialPurposes[$value-1]->name, 'gdpr-cookie-consent' );  ?></li>
+																							<li><?php echo esc_html( $data->specialPurposes[$value-1]->name );  ?></li>
 																							<?php } ?>
 																						</ul>
 																					</div>
@@ -796,7 +884,7 @@
 																					<p class="gdpr-vendor-features-title"><?php echo esc_html("Features ", "gdpr-cookie-consent");?></p>
 																						<ul class="gdpr-vendor-features-list">
 																							<?php foreach ( $vendor->features as $key => $value ) {?>
-																							<li><?php echo esc_html__( $data->features[$value-1]->name, 'gdpr-cookie-consent' );  ?></li>
+																							<li><?php echo esc_html( $data->features[$value-1]->name );  ?></li>
 																							<?php } ?>
 																						</ul>
 																					</div>
@@ -804,16 +892,31 @@
 																					<p class="gdpr-vendor-category-title"><?php echo esc_html("Data Categories ", "gdpr-cookie-consent");?></p>
 																						<ul class="gdpr-vendor-category-list">
 																							<?php foreach ( $vendor->dataDeclaration as $key => $value ) {?>
-																							<li><?php echo esc_html__( $data->dataCategories[$value-1]->name, 'gdpr-cookie-consent' );  ?></li>
+																							<li><?php echo esc_html( $data->dataCategories[$value-1]->name );  ?></li>
 																							<?php } ?>
 																						</ul>
 																					</div>
 																					<div class="gdpr-vendor-storage-section">
 																					<p class="gdpr-vendor-storage-title"><?php echo esc_html("Device Storage Overview ", "gdpr-cookie-consent");?></p>
 																						<ul class="gdpr-vendor-storage-list">
-																							<li><?php echo esc_html__( "Tracking method: ".($vendor->usesCookies && $vendor->usesNonCookieAccess ? "Cookie and others" : ($vendor->usesCookies ? "Cookie" : ($vendor->usesNonCookieAccess ? "Others" : ""))), 'gdpr-cookie-consent' );  ?></li>	
-																							<li><?php echo esc_html__( "Maximum duration of Cookies: ".$vendor->cookieMaxAgeSeconds/(60 * 60 * 24). " days", 'gdpr-cookie-consent' );  ?></li>	
-																							<li><?php echo esc_html__( $vendor->cookieRefresh ? "Cookie lifetime is being refreshed" : "Cookie lifetime is not refreshed", 'gdpr-cookie-consent' );  ?></li>	
+																							<?php
+																								$tracking_method = '';
+
+																								if ( $vendor->usesCookies && $vendor->usesNonCookieAccess ) {
+																									$tracking_method = __( 'Cookie and others', 'gdpr-cookie-consent' );
+																								} elseif ( $vendor->usesCookies ) {
+																									$tracking_method = __( 'Cookie', 'gdpr-cookie-consent' );
+																								} elseif ( $vendor->usesNonCookieAccess ) {
+																									$tracking_method = __( 'Others', 'gdpr-cookie-consent' );
+																								}
+																							/* translators: %s: tracking method name */
+																							echo esc_html( sprintf(__( 'Tracking method: %s', 'gdpr-cookie-consent' ), $tracking_method));
+																							?>
+																							<li><?php 
+																								/* translators: %d: maximum cookie duration in days */
+																								echo esc_html(sprintf(__( 'Maximum duration of Cookies: %d days', 'gdpr-cookie-consent' ), intval( $vendor->cookieMaxAgeSeconds / ( 60 * 60 * 24 ) )));?>
+																							</li>	
+																							<li><?php echo $vendor->cookieRefresh ? esc_html__( "Cookie lifetime is being refreshed", 'gdpr-cookie-consent' ) : esc_html__( "Cookie lifetime is not refreshed", 'gdpr-cookie-consent' );  ?></li>	
 																						</ul>
 																					</div>
 																					<div class="gdpr-vendor-storage-overview-section"></div>
@@ -839,7 +942,7 @@
 							?>
 						</ul>
 						<?php 
-						if($the_options['is_gacm_on']==="true" || $the_options['is_gacm_on'] === true) {?>
+						if($the_options['is_gacm_on']==="true" || $the_options['is_gacm_on'] === true || $the_options['is_gacm_on'] === 1 || $the_options['is_gacm_on'] === "1") {?>
 							<ul class="category-group vendor-group tabContainer">
 							<?php
 						    $vendors = ["Google's Ad Tech Providers"];
@@ -952,7 +1055,7 @@
 																					<div class="gdpr-vendor-wrapper">
 																						<p class="gdpr-vendor-privacy-link">
 																							<span class="gdpr-vendor-privacy-link-title"><?php echo esc_html("Privacy Policy: ", "gdpr-cookie-consent");?></span>
-																							<a href=<?php echo $vendor[2];?> target="_blank" rel="noopener noreferrer" aria-label="Privacy Policy"><?php echo $vendor[2];?></a>
+																							<a href=<?php echo esc_url( $vendor[2] );;?> target="_blank" rel="noopener noreferrer" aria-label="Privacy Policy"><?php echo esc_html($vendor[2]);?></a>
 																						</p>
 																						
 																						<div class="gdpr-vendor-storage-overview-section"></div>
