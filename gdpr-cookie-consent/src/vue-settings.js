@@ -4786,6 +4786,21 @@ var gen = new Vue({
     },
   },
   mounted() {
+    var that = this;
+    
+    if (!settings_obj.is_user_connected || settings_obj.api_user_plan === 'free') {
+        
+        // IAB off
+        that.is_iabtcf_on = false;
+        
+        //non-IAB message
+        that.gdpr_message = "This website uses cookies to improve your experience. We'll assume you're ok with this, but you can opt-out if you wish.";
+        that.gdpr_about_cookie_message = "Cookies are small text files that can be used by websites to make a user's experience more efficient. The law states that we can store cookies on your device if they are strictly necessary for the operation of this site. For all other types of cookies we need your permission. This site uses different types of cookies. Some cookies are placed by third party services that appear on our pages.";
+        
+        // credits on
+        that.show_credits = true;
+    }
+    
     if (window.vueMounted) return; // Prevent duplicate execution
     window.vueMounted = true; // Mark as mounted
     j("#gdpr-before-mount").css("display", "none");
