@@ -3175,12 +3175,9 @@ class Gdpr_Cookie_Consent_Admin {
 			
 			if ($settings['is_iabtcf_on'] !== "false" && $settings['is_iabtcf_on'] !== false) {
 				$settings['is_iabtcf_on'] = false;
-				$needs_update = true;
-			}
-
-			$non_iab_message = "This website uses cookies to improve your experience. We'll assume you're ok with this, but you can opt-out if you wish.";
-			if ($settings['notify_message'] !== $non_iab_message) {
-				$settings['notify_message'] = $non_iab_message;
+				$settings['notify_message'] = "This website uses cookies to improve your experience. We'll assume you're ok with this, but you can opt-out if you wish.";
+				$settings['about_message']  = "Cookies are small text files that can be used by websites to make a user's experience more efficient. The law states that we can store cookies on your device if they are strictly necessary for the operation of this site. For all other types of cookies we need your permission. This site uses different types of cookies. Some cookies are placed by third party services that appear on our pages.";
+				$settings = $this->changeLanguage($settings);
 				$needs_update = true;
 			}
 
@@ -4823,7 +4820,7 @@ class Gdpr_Cookie_Consent_Admin {
 
 
 
-			$the_options['lang_selected'] = isset( $_POST['select-banner-lan'] ) ? sanitize_text_field( wp_unslash( $_POST['select-banner-lan'] ) ) : 'en';
+			// $the_options['lang_selected'] = isset( $_POST['select-banner-lan'] ) ? sanitize_text_field( wp_unslash( $_POST['select-banner-lan'] ) ) : 'en';
 			//check if new consent version number is greater than the one in db, if yes, update the time stamp.
 			if(isset($the_options['consent_version']) && isset($_POST['gcc-consent-renew-enable']) && $_POST['gcc-consent-renew-enable'] > $the_options['consent_version']){
 				$option_name     = 'wpl_consent_timestamp';
@@ -5117,6 +5114,7 @@ class Gdpr_Cookie_Consent_Admin {
 				)
 			) : 'In case of sale of your personal information, you may opt out by using the link';
 			if(($the_options['is_iabtcf_on'] == false && $_POST['gcc-iabtcf-enable'] == "true") || ($the_options['is_iabtcf_on'] == true && $_POST['gcc-iabtcf-enable'] == "false")){
+				$the_options['is_iabtcf_on'] = isset( $_POST['gcc-iabtcf-enable'] ) && ( true === $_POST['gcc-iabtcf-enable'] || 'true' === $_POST['gcc-iabtcf-enable'] ) ? 'true' : 'false';
 				$the_options = $this->changeLanguage($the_options);
 			}
 
@@ -5622,9 +5620,9 @@ class Gdpr_Cookie_Consent_Admin {
 				}
 			}
 			// language translation based on the selected language.
-			if ( $_POST['lang_changed'] == 'true' && isset( $_POST['select-banner-lan'] ) && in_array( $_POST['select-banner-lan'], $this->supported_languages ) ) {  //phpcs:ignore
-				$the_options = $this->changeLanguage($the_options);				
-			}
+			// if ( $_POST['lang_changed'] == 'true' && isset( $_POST['select-banner-lan'] ) && in_array( $_POST['select-banner-lan'], $this->supported_languages ) ) {  //phpcs:ignore
+			// 	$the_options = $this->changeLanguage($the_options);				
+			// }
 			
 			if ( isset( $_POST['logo_removed'] ) && 'true' == $_POST['logo_removed'] ) {
 				update_option( GDPR_COOKIE_CONSENT_SETTINGS_LOGO_IMAGE_FIELD, '' );
@@ -5898,7 +5896,7 @@ class Gdpr_Cookie_Consent_Admin {
 			$the_options['lang_selected'] = isset( $_POST['select-banner-lan'] ) ? sanitize_text_field( wp_unslash( $_POST['select-banner-lan'] ) ) : 'en';
 
 			// language translation based on the selected language.
-			if ( isset( $_POST['select-banner-lan'] ) && in_array( $_POST['select-banner-lan'], $this->supported_languages ) ) {  //phpcs:ignore
+			if ( $_POST['lang_changed'] == 'true' && isset( $_POST['select-banner-lan'] ) && in_array( $_POST['select-banner-lan'], $this->supported_languages ) ) {  //phpcs:ignore
 				$the_options = $this->changeLanguage($the_options);				
 			}
 
@@ -6107,13 +6105,13 @@ class Gdpr_Cookie_Consent_Admin {
 						$the_options[ $stripped_string . '1' ] = $translated_text;
 						$the_options[ $stripped_string . '2' ] = $translated_text;
 					}
-					else if(($text_key === 'dash_about_message_iabtcf' || $text_key === 'dash_notify_message_iabtcf') && ($_POST['gcc-iabtcf-enable'] === true || $_POST['gcc-iabtcf-enable'] === "true" || $_POST['gcc-iabtcf-enable'] === 1)){
+					else if(($text_key === 'dash_about_message_iabtcf' || $text_key === 'dash_notify_message_iabtcf') && ($the_options['is_iabtcf_on'] === true || $the_options['is_iabtcf_on'] === "true" || $the_options['is_iabtcf_on'] === 1)){
 						$stripped_string                 = str_replace( '_iabtcf', '', $stripped_string );
 						$the_options[ $stripped_string ] = $translated_text;
 			
 						
 					}
-					else if(($text_key === 'dash_about_message' || $text_key === 'dash_notify_message') && (!$_POST['gcc-iabtcf-enable'] || $_POST['gcc-iabtcf-enable'] === false || $_POST['gcc-iabtcf-enable'] === "false" || $_POST['gcc-iabtcf-enable'] === 0)){
+					else if(($text_key === 'dash_about_message' || $text_key === 'dash_notify_message') && (!$the_options['is_iabtcf_on'] || $the_options['is_iabtcf_on'] === false || $the_options['is_iabtcf_on'] === "false" || $the_options['is_iabtcf_on'] === 0)){
 
 						$the_options[ $stripped_string ] = $translated_text;
 						
