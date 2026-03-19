@@ -4068,7 +4068,6 @@ class Gdpr_Cookie_Consent_Admin {
 				$the_options['is_script_dependency_on'] = isset( $_POST['gcc-script-dependency-on'] ) && ( true === $_POST['gcc-script-dependency-on'] || 'true' === $_POST['gcc-script-dependency-on'] ) ? 'true' : 'false';
 				$the_options['header_dependency'] = isset( $_POST['gcc-header-dependency'] )? sanitize_text_field( wp_unslash( $_POST['gcc-header-dependency'] ) ): '';
 				$the_options['footer_dependency'] = isset( $_POST['gcc-footer-dependency'] )? sanitize_text_field( wp_unslash( $_POST['gcc-footer-dependency'] ) ): '';
-				$the_options['enable_safe']          = isset( $_POST['gcc-enable-safe'] ) && ( true === $_POST['gcc-enable-safe'] || 'true' === $_POST['gcc-enable-safe'] ) ? 'true' : 'false';
 				$the_options['logging_on']           = isset( $_POST['gcc-logging-on'] ) && ( true === $_POST['gcc-logging-on'] || 'true' === $_POST['gcc-logging-on'] ) ? 'true' : 'false';
 				// DO NOT TRACK.
 				$the_options['do_not_track_on'] = isset( $_POST['gcc-do-not-track'] ) && ( true === $_POST['gcc-do-not-track'] || 'true' === $_POST['gcc-do-not-track'] ) ? 'true' : 'false';
@@ -4261,6 +4260,7 @@ class Gdpr_Cookie_Consent_Admin {
 				update_option( GDPR_COOKIE_CONSENT_SETTINGS_LOGO_IMAGE_FIELD, esc_url_raw( wp_unslash( $_POST['gdpr-cookie-bar-logo-url-holder'] ) ) );
 			}
 			update_option( GDPR_COOKIE_CONSENT_SETTINGS_FIELD, $the_options );
+			update_option( 'wplp_cookie_banner_created_once', 'true' );
 			wp_send_json_success( array( 'form_options_saved' => true ) );
 		}
 	}
@@ -5712,6 +5712,15 @@ class Gdpr_Cookie_Consent_Admin {
 			if( !get_option( 'wpl_pro_active' )) {
 				// enable safe mode.
 				$the_options['enable_safe'] = isset( $_POST['gcc-enable-safe'] ) && ( true === $_POST['gcc-enable-safe'] || 'true' === $_POST['gcc-enable-safe'] ) ? 'true' : 'false';
+				if ( isset( $the_options['enable_safe'] ) && 'true' === $the_options['enable_safe'] ) {
+					$the_options['is_worldwide_on'] = 'true';
+					$the_options['is_selectedCountry_on'] = 'false';
+					$the_options['is_eu_on'] = 'false';
+					$the_options['is_ccpa_on'] = 'false';
+
+					$the_options['is_worldwide_on_ccpa'] = 'true';
+					$the_options['is_selectedCountry_on_ccpa'] = 'false';
+				}
 				$is_usage_tracking_allowed = 'false';
 				if ( isset( $_POST['gcc-usage-data'] ) && ( true === $_POST['gcc-usage-data'] || 'true' === $_POST['gcc-usage-data'] ) ) {
 					$is_usage_tracking_allowed = 'true';

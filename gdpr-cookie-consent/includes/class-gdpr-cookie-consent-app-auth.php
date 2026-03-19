@@ -423,6 +423,9 @@ class GDPR_Cookie_Consent_App_Auth {
 		$the_options['is_selectedCountry_on'] = 'false';
 		$the_options['is_eu_on'] = 'false';
 		$the_options['is_ccpa_on'] = 'false';
+
+		$the_options['is_worldwide_on_ccpa'] = 'true';
+		$the_options['is_selectedCountry_on_ccpa'] = 'false';
 		update_option( GDPR_COOKIE_CONSENT_SETTINGS_FIELD, $the_options );
 
 		update_option( 'gdpr_no_of_page_scan', 0 );

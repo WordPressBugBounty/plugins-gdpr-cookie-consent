@@ -14016,31 +14016,28 @@ var ckm = new Vue({
         success: function (data) {
           if (data.response === true) {
             that.success_error_message = data.message;
-            j("#gdpr-cookie-consent-save-settings-alert").css(
+            j("#gdpr-cookie-consent-save-settings-alert-ckm").css(
               "background-color",
               "#72b85c"
-            );
-            j("#gdpr-cookie-consent-save-settings-alert").fadeIn(400);
-            j("#gdpr-cookie-consent-save-settings-alert").fadeOut(2500);
+            ).fadeIn(400).delay(2500).fadeOut(400, function () {
             that.getPostCookieList();
+          });
           } else {
             that.success_error_message = data.message;
-            j("#gdpr-cookie-consent-save-settings-alert").css(
+            j("#gdpr-cookie-consent-save-settings-alert-ckm").css(
               "background-color",
               "#e55353"
-            );
-            j("#gdpr-cookie-consent-save-settings-alert").fadeIn(400);
-            j("#gdpr-cookie-consent-save-settings-alert").fadeOut(2500);
+            ).fadeIn(400)
+            .fadeOut(2500);
           }
         },
         error: function () {
           that.success_error_message = data.message;
-          j("#gdpr-cookie-consent-save-settings-alert").css(
+          j("#gdpr-cookie-consent-save-settings-alert-ckm").css(
             "background-color",
             "#e55353"
-          );
-          j("#gdpr-cookie-consent-save-settings-alert").fadeIn(400);
-          j("#gdpr-cookie-consent-save-settings-alert").fadeOut(2500);
+          ).fadeIn(400)
+          .fadeOut(2500);
         },
       });
     },
