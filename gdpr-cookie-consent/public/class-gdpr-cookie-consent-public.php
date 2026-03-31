@@ -1252,6 +1252,23 @@ $selected_script_category = $wpdb->get_var(
 			$the_options['select_sites']   = is_array( $the_options['select_sites'] ) ? $the_options['select_sites'] : array();
 			$the_options['select_sites'][] = $currentid;
 
+			$color = $abTesting
+				? $the_options['cookie_bar_color' . $chosenBanner]
+				: $the_options['background'];
+
+			$opacity = $abTesting
+				? $the_options['cookie_bar_opacity' . $chosenBanner]
+				: $the_options['opacity'];
+
+
+			$opacityHex = strtoupper(str_pad(dechex((int) floor($opacity * 255)), 2, '0', STR_PAD_LEFT));
+			$finalColor = strtoupper($color . $opacityHex);
+			$acceptAllBGColor = $abTesting
+				? $the_options[ 'button_accept_all_button_color' . $chosenBanner ]
+				: ( $the_options['cookie_usage_for'] === 'both' 
+					? $the_options[ 'button_accept_all_button_color1'] 
+					: $the_options['button_accept_all_button_color'] );
+
 			if ( $the_options['consent_forward'] !== true ) {
 				$the_options['select_sites'] = null;
 			}
@@ -1275,7 +1292,11 @@ $selected_script_category = $wpdb->get_var(
 				'chosenBanner'								=> $chosenBanner,
 				'is_iabtcf_on'                              => $the_options['is_iabtcf_on'],
 				'is_gcm_on'									=> $this->convert_boolean($the_options['is_gcm_on']),
-				'is_gcm_debug_on'							=> isset($the_options['is_gcm_debug_mode']) ? $this->convert_boolean($the_options['is_gcm_debug_mode']) : false
+				'is_gcm_debug_on'							=> isset($the_options['is_gcm_debug_mode']) ? $this->convert_boolean($the_options['is_gcm_debug_mode']) : false,
+				'vendor_data'	                            => Gdpr_Cookie_Consent::gdpr_get_all_vendors(),
+				'cookieSettingsPopupAccentColor'	        => strtoupper(substr($finalColor, 0, -2)) === strtoupper($acceptAllBGColor) ? $the_options['button_accept_all_link_color'] : $acceptAllBGColor,
+				'template_parts' 	                        => $the_options['template_parts']
+        
 			);
 
 

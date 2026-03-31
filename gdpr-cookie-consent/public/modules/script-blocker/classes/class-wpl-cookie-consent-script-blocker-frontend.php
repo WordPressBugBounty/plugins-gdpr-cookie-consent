@@ -196,11 +196,14 @@ class Gdpr_Cookie_Consent_Script_Blocker_Frontend extends Gdpr_Cookie_Consent_Sc
 			'body'  => '',
 			'split' => '',
 		);
-		$pattern = '#\</head\>[^<]*\<body[^\>]*?\>#';
+		$pattern = '#</head\s*>[\s\S]*?<body[^>]*>#i';
 		if ( preg_match( $pattern, $buffer, $m ) ) {
 			$splitted = preg_split( $pattern, $buffer );
 			if ( 2 !== count( $splitted ) ) {
-				throw new RuntimeException( 'Could not split content in <head> and <body> parts.' );
+				if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+					error_log( 'WPL: Could not split content into head/body.' );
+				}
+				return false; // fail gracefully
 			}
 			$parts['head']  = $splitted[0];
 			$parts['body']  = $splitted[1];

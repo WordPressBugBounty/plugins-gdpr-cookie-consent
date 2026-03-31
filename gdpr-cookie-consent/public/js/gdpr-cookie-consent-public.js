@@ -213,6 +213,11 @@ GDPR_CCPA_COOKIE_EXPIRE =
   var is_iab_on = gdpr_cookies_obj.is_iabtcf_on;
   var is_gcm_on = gdpr_cookies_obj.is_gcm_on;
   var is_gcm_debug_on = gdpr_cookies_obj.is_gcm_debug_on;  
+  var vendor_data = gdpr_cookies_obj.vendor_data;
+  var cookieSettingsPopupAccentColor  = gdpr_cookies_obj.cookieSettingsPopupAccentColor;
+  var template_parts = gdpr_cookies_obj.template_parts;
+  var current_vendor_index = 0;
+  var next_vendors_loaded = false;
   // Set the value for the Multiple Legislation Banner Selection
   var multiple_legislation_current_banner = "gdpr";
   var browser_dnt_value = "";
@@ -291,6 +296,27 @@ GDPR_CCPA_COOKIE_EXPIRE =
             GDPR.logConsent("bypassed");
           };
         }
+      });
+
+      window.addEventListener("load", function () {
+          GDPR.render_vendor_list();
+        });
+
+      document.querySelector('.gdprmodal-body').addEventListener('scroll', function () {
+
+          var scrollTop = this.scrollTop;
+          var scrollHeight = this.scrollHeight;
+          var clientHeight = this.clientHeight;
+          var vendorTab = document.querySelector('#gdprIABTabVendors .gdpr-iab-navbar-button');
+          var vendorRoot = document.querySelector('.iab-vendors-root');
+          if (scrollTop + clientHeight >= 0.8 * scrollHeight && vendorTab.classList.contains('active') && vendorRoot.classList.contains('active-group')) {
+              if(!next_vendors_loaded) {
+                GDPR.render_vendor_list();
+                next_vendors_loaded = true;
+              }
+          }
+          else if(scrollTop + clientHeight < 0.8 * scrollHeight) next_vendors_loaded = false;
+
       });
 
       // hide banner.
@@ -455,6 +481,441 @@ GDPR_CCPA_COOKIE_EXPIRE =
           window.dispatchEvent(event);
         }
       }
+    },
+    render_vendor_list: function () {
+      if (!vendor_data || !vendor_data.vendors || current_vendor_index >= vendor_data.vendors.length) return;
+
+          var vendors = vendor_data.vendors;
+          var purposes = vendor_data.purposes;
+          var specialPurposes = vendor_data.specialPurposes;
+          var features = vendor_data.features;
+          var dataCategories = vendor_data.dataCategories;
+
+          var ul = document.querySelector(".vendors-list");
+
+          var limit = Math.min(10, vendors.length);
+
+          for (var i = current_vendor_index; i < current_vendor_index + limit && i < vendors.length; i++) {
+
+              var vendor = vendors[i];
+
+              var li = document.createElement("li");
+              li.className = "category-item";
+
+              /* HR */
+
+              var hr = document.createElement("hr");
+              hr.style.marginTop = "10px";
+              hr.style.borderTop = "1px solid " + cookieSettingsPopupAccentColor;
+              li.appendChild(hr);
+
+              /* INNER COLUMN */
+
+              var innerColumn = document.createElement("div");
+              innerColumn.className = "inner-gdpr-column gdpr-category-toggle " + template_parts;
+
+              var innerColumns = document.createElement("div");
+              innerColumns.className = "inner-gdpr-columns";
+
+              /* LEFT SECTION */
+
+              var left = document.createElement("div");
+              left.className = "left";
+
+              var arrow = document.createElement("span");
+              arrow.className = "gdpr-dropdown-arrow";
+
+              arrow.innerHTML = '<svg width="25px" height="25px" viewBox="0 0 24 24"><path d="M7 10L12 15L17 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+
+              var header = document.createElement("a");
+              header.href = "#";
+              header.className = "btn category-header vendors";
+              header.tabIndex = 0;
+              header.textContent = vendor.name;
+
+              left.appendChild(arrow);
+              left.appendChild(header);
+
+              /* RIGHT SECTION */
+
+              var right = document.createElement("div");
+              right.className = "right";
+
+              var toggleGroup = document.createElement("div");
+              toggleGroup.className = "toggle-group";
+
+              var vendorSwitchWrapper = document.createElement("div");
+              vendorSwitchWrapper.className = "vendor-switch-wrapper";
+
+              /* LEGITIMATE INTEREST SWITCH */
+
+              if (vendor.legIntPurposes && vendor.legIntPurposes.length) {
+
+                  var legWrap = document.createElement("div");
+                  legWrap.className = "vendor-legitimate-switch-wrapper";
+
+                  var legLabel = document.createElement("div");
+                  legLabel.className = "vendor-switch-label";
+                  legLabel.textContent = "Legitimate Interest";
+
+                  var toggle = document.createElement("div");
+                  toggle.className = "toggle";
+
+                  var checkbox = document.createElement("div");
+                  checkbox.className = "checkbox";
+
+                  var input = document.createElement("input");
+                  input.id = "gdpr_messagebar_body_button_legint_vendor_" + vendor.id;
+                  input.className = "vendor-switch-handler legint-switch " + vendor.id;
+                  input.type = "checkbox";
+                  input.name = input.id;
+                  input.value = vendor.id;
+
+                  var label = document.createElement("label");
+                  label.setAttribute("for", input.id);
+
+                  var labelSpan = document.createElement("span");
+                  labelSpan.className = "label-text";
+                  labelSpan.textContent = vendor.id;
+
+                  label.appendChild(labelSpan);
+                  checkbox.appendChild(input);
+                  checkbox.appendChild(label);
+                  toggle.appendChild(checkbox);
+
+                  legWrap.appendChild(legLabel);
+                  legWrap.appendChild(toggle);
+
+                  vendorSwitchWrapper.appendChild(legWrap);
+              }
+
+              /* CONSENT SWITCH */
+
+              if (vendor.purposes && vendor.purposes.length) {
+
+                  var consentWrap = document.createElement("div");
+                  consentWrap.className = "vendor-consent-switch-wrapper";
+
+                  var consentLabel = document.createElement("div");
+                  consentLabel.className = "vendor-switch-label";
+                  consentLabel.textContent = "Consent";
+
+                  var toggle2 = document.createElement("div");
+                  toggle2.className = "toggle";
+
+                  var checkbox2 = document.createElement("div");
+                  checkbox2.className = "checkbox";
+
+                  var input2 = document.createElement("input");
+                  input2.id = "gdpr_messagebar_body_button_consent_vendor_" + vendor.id;
+                  input2.className = "vendor-switch-handler consent-switch " + vendor.id;
+                  input2.type = "checkbox";
+                  input2.name = input2.id;
+                  input2.value = vendor.id;
+
+                  var label2 = document.createElement("label");
+                  label2.setAttribute("for", input2.id);
+
+                  var labelSpan2 = document.createElement("span");
+                  labelSpan2.className = "label-text";
+                  labelSpan2.textContent = vendor.id;
+
+                  label2.appendChild(labelSpan2);
+
+                  checkbox2.appendChild(input2);
+                  checkbox2.appendChild(label2);
+
+                  toggle2.appendChild(checkbox2);
+
+                  consentWrap.appendChild(consentLabel);
+                  consentWrap.appendChild(toggle2);
+
+                  vendorSwitchWrapper.appendChild(consentWrap);
+              }
+
+              toggleGroup.appendChild(vendorSwitchWrapper);
+              right.appendChild(toggleGroup);
+
+              innerColumns.appendChild(left);
+              innerColumns.appendChild(right);
+
+              innerColumn.appendChild(innerColumns);
+
+              li.appendChild(innerColumn);
+
+              /* DESCRIPTION CONTAINER */
+
+              var descContainer = document.createElement("div");
+              descContainer.className = "inner-description-container hide";
+
+              var groupDesc = document.createElement("div");
+              groupDesc.className = "group-description";
+              groupDesc.tabIndex = 0;
+
+              var adPurposeDetails = document.createElement("div");
+              adPurposeDetails.className = "gdpr-ad-purpose-details";
+
+              var vendorWrapper = document.createElement("div");
+              vendorWrapper.className = "gdpr-vendor-wrapper";
+
+              /* PRIVACY POLICY */
+
+              if (vendor.urls && vendor.urls.length) {
+
+                  var privacyP = document.createElement("p");
+                  privacyP.className = "gdpr-vendor-privacy-link";
+
+                  var privacyTitle = document.createElement("span");
+                  privacyTitle.className = "gdpr-vendor-privacy-link-title";
+                  privacyTitle.textContent = "Privacy Policy: ";
+
+                  var privacyLink = document.createElement("a");
+                  privacyLink.href = vendor.urls[0].privacy;
+                  privacyLink.target = "_blank";
+                  privacyLink.rel = "noopener noreferrer";
+                  privacyLink.textContent = vendor.urls[0].privacy;
+
+                  privacyP.appendChild(privacyTitle);
+                  privacyP.appendChild(privacyLink);
+
+                  vendorWrapper.appendChild(privacyP);
+              }
+
+              /* DATA RETENTION */
+
+              var retention = document.createElement("p");
+              retention.className = "gdpr-vendor-data-retention-section";
+
+              var retentionSpan = document.createElement("span");
+              retentionSpan.className = "gdpr-vendor-data-retention-value";
+
+              if (vendor.dataRetention && vendor.dataRetention.stdRetention)
+                  retentionSpan.textContent = "Data Retention Period: " + vendor.dataRetention.stdRetention + " Days";
+              else
+                  retentionSpan.textContent = "Data Retention Period: Not Available";
+
+              retention.appendChild(retentionSpan);
+
+              vendorWrapper.appendChild(retention);
+
+              /* PURPOSES */
+
+              if (vendor.purposes && vendor.purposes.length) {
+
+                  var purposeSection = document.createElement("div");
+                  purposeSection.className = "gdpr-vendor-purposes-section";
+
+                  var purposeTitle = document.createElement("p");
+                  purposeTitle.className = "gdpr-vendor-purposes-title";
+                  purposeTitle.textContent = "Purposes (Consent)";
+
+                  var purposeList = document.createElement("ul");
+                  purposeList.className = "gdpr-vendor-purposes-list";
+
+                  vendor.purposes.forEach(function (p) {
+
+                      var item = document.createElement("li");
+                      item.textContent = purposes[p - 1].name;
+
+                      purposeList.appendChild(item);
+                  });
+
+                  purposeSection.appendChild(purposeTitle);
+                  purposeSection.appendChild(purposeList);
+
+                  vendorWrapper.appendChild(purposeSection);
+              }
+
+              /* LEGITIMATE PURPOSES */
+
+              if (vendor.legIntPurposes && vendor.legIntPurposes.length) {
+
+                  var legSection = document.createElement("div");
+                  legSection.className = "gdpr-vendor-purposes-legint-section";
+
+                  var legTitle = document.createElement("p");
+                  legTitle.className = "gdpr-vendor-purposes-legint-title";
+                  legTitle.textContent = "Purposes (Legitimate Interest)";
+
+                  var legList = document.createElement("ul");
+                  legList.className = "gdpr-vendor-purposes-legint-list";
+
+                  vendor.legIntPurposes.forEach(function (p) {
+
+                      var item = document.createElement("li");
+                      item.textContent = purposes[p - 1].name;
+
+                      legList.appendChild(item);
+                  });
+
+                  legSection.appendChild(legTitle);
+                  legSection.appendChild(legList);
+
+                  vendorWrapper.appendChild(legSection);
+              }
+
+              /* SPECIAL PURPOSES */
+
+              if (vendor.specialPurposes && vendor.specialPurposes.length) {
+
+                  var spSection = document.createElement("div");
+                  spSection.className = "gdpr-vendor-special-purposes-section";
+
+                  var spTitle = document.createElement("p");
+                  spTitle.className = "gdpr-vendor-special-purposes-title";
+                  spTitle.textContent = "Special Purposes";
+
+                  var spList = document.createElement("ul");
+                  spList.className = "gdpr-vendor-special-purposes-list";
+
+                  vendor.specialPurposes.forEach(function (p) {
+
+                      var item = document.createElement("li");
+                      item.textContent = specialPurposes[p - 1].name;
+
+                      spList.appendChild(item);
+                  });
+
+                  spSection.appendChild(spTitle);
+                  spSection.appendChild(spList);
+
+                  vendorWrapper.appendChild(spSection);
+              }
+
+              /* FEATURES */
+
+              if (vendor.features && vendor.features.length) {
+
+                  var featureSection = document.createElement("div");
+                  featureSection.className = "gdpr-vendor-features-section";
+
+                  var featureTitle = document.createElement("p");
+                  featureTitle.className = "gdpr-vendor-features-title";
+                  featureTitle.textContent = "Features";
+
+                  var featureList = document.createElement("ul");
+                  featureList.className = "gdpr-vendor-features-list";
+
+                  vendor.features.forEach(function (p) {
+
+                      var item = document.createElement("li");
+                      item.textContent = features[p - 1].name;
+
+                      featureList.appendChild(item);
+                  });
+
+                  featureSection.appendChild(featureTitle);
+                  featureSection.appendChild(featureList);
+
+                  vendorWrapper.appendChild(featureSection);
+              }
+
+              /* DATA CATEGORIES */
+
+              if (vendor.dataDeclaration && vendor.dataDeclaration.length) {
+
+                  var catSection = document.createElement("div");
+                  catSection.className = "gdpr-vendor-category-section";
+
+                  var catTitle = document.createElement("p");
+                  catTitle.className = "gdpr-vendor-category-title";
+                  catTitle.textContent = "Data Categories";
+
+                  var catList = document.createElement("ul");
+                  catList.className = "gdpr-vendor-category-list";
+
+                  vendor.dataDeclaration.forEach(function (p) {
+
+                      var item = document.createElement("li");
+                      item.textContent = dataCategories[p - 1].name;
+
+                      catList.appendChild(item);
+                  });
+
+                  catSection.appendChild(catTitle);
+                  catSection.appendChild(catList);
+
+                  vendorWrapper.appendChild(catSection);
+              }
+
+              if (
+                  vendor.usesCookies ||
+                  vendor.usesNonCookieAccess ||
+                  vendor.cookieMaxAgeSeconds !== undefined
+              ) {
+
+                  var storageSection = document.createElement("div");
+                  storageSection.className = "gdpr-vendor-storage-section";
+
+                  var storageTitle = document.createElement("p");
+                  storageTitle.className = "gdpr-vendor-storage-title";
+                  storageTitle.textContent = "Device Storage Overview";
+
+                  var storageList = document.createElement("ul");
+                  storageList.className = "gdpr-vendor-storage-list";
+
+                  /* Tracking Method */
+
+                  var trackingMethod = "";
+
+                  if (vendor.usesCookies && vendor.usesNonCookieAccess) {
+                      trackingMethod = "Cookie and others";
+                  } else if (vendor.usesCookies) {
+                      trackingMethod = "Cookie";
+                  } else if (vendor.usesNonCookieAccess) {
+                      trackingMethod = "Others";
+                  }
+
+                  if (trackingMethod) {
+
+                      var trackingLi = document.createElement("li");
+                      trackingLi.textContent = "Tracking method: " + trackingMethod;
+
+                      storageList.appendChild(trackingLi);
+                  }
+
+                  /* Cookie Max Duration */
+
+                  if (vendor.cookieMaxAgeSeconds) {
+
+                      var durationLi = document.createElement("li");
+
+                      var days = Math.floor(vendor.cookieMaxAgeSeconds / (60 * 60 * 24));
+
+                      durationLi.textContent =
+                          "Maximum duration of Cookies: " + days + " days";
+
+                      storageList.appendChild(durationLi);
+                  }
+
+                  /* Cookie Refresh */
+
+                  var refreshLi = document.createElement("li");
+
+                  if (vendor.cookieRefresh) {
+                      refreshLi.textContent = "Cookie lifetime is being refreshed";
+                  } else {
+                      refreshLi.textContent = "Cookie lifetime is not refreshed";
+                  }
+
+                  storageList.appendChild(refreshLi);
+
+                  storageSection.appendChild(storageTitle);
+                  storageSection.appendChild(storageList);
+
+                  vendorWrapper.appendChild(storageSection);
+              }
+
+              adPurposeDetails.appendChild(vendorWrapper);
+              groupDesc.appendChild(adPurposeDetails);
+              descContainer.appendChild(groupDesc);
+
+              li.appendChild(descContainer);
+
+              ul.appendChild(li);
+          }
+          current_vendor_index += 10;
+          $(document).trigger("wplp_vendors_rendered");
     },
     consent_renew_method: function () {
       const browser_consent_version = GDPR_Cookie.read("consent_version");
@@ -2895,42 +3356,63 @@ banner.style.display = "none";
       }
     });
 
-    $(".gdpr-category-toggle.inner-gdpr-column").click(function () {
-      var heightOfB = $(this).outerHeight() - 23;
-      $(".gdpr-category-toggle.inner-gdpr-column", this);
+    $(document).on("click", ".gdpr-category-toggle.inner-gdpr-column", function () {
+
       if (!$(this).children(".inner-gdpr-columns").hasClass("active-group")) {
+
         $(".inner-gdpr-columns").removeClass("active-group");
-        $(".inner-gdpr-columns .gdpr-dropdown-arrow").removeClass("rotated");
+        $(".inner-gdpr-columns .dashicons")
+          .removeClass("dashicons-arrow-up-alt2")
+          .addClass("dashicons-arrow-down-alt2");
 
         $(this).children(".inner-gdpr-columns").addClass("active-group");
+
         $(this)
           .children(".inner-gdpr-columns")
-          .find(".gdpr-dropdown-arrow")
-          .addClass("rotated");
+          .find(".dashicons")
+          .removeClass("dashicons-arrow-down-alt2")
+          .addClass("dashicons-arrow-up-alt2");
+
       } else {
+
         $(".inner-gdpr-columns").removeClass("active-group");
+
         $(this)
           .children(".inner-gdpr-columns")
-          .find(".gdpr-dropdown-arrow")
-          .removeClass("rotated");
+          .find(".dashicons")
+          .removeClass("dashicons-arrow-up-alt2")
+          .addClass("dashicons-arrow-down-alt2");
       }
+
       if ($(this).siblings(".inner-description-container").hasClass("hide")) {
+
         $(".inner-description-container").addClass("hide");
         $(this).siblings(".inner-description-container").removeClass("hide");
+
       } else {
+
         $(".inner-description-container").addClass("hide");
       }
+
     });
-    $(".gdpr-default-category-toggle.inner-gdpr-column").click(function () {
-      $(".gdpr-default-category-toggle.inner-gdpr-column", this);
+
+
+    $(document).on("click", ".gdpr-default-category-toggle.inner-gdpr-column", function () {
+
       if (!$(this).children(".inner-gdpr-columns").hasClass("active-group")) {
+
         $(".inner-gdpr-columns").removeClass("active-group");
         $(this).children(".inner-gdpr-columns").addClass("active-group");
+
       }
+
       if ($(this).siblings(".inner-description-container").hasClass("hide")) {
+
         $(".inner-description-container").addClass("hide");
         $(this).siblings(".inner-description-container").removeClass("hide");
+
       }
+
     });
   });
 

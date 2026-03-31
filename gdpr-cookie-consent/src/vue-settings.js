@@ -12635,6 +12635,13 @@ var lang = new Vue({
     },
     onLanguageChange() {
       this.is_lang_changed = true;
+      this.success_error_message = "Language updated. Please Save Changes to view the updated banner.";
+      j("#gdpr-cookie-consent-save-settings-alert-lang").css(
+            "background-color",
+            "#72b85c"
+      );
+      j("#gdpr-cookie-consent-save-settings-alert-lang").fadeIn(400);
+      j("#gdpr-cookie-consent-save-settings-alert-lang").fadeOut(2500);
     },
   }
 });

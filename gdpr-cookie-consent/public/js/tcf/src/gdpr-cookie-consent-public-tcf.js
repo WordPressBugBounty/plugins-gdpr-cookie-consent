@@ -119,29 +119,39 @@ if (!(iabtcf.is_iabtcf_on === true || iabtcf.is_iabtcf_on === "true" || iabtcf.i
     if (user_gacm_consent.length == 1 && Number(user_gacm_consent[0]) == 0)
       user_gacm_consent = [];
   }
-  //function to set switches of selected consents to on
-  (function ($) {
-    // Select all input elements using the class
-    $(".vendor-switch-handler.consent-switch").each(function () {
+  window.syncVendorToggles = function () {
+    jQuery(".vendor-switch-handler.consent-switch").each(function () {
       // Get the value of the current element
-      const value = $(this).val();
+      const value = jQuery(this).val();
 
       // Check if the value is in the user_iab_consent.consent array
       if (user_iab_consent.consent.includes(Number(value))) {
-        $(this).prop("checked", true); // Mark as checked
+        jQuery(this).prop("checked", true); // Mark as checked
       } else {
-        $(this).prop("checked", false); // Ensure it is unchecked
+        jQuery(this).prop("checked", false); // Ensure it is unchecked
       }
     });
-    $(".vendor-switch-handler.legint-switch").each(function () {
-      const value = $(this).val();
+    jQuery(".vendor-switch-handler.legint-switch").each(function () {
+      const value = jQuery(this).val();
 
       if (user_iab_consent.legint.includes(Number(value))) {
-        $(this).prop("checked", true);
+        jQuery(this).prop("checked", true);
       } else {
-        $(this).prop("checked", false);
+        jQuery(this).prop("checked", false);
       }
     });
+  }
+
+  jQuery(document).on("wplp_vendors_rendered", function () {
+    if (typeof window.syncVendorToggles === "function") {
+      window.syncVendorToggles();
+    }
+  });
+
+  //function to set switches of selected consents to on
+  (function ($) {
+    // Select all input elements using the class
+    window.syncVendorToggles();
     $(".purposes-switch-handler.consent-switch").each(function () {
       const value = $(this).val();
 
@@ -257,6 +267,8 @@ if (!(iabtcf.is_iabtcf_on === true || iabtcf.is_iabtcf_on === "true" || iabtcf.i
       else $(this).prop("checked", false);
     });
   })(jQuery);
+  
+  
 
   //function to setup gvl once it has returned the promise and resolved it
   gvl.readyPromise.then(() => {
@@ -526,32 +538,37 @@ if (!(iabtcf.is_iabtcf_on === true || iabtcf.is_iabtcf_on === "true" || iabtcf.i
         user_iab_consent.legint = [];
       }
     });
-    $(".vendor-switch-handler.consent-switch").click(function () {
-      var val = $(this).val();
+    $(document).on("click", ".vendor-switch-handler.consent-switch", function () {
+      var val = Number($(this).val());
       if ($(this).is(":checked")) {
-        user_iab_consent.consent.push(Number(val));
+        if (!user_iab_consent.consent.includes(val)) {
+          user_iab_consent.consent.push(val);
+        }
         $(this).prop("checked", true);
       } else {
         $(this).prop("checked", false);
         $(".vendor-all-switch-handler").prop("checked", false);
-        user_iab_consent.consent.splice(
-          user_iab_consent.consent.indexOf(Number(val)),
-          1
-        );
+        var idx = user_iab_consent.consent.indexOf(val);
+        if (idx > -1) {
+          user_iab_consent.consent.splice(idx, 1);
+        }
       }
+
     });
-    $(".vendor-switch-handler.legint-switch").click(function () {
-      var val = $(this).val();
+    $(document).on("click", ".vendor-switch-handler.legint-switch", function () {
+      var val = Number($(this).val());
       if ($(this).is(":checked")) {
-        user_iab_consent.legint.push(Number(val));
+        if (!user_iab_consent.legint.includes(val)) {
+          user_iab_consent.legint.push(val);
+        }
         $(this).prop("checked", true);
       } else {
         $(this).prop("checked", false);
         $(".vendor-all-switch-handler").prop("checked", false);
-        user_iab_consent.legint.splice(
-          user_iab_consent.legint.indexOf(Number(val)),
-          1
-        );
+        var idx = user_iab_consent.legint.indexOf(val);
+        if (idx > -1) {
+          user_iab_consent.legint.splice(idx, 1);
+        }
       }
     });
     $(".purposes-all-switch-handler").click(function () {

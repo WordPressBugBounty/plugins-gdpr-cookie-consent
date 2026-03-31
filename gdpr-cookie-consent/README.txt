@@ -4,7 +4,7 @@ Donate link: https://wplegalpages.com/
 Tags: cookie banner, cookie consent, cookie notice, eu cookie law, gdpr
 Requires at least: 3.3.1
 Tested up to: 6.9
-Stable tag: 4.2.4
+Stable tag: 4.2.5
 Requires PHP: 7.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
@@ -195,6 +195,11 @@ Yes, the plugin supports multiple languages, ensuring that your cookie consent b
 11.Consent Log table
 
 == Change Log ==
+
+= 4.2.5 =
+* Improved performance with IAB TCF enabled: Resolved an issue where enabling IAB TCF caused slow loading and impacted overall website performance.
+* Fixed Cookie Settings Export/Import (SaaS Dashboard): Addressed a bug where exporting and importing cookie settings was not functioning correctly within the SaaS dashboard.
+* Resolved Sidebar Widget Saving Issue: Fixed a conflict where sidebar widgets failed to save when WP Legal Pages was used alongside popular WordPress themes.
 
 = 4.2.4 =
 * Bug fixes and Improvements.
@@ -774,6 +779,11 @@ Yes, the plugin supports multiple languages, ensuring that your cookie consent b
 * Initial version
 
 == Upgrade Notice ==
+
+= 4.2.5 =
+* Improved performance with IAB TCF enabled: Resolved an issue where enabling IAB TCF caused slow loading and impacted overall website performance.
+* Fixed Cookie Settings Export/Import (SaaS Dashboard): Addressed a bug where exporting and importing cookie settings was not functioning correctly within the SaaS dashboard.
+* Resolved Sidebar Widget Saving Issue: Fixed a conflict where sidebar widgets failed to save when WP Legal Pages was used alongside popular WordPress themes.
 
 = 4.2.4 =
 * Bug fixes and Improvements.
