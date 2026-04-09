@@ -250,7 +250,7 @@ class Gdpr_Cookie_Consent_Consent_Logs {
 		if ( ! current_user_can( 'manage_options' ) ) {
     	    wp_die( __( 'Unauthorized', 'gdpr-cookie-consent' ), 403 );
     	}
-		
+
 		global $wpdb;
 
 		$wpdb->hide_errors();

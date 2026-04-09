@@ -148,6 +148,7 @@ class Gdpr_Cookie_Consent_Admin {
 		}
 		
 		add_action( 'update_maxmind_db_event', array($this,'download_maxminddb' ));
+		add_action( 'gdpr_run_scheduled_cookie_scan', array( $this, 'gdpr_cron_run_scan' ) );
 	}
 
 	
@@ -11727,6 +11728,27 @@ public function gdpr_support_request_handler() {
 
 		update_option( 'gdpr_scan_schedule_data', $schedule_scan_data );
 
+		// Clear any existing scheduled scan first
+    	$this->gdpr_clear_scheduled_scan();
+
+    	if ( $scan_as === 'once' ) {
+    	    $timestamp = $this->gdpr_parse_scan_datetime( $scan_date, $scan_time_value );
+
+    	    if ( ! $timestamp || $timestamp <= time() ) {
+    	        return new WP_REST_Response(
+    	            array( 'status' => 'error', 'message' => 'Selected date/time is in the past.' ),
+    	            400
+    	        );
+    	    }
+    	    wp_schedule_single_event( $timestamp, 'gdpr_run_scheduled_cookie_scan' );
+
+    	} elseif ( $scan_as === 'monthly' ) {
+    	    $this->gdpr_schedule_monthly_cron( $schedule_scan_data );
+
+    	} elseif ( $scan_as === 'never' ) {
+    	    // Already cleared above, nothing to do
+    	}
+
 		return new WP_REST_Response(
 			array(
 				'status'  => 'success',
@@ -12375,5 +12397,89 @@ public function gdpr_support_request_handler() {
 			$out,
 			$response['code']
 		);
+	}
+
+	public function gdpr_cron_run_scan() {
+	    require_once plugin_dir_path( __DIR__ ) . 'admin/modules/cookie-scanner/classes/class-wpl-cookie-consent-cookie-scanner-ajax.php';
+	    $cookies_scan = new Gdpr_Cookie_Consent_Cookie_Scanner_Ajax();
+	    $cookies_scan->gdpr_start_cookie_scanning();
+		
+	
+	    $schedule_data = get_option( 'gdpr_scan_schedule_data', [] );
+
+    	if ( ( $schedule_data['schedule_scan_as'] ?? '' ) === 'monthly' ) {
+    	    $clean     = preg_replace( '/\(.*?\)/', '', trim( $schedule_data['schedule_scan_date'] ) );
+    	    $source_dt = new DateTime( trim( $clean ) );
+    	    $source_dt->modify( '+1 month' );
+
+    	    $schedule_data['schedule_scan_date']  = $source_dt->format( 'D M d Y H:i:s \G\M\TO' );
+    	    $schedule_data['next_scan_is_when']   = $source_dt->format( 'M j, Y' );
+    	    $schedule_data['schedule_scan_when']  = $source_dt->format( 'M j, Y' );
+
+    	    update_option( 'gdpr_scan_schedule_data', $schedule_data );
+
+    	    $this->gdpr_schedule_monthly_cron( $schedule_data );
+    	} else {
+    	    delete_option( 'gdpr_scan_schedule_data' );
+    	}
+	}
+
+	private function gdpr_schedule_monthly_cron( $schedule_data ) {
+		$day_string  = $schedule_data['schedule_scan_day'] ?? '';
+		$date_string = $schedule_data['schedule_scan_date'] ?? '';
+		$day_number  = (int) filter_var( $day_string, FILTER_SANITIZE_NUMBER_INT );
+
+		if ( $day_number < 1 || $day_number > 31 ) {
+			return;
+		}
+
+		$clean = preg_replace( '/\(.*?\)/', '', trim( $date_string ) );
+
+		$ist_dt = new DateTimeImmutable( trim( $clean ) );
+
+		$utc_dt = $ist_dt->setTimezone( new DateTimeZone('UTC') );
+
+		$utc = new DateTimeZone('UTC');
+		$now = new DateTime('now', $utc);
+
+		$next = new DateTime('now', $utc);
+		$next->setDate(
+			$now->format('Y'),
+			$now->format('m'),
+			$day_number
+		);
+
+		$next->setTime(
+			(int) $utc_dt->format('H'),
+			(int) $utc_dt->format('i'),
+			0
+		);
+
+		if ( $next->getTimestamp() <= time() ) {
+			$next->modify('+1 month');
+		}
+
+		wp_schedule_single_event( $next->getTimestamp(), 'gdpr_run_scheduled_cookie_scan' );
+
+		$schedule_data['next_scan_is_when'] = $ist_dt->format( 'M j, Y h:i A' );
+		update_option( 'gdpr_scan_schedule_data', $schedule_data );
+	}
+
+	private function gdpr_clear_scheduled_scan() {
+	    $timestamp = wp_next_scheduled( 'gdpr_run_scheduled_cookie_scan' );
+	    if ( $timestamp ) {
+	        wp_unschedule_event( $timestamp, 'gdpr_run_scheduled_cookie_scan' );
+	    }
+	}
+
+	private function gdpr_parse_scan_datetime( $date_string ) {
+    	$clean = preg_replace( '/\(.*?\)/', '', trim( $date_string ) );
+
+    	try {
+    	    $dt = new DateTimeImmutable( trim( $clean ) );
+    	    return $dt->getTimestamp();
+    	} catch ( Exception $e ) {
+    	    return false;
+    	}
 	}
 }

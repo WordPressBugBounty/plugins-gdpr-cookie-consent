@@ -79,6 +79,16 @@ $site_domain = wp_parse_url($site_url, PHP_URL_HOST);
 <div id="gdpr-cookie-consent-main-admin-structure" class="gdpr-cookie-consent-main-admin-structure">
 	<div id="gdpr-cookie-consent-main-admin-header" class="gdpr-cookie-consent-main-admin-header">
 		<div class="wplp-compliance-main-wrapper">
+
+			<div id="gdpr-before-mount">
+  				<div style="text-align:center;">
+  				  	<div class="gdpr-before-mount-loader-content"></div>
+  				  	<p class="gdpr-before-mount-loader-text">
+  				  	  	Loading...
+  				  	</p>
+  				</div>
+			</div>
+
 			<!-- Main top banner  -->
 			<div class="gdpr-cookie-consent-admin-fixed-banner">
 					<div class="gdpr-cookie-consent-admin-logo-and-label">

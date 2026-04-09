@@ -20,6 +20,20 @@ if (!(iabtcf.is_iabtcf_on === true || iabtcf.is_iabtcf_on === "true" || iabtcf.i
   const cmpVersion = 1;
   cmpstub();
 
+  function initDisclosedVendors() {
+    const vendors = iabtcf?.data?.vendors || [];
+    const vendorIds = Array.isArray(vendors) ? vendors.map(v => Number(v.id)).filter(Boolean) : [];
+    var ids = vendorIds;
+
+    if (ids.length === 0) {
+        if (typeof gvl !== 'undefined' && gvl?.vendors) {
+            ids = Object.keys(gvl.vendors).map(Number);
+        } else {
+            ids = [];
+        }
+    }
+    ids.forEach(id => tcModel.vendorsDisclosed.set(id));
+  }
   //functions to handle tc string cookie
   var GDPR_Cookie = {
     set: function (name, value, days) {
@@ -125,7 +139,7 @@ if (!(iabtcf.is_iabtcf_on === true || iabtcf.is_iabtcf_on === "true" || iabtcf.i
       const value = jQuery(this).val();
 
       // Check if the value is in the user_iab_consent.consent array
-      if (user_iab_consent.consent.includes(Number(value))) {
+      if (user_iab_consent.consent.includes(Number(value))) { 
         jQuery(this).prop("checked", true); // Mark as checked
       } else {
         jQuery(this).prop("checked", false); // Ensure it is unchecked
@@ -281,6 +295,9 @@ if (!(iabtcf.is_iabtcf_on === true || iabtcf.is_iabtcf_on === "true" || iabtcf.i
       tcModel.cmpVersion = cmpVersion;
       tcModel.gdprApplies = true;
       tcModel.isServiceSpecific = false;
+
+      initDisclosedVendors();
+
       //initializing the cmp api
       if (tcModel && tcModel.gvl) {
         cmpApi = new CmpApi(cmpId, cmpVersion, false, {
@@ -305,6 +322,8 @@ if (!(iabtcf.is_iabtcf_on === true || iabtcf.is_iabtcf_on === "true" || iabtcf.i
     } catch (error) {
       console.error("Error during CMP initialization:", error);
     }
+  }).catch(err => {
+    console.error("GVL readyPromise failed:", err);
   });
 
   function updateTCModel() {

@@ -59,7 +59,6 @@ $gdpr_no_of_page_scan_left       = $total_pages_scan_limit - get_option( 'gdpr_n
 $remaining_percentage_scan_limit = ( get_option( 'gdpr_no_of_page_scan' ) / $total_pages_scan_limit ) * 100;
 
 ?>
-<div id="gdpr-before-mount" style="top:0;left:0;right:0;left:0;height:100%;width:100%;position:fixed;background-color:white;z-index:999"></div>
 <div class="gdpr-cookie-consent-app-container" id="gdpr-cookie-consent-settings-app">
 	<!-- main preview container -->
 	<div v-if="banner_preview_is_on">
@@ -786,7 +785,7 @@ $remaining_percentage_scan_limit = ( get_option( 'gdpr_no_of_page_scan' ) / $tot
 									</c-col>
 								</c-row>
 								<c-row v-show="is_gdpr && iabtcf_is_on">
-									<?php if($api_user_plan == "10sites" || $api_user_plan == "3sites" || $api_user_plan == "10Sites" || $api_user_plan == "3Sites") { ?>
+									<?php if (strtolower($api_user_plan) !== 'free') { ?>
 									<c-col class="col-sm-4"><label><?php esc_attr_e( 'Support Google Additional Consent Mode', 'gdpr-cookie-consent' ); ?></label></c-col>
 									<c-col class="col-sm-8">
 										<label for="gdpr-cookie-consent-gacm-on" class="screen-reader-text"><?php esc_attr_e( 'gdpr-cookie-consent-gacm-on','gdpr-cookie-consent'); ?></label>

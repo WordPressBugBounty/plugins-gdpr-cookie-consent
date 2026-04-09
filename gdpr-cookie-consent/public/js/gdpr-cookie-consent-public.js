@@ -297,27 +297,29 @@ GDPR_CCPA_COOKIE_EXPIRE =
           };
         }
       });
-
-      window.addEventListener("load", function () {
+      if (is_iab_on) {
+        window.addEventListener("load", function () {
           GDPR.render_vendor_list();
         });
 
-      document.querySelector('.gdprmodal-body').addEventListener('scroll', function () {
+        document.querySelector('.gdprmodal-body').addEventListener('scroll', function () {
 
-          var scrollTop = this.scrollTop;
-          var scrollHeight = this.scrollHeight;
-          var clientHeight = this.clientHeight;
-          var vendorTab = document.querySelector('#gdprIABTabVendors .gdpr-iab-navbar-button');
-          var vendorRoot = document.querySelector('.iab-vendors-root');
-          if (scrollTop + clientHeight >= 0.8 * scrollHeight && vendorTab.classList.contains('active') && vendorRoot.classList.contains('active-group')) {
-              if(!next_vendors_loaded) {
-                GDPR.render_vendor_list();
-                next_vendors_loaded = true;
-              }
-          }
-          else if(scrollTop + clientHeight < 0.8 * scrollHeight) next_vendors_loaded = false;
+            var scrollTop = this.scrollTop;
+            var scrollHeight = this.scrollHeight;
+            var clientHeight = this.clientHeight;
+            var vendorTab = document.querySelector('#gdprIABTabVendors .gdpr-iab-navbar-button');
+            var vendorRoot = document.querySelector('.iab-vendors-root');
+            if (scrollTop + clientHeight >= 0.8 * scrollHeight && vendorTab.classList.contains('active') && vendorRoot.classList.contains('active-group')) {
+                if(!next_vendors_loaded) {
+                  GDPR.render_vendor_list();
+                  next_vendors_loaded = true;
+                }
+            }
+            else if(scrollTop + clientHeight < 0.8 * scrollHeight) next_vendors_loaded = false;
 
-      });
+        });
+      }
+      
 
       // hide banner.
       // window.addEventListener("load", function () {
@@ -3248,9 +3250,7 @@ banner.style.display = "none";
       );
     }
     
-    if (is_iab_on) {
-
-    }
+    
     $(".gdpr-iab-navbar-item").click(function () {
       const modalBody = document.querySelector('.gdprmodal-body');
 

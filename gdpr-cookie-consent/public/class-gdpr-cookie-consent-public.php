@@ -978,7 +978,7 @@ $selected_script_category = $wpdb->get_var(
 				$the_options['cookie_data']       = $cookie_data;
 
 				// language translation based on the selected language for the public facing.
-				if ( isset( $the_options['lang_selected'] ) && isset( $the_options['gdpr_current_language'] ) && in_array( $the_options['lang_selected'], $this->supported_languages )  && $the_options['gdpr_current_language'] !== $the_options['lang_selected']) {
+				if ( isset( $the_options['lang_selected'] )  && in_array( $the_options['lang_selected'], $this->supported_languages ) ) {
 
 					// Load and decode translations from JSON file.
 					$translations_file = get_site_url() . '/wp-content/plugins/gdpr-cookie-consent/public/translations/public-translations.json';
@@ -997,34 +997,6 @@ $selected_script_category = $wpdb->get_var(
 							'type',
 							'cookies_not_found',
 							'consent_notice',
-							'dash_notify_message_eprivacy',
-					'dash_notify_message_lgpd',
-					'dash_button_readmore_text',
-					'dash_button_accept_text',
-					'dash_button_accept_all_text',
-					'dash_button_decline_text',
-					'dash_about_message',
-					'dash_about_message_iabtcf',
-					'dash_about_message_lgpd',
-					'dash_notify_message',
-					'dash_notify_message_iabtcf',
-					'dash_button_settings_text',
-					'dash_notify_message_ccpa',
-					'dash_button_donotsell_text',
-					'dash_button_confirm_text',
-					'dash_button_cancel_text',
-					'dash_show_again_text',
-					'dash_optout_text',
-					'gdpr_cookie_category_description_necessary',
-					'gdpr_cookie_category_name_necessary',
-					'gdpr_cookie_category_description_analytics',
-					'gdpr_cookie_category_name_analytics',
-					'gdpr_cookie_category_description_marketing',
-					'gdpr_cookie_category_description_preference',
-					'gdpr_cookie_category_description_unclassified',
-					'gdpr_cookie_category_name_marketing',
-					'gdpr_cookie_category_name_preference',
-					'gdpr_cookie_category_name_unclassified',
 						);
 
 					// Determine the target language based on the POST value.
