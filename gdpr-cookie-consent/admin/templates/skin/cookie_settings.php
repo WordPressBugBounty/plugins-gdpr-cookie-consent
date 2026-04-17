@@ -182,8 +182,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 			<div class="gdprmodal-body" :style="'scrollbar-color: ' + cookieSettingsPopupAccentColor + ' transparent;'">
 				<div class="gdpr-details-content">
 				<div class="gdpr-groups-container">
-                     <div class="gdpr-about-cookies">Cookies are small text files that can be used by websites to make a user's experience more efficient. The law states that we can store cookies on your device if they are strictly necessary for the operation of this site. For all other types of cookies we need your permission. This site uses different types of cookies. Some cookies are placed by third party services that appear on our pages.</div>
-					      <div class="gdpr-about-cookies iabtcf">Customize your consent preferences for Cookie Categories and advertising tracking preferences for Purposes & Features and Vendors below. You can give granular consent for each Third Party Vendor. Most vendors require consent for personal data processing, while some rely on legitimate interest. However, you have the right to object to their use of legitimate interest. The choices you make regarding the purposes and entities listed in this notice are saved in a cookie named wpl_tc_string for a maximum duration of 12 months.</div>
+                     <div class="gdpr-about-cookies"><?php echo esc_html( $the_options['about_message'] ); ?></div>
+                     <div class="gdpr-about-cookies iabtcf"><?php echo esc_html( $the_options['about_message'] ); ?></div>
                      <div v-if="gcm_is_on" class="gdpr-about-cookies-gcm">
                         <?php echo esc_html("For more information on how Google's third party cookies operate and handle your data, see: "); ?><a :style="{'color': cookieSettingsPopupAccentColor}" href="https://business.safety.google/privacy" target="blank"><?php echo esc_html("Google's Privacy Policy"); ?></a>
                      </div>
@@ -232,11 +232,11 @@ if ( ! defined( 'ABSPATH' ) ) {
                            <div class="gdpr-column gdpr-category-toggle default">
                               <div class="gdpr-columns">
                                  <span class="dashicons dashicons-arrow-down-alt2"></span>
-                                 <a href="#" class="btn category-header" tabindex="0">Necessary</a>
+                                 <a href="#" class="btn category-header" tabindex="0"><?php echo esc_html( $the_options['gdpr_cookie_category_name_necessary'] ); ?></a>
                               </div>
                            </div>
                            <div class="description-container hide">
-                              <div class="group-description" tabindex="0">Necessary cookies help make a website usable by enabling basic functions like page navigation and access to secure areas of the website. The website cannot function properly without these cookies.</div>
+                              <div class="group-description" tabindex="0"><?php echo esc_html( $the_options['gdpr_cookie_category_description_necessary'] ); ?></div>
                               <!-- sub groups -->
                               <div class="category-cookies-list-container">
                               </div>
@@ -250,7 +250,7 @@ if ( ! defined( 'ABSPATH' ) ) {
                                     <!-- DYNAMICALLY GENERATE Input ID  -->
                                     <input id="gdpr_messagebar_body_button_marketing" class="category-switch-handler" type="checkbox" name="gdpr_messagebar_body_button_marketing" value="marketing">
                                     <label for="gdpr_messagebar_body_button_marketing">
-                                    <span class="label-text">Marketing</span>
+                                    <span class="label-text"><?php echo esc_html( $the_options['gdpr_cookie_category_name_marketing'] ); ?></span>
                                     </label>
                                     <!-- DYNAMICALLY GENERATE Input ID  -->
                                  </div>
@@ -259,11 +259,11 @@ if ( ! defined( 'ABSPATH' ) ) {
                            <div class="gdpr-column gdpr-category-toggle default">
                               <div class="gdpr-columns">
                                  <span class="dashicons dashicons-arrow-down-alt2"></span>
-                                 <a href="#" class="btn category-header" tabindex="0">Marketing</a>
+                                 <a href="#" class="btn category-header" tabindex="0"><?php echo esc_html( $the_options['gdpr_cookie_category_name_marketing'] ); ?></a>
                               </div>
                            </div>
                            <div class="description-container hide">
-                              <div class="group-description" tabindex="0">Marketing cookies are used to track visitors across websites. The intention is to display ads that are relevant and engaging for the individual user and thereby more valuable for publishers and third party advertisers.</div>
+                              <div class="group-description" tabindex="0"><?php echo esc_html( $the_options['gdpr_cookie_category_description_marketing'] ); ?></div>
                               <!-- sub groups -->
                               <div class="category-cookies-list-container">
                               </div>
@@ -277,7 +277,7 @@ if ( ! defined( 'ABSPATH' ) ) {
                                     <!-- DYNAMICALLY GENERATE Input ID  -->
                                     <input id="gdpr_messagebar_body_button_analytics" class="category-switch-handler" type="checkbox" name="gdpr_messagebar_body_button_analytics" value="analytics">
                                     <label for="gdpr_messagebar_body_button_analytics">
-                                    <span class="label-text">Analytics</span>
+                                    <span class="label-text"><?php echo esc_html( $the_options['gdpr_cookie_category_name_analytics'] ); ?></span>
                                     </label>
                                     <!-- DYNAMICALLY GENERATE Input ID  -->
                                  </div>
@@ -286,11 +286,11 @@ if ( ! defined( 'ABSPATH' ) ) {
                            <div class="gdpr-column gdpr-category-toggle default">
                               <div class="gdpr-columns">
                                  <span class="dashicons dashicons-arrow-down-alt2"></span>
-                                 <a href="#" class="btn category-header" tabindex="0">Analytics</a>
+                                 <a href="#" class="btn category-header" tabindex="0"><?php echo esc_html( $the_options['gdpr_cookie_category_name_analytics'] ); ?></a>
                               </div>
                            </div>
                            <div class="description-container hide">
-                              <div class="group-description" tabindex="0">Analytics cookies help website owners to understand how visitors interact with websites by collecting and reporting information anonymously.</div>
+                              <div class="group-description" tabindex="0"><?php echo esc_html( $the_options['gdpr_cookie_category_description_analytics'] ); ?></div>
                               <!-- sub groups -->
                               <div class="category-cookies-list-container">
                               </div>
@@ -304,7 +304,7 @@ if ( ! defined( 'ABSPATH' ) ) {
                                     <!-- DYNAMICALLY GENERATE Input ID  -->
                                     <input id="gdpr_messagebar_body_button_preferences" class="category-switch-handler" type="checkbox" name="gdpr_messagebar_body_button_preferences" value="preferences">
                                     <label for="gdpr_messagebar_body_button_preferences">
-                                    <span class="label-text">Preference</span>
+                                    <span class="label-text"><?php echo esc_html( $the_options['gdpr_cookie_category_name_preference'] ); ?></span>
                                     </label>
                                     <!-- DYNAMICALLY GENERATE Input ID  -->
                                  </div>
@@ -313,11 +313,11 @@ if ( ! defined( 'ABSPATH' ) ) {
                            <div class="gdpr-column gdpr-category-toggle default">
                               <div class="gdpr-columns">
                                  <span class="dashicons dashicons-arrow-down-alt2"></span>
-                                 <a href="#" class="btn category-header" tabindex="0">Preference</a>
+                                 <a href="#" class="btn category-header" tabindex="0"><?php echo esc_html( $the_options['gdpr_cookie_category_name_preference'] ); ?></a>
                               </div>
                            </div>
                            <div class="description-container hide">
-                              <div class="group-description" tabindex="0">Preference cookies enable a website to remember information that changes the way the website behaves or looks, like your preferred language or the region that you are in.</div>
+                              <div class="group-description" tabindex="0"><?php echo esc_html( $the_options['gdpr_cookie_category_description_preference'] ); ?></div>
                               <!-- sub groups -->
                               <div class="category-cookies-list-container">
                               </div>
@@ -331,7 +331,7 @@ if ( ! defined( 'ABSPATH' ) ) {
                                     <!-- DYNAMICALLY GENERATE Input ID  -->
                                     <input id="gdpr_messagebar_body_button_unclassified" class="category-switch-handler" type="checkbox" name="gdpr_messagebar_body_button_unclassified" value="unclassified">
                                     <label for="gdpr_messagebar_body_button_unclassified">
-                                    <span class="label-text">Unclassified</span>
+                                    <span class="label-text"><?php echo esc_html( $the_options['gdpr_cookie_category_name_unclassified'] ); ?></span>
                                     </label>
                                     <!-- DYNAMICALLY GENERATE Input ID  -->
                                  </div>
@@ -340,11 +340,11 @@ if ( ! defined( 'ABSPATH' ) ) {
                            <div class="gdpr-column gdpr-category-toggle default">
                               <div class="gdpr-columns">
                                  <span class="dashicons dashicons-arrow-down-alt2"></span>
-                                 <a href="#" class="btn category-header" tabindex="0">Unclassified</a>
+                                 <a href="#" class="btn category-header" tabindex="0"><?php echo esc_html( $the_options['gdpr_cookie_category_name_unclassified'] ); ?></a>
                               </div>
                            </div>
                            <div class="description-container hide">
-                              <div class="group-description" tabindex="0">Unclassified cookies are cookies that we are in the process of classifying, together with the providers of individual cookies.</div>
+                              <div class="group-description" tabindex="0"><?php echo esc_html( $the_options['gdpr_cookie_category_description_unclassified'] ); ?></div>
                               <!-- sub groups -->
                               <div class="category-cookies-list-container">
                               </div>

@@ -10429,9 +10429,17 @@ public function gdpr_support_request_handler() {
 
 		$data = $request->get_param( 'settings' );
 		$data = json_decode( $data, true );
-		
+
 		// Extract settings and logo images
-		$settings = isset( $data['settings'] ) ? $data['settings'] : $data;
+		if ( !isset($data['settings']) || !is_array($data['settings']) ) {
+			return new WP_REST_Response([
+				'success' => false,
+				'message' => 'Invalid settings file.'
+			], 400);
+		}
+
+		$settings = $data['settings'];
+		
 		$logo_images = isset( $data['logo_images'] ) ? $data['logo_images'] : array();
 		
 		update_option(GDPR_COOKIE_CONSENT_SETTINGS_FIELD, $settings);
