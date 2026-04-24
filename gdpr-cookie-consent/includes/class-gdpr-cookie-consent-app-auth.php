@@ -343,6 +343,13 @@ class GDPR_Cookie_Consent_App_Auth {
 		$data        = $_POST['response'];
 		$origin      = ! empty( $_POST['origin'] ) ? esc_url_raw( wp_unslash( $_POST['origin'] ) ) : false;
 		$no_of_scans = $_POST['no_of_scans'];
+
+		if ( get_option('app_wplp_subscription_status_pending_cancel') === 1 || get_option('app_wplp_subscription_status_pending_cancel') === '1' || get_option('app_wplp_subscription_status_pending_cancel') === true ) {
+			if (!empty($data['account']['plan']) && strtolower($data['account']['plan']) !== 'free' ) {
+				delete_option('app_wplp_subscription_status_pending_cancel');
+			}
+		}
+
 		// Verify data and origin.
 		if ( empty( $data ) || GDPR_APP_URL !== $origin ) {
 			ob_end_clean();
@@ -399,75 +406,62 @@ class GDPR_Cookie_Consent_App_Auth {
 		// Verify AJAX nonce.
 		check_ajax_referer( 'gdpr-cookie-consent', '_ajax_nonce' );
 
-		require_once GDPR_COOKIE_CONSENT_PLUGIN_PATH . 'includes/settings/class-gdpr-cookie-consent-settings.php';
-		$settings   = new GDPR_Cookie_Consent_Settings();
-		$options    = $settings->get_defaults();
-		$product_id = $settings->get( 'account', 'product_id' );
+		$result = $this->perform_disconnect();
 
-		global $wcam_lib_gdpr;
-		$activation_status = get_option( $wcam_lib_gdpr->wc_am_activated_key );
-
-		$args = array(
-			'api_key' => $settings->get( 'api', 'token' ),
-		);
-		update_option( 'wpeka_api_framework_app_settings', $options );
-
-		if ( false !== get_option( 'wplegal_api_framework_app_settings' ) ) {
-			update_option( 'wplegal_api_framework_app_settings', $options );
+		if ( isset($result['success']) && $result['success'] === true && $result['deactivated'] === true ) {
+			wp_send_json_success([
+				'message' 				=> 'Disconnected successfully',
+				'error'					=> false,
+				'deactivate_results'	=> $result,
+			]);
 		}
 
-		//changing banner display status to worldwide
-		$the_options = Gdpr_Cookie_Consent::gdpr_get_settings();
-		
-		$the_options['is_worldwide_on'] = 'true';
-		$the_options['is_selectedCountry_on'] = 'false';
-		$the_options['is_eu_on'] = 'false';
-		$the_options['is_ccpa_on'] = 'false';
-
-		$the_options['is_worldwide_on_ccpa'] = 'true';
-		$the_options['is_selectedCountry_on_ccpa'] = 'false';
-		update_option( GDPR_COOKIE_CONSENT_SETTINGS_FIELD, $the_options );
-
-		update_option( 'gdpr_no_of_page_scan', 0 );
-
-		$deactivate_results = json_decode( $wcam_lib_gdpr->deactivate( $args, $product_id ), true );
-
-		if ( true === $deactivate_results['success'] && true === $deactivate_results['deactivated'] ) {
-			if ( ! empty( $wcam_lib_gdpr->wc_am_activated_key ) ) {
-				update_option( $wcam_lib_gdpr->wc_am_activated_key, 'Deactivated' );
-			}
-
-			wp_send_json_success(
-				array(
-					'deactivate_results' => $deactivate_results,
-					'error'              => false,
-					'message'            => $deactivate_results['activations_remaining'],
-				)
-			);
-		}
-
-		if ( isset( $deactivate_results['data']['error_code'] ) && ! empty( $wcam_lib_gdpr->data ) && ! empty( $wcam_lib_gdpr->wc_am_activated_key ) ) {
-			if ( isset( $wcam_lib_gdpr->data[ $wcam_lib_gdpr->wc_am_activated_key ] ) ) {
-				update_option( $wcam_lib_gdpr->data[ $wcam_lib_gdpr->wc_am_activated_key ], 'Deactivated' );
-			}
-			wp_send_json_error(
-				array(
-					'deactivate_results' => $deactivate_results,
-					'error'              => true,
-					'message'            => $deactivate_results['data']['error'],
-				)
-			);
-		}
-		// } else {
-			wp_send_json_error(
-				array(
-					'deactivate_results' => false,
-					'error'              => true,
-					'message'            => 'Connection Already Deactivated',
-				)
-			);
+		wp_send_json_error([
+			'message' 				=> $result['data']['error'] ?? 'Disconnect failed',
+			'error'					=> true,
+			'deactivate_results'    => $result,
+		]);
 	}
 
+	/**
+	 * Disconnection Logic
+	 */
+	public function perform_disconnect() {
+
+		require_once GDPR_COOKIE_CONSENT_PLUGIN_PATH . 'includes/settings/class-gdpr-cookie-consent-settings.php';
+    	$settings   = new GDPR_Cookie_Consent_Settings();
+    	$options    = $settings->get_defaults();
+    	$product_id = $settings->get( 'account', 'product_id' );
+
+    	global $wcam_lib_gdpr;
+
+    	$args = array( 'api_key' => $settings->get( 'api', 'token' ) );
+    	update_option( 'wpeka_api_framework_app_settings', $options );
+
+    	if ( false !== get_option( 'wplegal_api_framework_app_settings' ) ) {
+    	    update_option( 'wplegal_api_framework_app_settings', $options );
+    	}
+
+    	$the_options = Gdpr_Cookie_Consent::gdpr_get_settings();
+    	$the_options['is_worldwide_on']            = 'true';
+    	$the_options['is_selectedCountry_on']      = 'false';
+    	$the_options['is_eu_on']                   = 'false';
+    	$the_options['is_ccpa_on']                 = 'false';
+    	$the_options['is_worldwide_on_ccpa']       = 'true';
+    	$the_options['is_selectedCountry_on_ccpa'] = 'false';
+    	update_option( GDPR_COOKIE_CONSENT_SETTINGS_FIELD, $the_options );
+
+    	update_option( 'gdpr_no_of_page_scan', 0 );
+
+    	$deactivate_results = json_decode( $wcam_lib_gdpr->deactivate( $args, $product_id ), true );
+
+    	if ( ! empty( $wcam_lib_gdpr->wc_am_activated_key ) ) {
+    	    update_option( $wcam_lib_gdpr->wc_am_activated_key, 'Deactivated' );
+    	}
+
+    	return $deactivate_results;
+	}
+	
 	/**
 	 * Check if the site is authenticated.
 	 *

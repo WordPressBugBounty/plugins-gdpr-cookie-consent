@@ -4,7 +4,7 @@ Donate link: https://wplegalpages.com/
 Tags: cookie banner, cookie consent, cookie notice, eu cookie law, gdpr
 Requires at least: 3.3.1
 Tested up to: 6.9
-Stable tag: 4.2.7
+Stable tag: 4.2.8
 Requires PHP: 7.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
@@ -195,6 +195,11 @@ Yes, the plugin supports multiple languages, ensuring that your cookie consent b
 11.Consent Log table
 
 == Change Log ==
+
+= 4.2.8 =
+* Fixed script blocker conflicts affecting Elementor youtube embeds.
+* Fixed import/export settings sync issues between plugin and SaaS.
+* General bug fixes and performance improvements.
 
 = 4.2.7 =
 * Bug Fixes
@@ -788,6 +793,11 @@ Yes, the plugin supports multiple languages, ensuring that your cookie consent b
 * Initial version
 
 == Upgrade Notice ==
+
+= 4.2.8 =
+* Fixed script blocker conflicts affecting Elementor youtube embeds.
+* Fixed import/export settings sync issues between plugin and SaaS.
+* General bug fixes and performance improvements.
 
 = 4.2.7 =
 * Bug Fixes

@@ -3205,6 +3205,61 @@ banner.style.display = "none";
       genericFuncs.reviewConsent();
       genericFuncs.renderByElement(GDPR_Blocker.removeCookieByCategory);
     },
+    blockElementorYoutube: function () {
+      var ytData          = gdpr_cookies_obj.youtube_embed_category || {};
+      var youtubeCategory = ytData.slug || 'preferences';
+      var youtubeName     = ytData.name || 'Preferences';
+      var placeholderHtml = 'Accept <a class="wpl_manage_current_consent">'
+                            + youtubeName +
+                            '</a> cookies to view this video.';
+
+      var observer = new MutationObserver( function ( mutations ) {
+          mutations.forEach( function ( mutation ) {
+              mutation.addedNodes.forEach( function ( node ) {
+                  if ( node.nodeType !== 1 ) return;
+                  if (
+                      node.tagName === 'IFRAME' &&
+                      node.src &&
+                      node.src.indexOf( 'youtube.com/embed' ) !== -1 &&
+                      (
+                        node.closest( '[data-e-type="e-youtube"]' ) ||      // YouTube Embed widget
+                        node.closest( '.elementor-widget-video' )            // Video widget
+                      )
+                  ) {
+                      var gdpr_user_preference_arr = {};
+                      if ( GDPR_Cookie.read( 'wpl_user_preference' ) ) {
+                          gdpr_user_preference_arr = JSON.parse(
+                              GDPR_Cookie.read( 'wpl_user_preference' )
+                          );
+                      }
+                      var consentGiven =
+                          GDPR_Cookie.read( GDPR_ACCEPT_COOKIE_NAME ) === 'yes' &&
+                          gdpr_user_preference_arr[ youtubeCategory ] === 'yes';
+
+                      if ( ! consentGiven ) {
+                          node.setAttribute( 'data-wpl-src', node.src );
+                          node.setAttribute( 'data-wpl-class', 'wpl-blocker-script' );
+                          node.setAttribute( 'data-wpl-script-type', youtubeCategory );
+                          node.setAttribute( 'data-wpl-placeholder', placeholderHtml );
+                          node.removeAttribute( 'src' );
+                          node.style.display = 'none';
+                          jQuery( '<div style="width:560px;height:315px;" class="wpl-iframe-placeholder"><div class="wpl-inner-text">'
+                              + placeholderHtml +
+                          '</div></div>' ).insertBefore( node );
+                      }
+                  }
+              });
+          });
+      });
+
+      if ( document.body ) {
+          observer.observe( document.body, { childList: true, subtree: true } );
+      } else {
+          document.addEventListener( 'DOMContentLoaded', function () {
+              observer.observe( document.body, { childList: true, subtree: true } );
+          });
+      }
+    },
   };
   $(document).ready(function () {
     var settings = JSON.parse(gdpr_cookiebar_settings);
@@ -3217,6 +3272,13 @@ banner.style.display = "none";
         cookies: gdpr_cookies_list,
       });
       GDPR_Blocker.runScripts();
+      if (typeof gdpr_cookies_list != "undefined") {
+        GDPR_Blocker.set({
+          cookies: gdpr_cookies_list,
+        });
+        GDPR_Blocker.runScripts();
+        GDPR_Blocker.blockElementorYoutube(); // ADD THIS
+      }
     }
     if (typeof gdpr_cookiebar_settings != "undefined") {
       GDPR.set({
@@ -3440,82 +3502,4 @@ banner.style.display = "none";
       }
   }
   });
-
-
-  // For adding placeholder for blocked Youtube scripts
-//  document.addEventListener("DOMContentLoaded", function () {
-
-//    var observer = new MutationObserver(function (mutations) {
-//   mutations.forEach(function (mutation) {
-//     mutation.addedNodes.forEach(function (node) {
-//       if (node.nodeType === Node.ELEMENT_NODE) {
-//         var iframes = (node.matches && node.matches("iframe"))
-//           ? [node]
-//           : (node.querySelectorAll ? node.querySelectorAll("iframe") : []);
-
-//         iframes.forEach(function (iframe) {
-//           var src =
-//             iframe.getAttribute("src") ||
-//             iframe.getAttribute("data-src") ||
-//             "";
-
-//           if (
-//             src.indexOf("youtube.com") !== -1 &&
-//             !iframe.hasAttribute("data-wpl-placeholder")
-//           ) {
-//             // add replacement iframe with data-wpl-* attributes
-//             var wrapper = document.createElement("div");
-//             wrapper.style.display = "none"; // prevent flash
-//             iframe.parentNode.insertBefore(wrapper, iframe);
-//             iframe.parentNode.removeChild(iframe);
-
-//             var placeholderIframe = document.createElement("iframe");
-//             placeholderIframe.setAttribute(
-//               "width",
-//               iframe.getAttribute("width") || "625"
-//             );
-//             placeholderIframe.setAttribute(
-//               "height",
-//               iframe.getAttribute("height") || "300"
-//             );
-//             placeholderIframe.setAttribute(
-//               "data-wpl-placeholder",
-//               "Accept <a class='wpl_manage_current_consent'>" +
-//                 log_obj.selected_script_category +
-//                 "</a> cookies to view the content."
-//             );
-//             placeholderIframe.setAttribute("data-wpl-src", src);
-//             placeholderIframe.setAttribute(
-//               "data-wpl-class",
-//               "wpl-blocker-script"
-//             );
-//             placeholderIframe.setAttribute(
-//               "data-wpl-script-type",
-//               "marketing"
-//             );
-
-//             wrapper.appendChild(placeholderIframe);
-//             wrapper.style.display = ""; // show again
-
-//             // Calling placeholder logic
-//             if (
-//               typeof GDPR !== "undefined" &&
-//               typeof GDPR.addPlaceholder === "function"
-//             ) {
-//               GDPR.addPlaceholder(placeholderIframe);
-//             }
-//           }
-//         });
-//       }
-//     });
-//   });
-// });
-
-
-//    observer.observe(document.body, {
-//      childList: true,
-//      subtree: true,
-//    });
-//  });
-  
 })(jQuery);

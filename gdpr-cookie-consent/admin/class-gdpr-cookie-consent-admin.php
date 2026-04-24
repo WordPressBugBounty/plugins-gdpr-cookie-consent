@@ -9563,6 +9563,11 @@ class Gdpr_Cookie_Consent_Admin {
 			$message = 'Active';
 		} else {
 			update_option( 'app_wplp_subscription_status_pending_cancel', 1 );
+
+			require_once GDPR_COOKIE_CONSENT_PLUGIN_PATH . 'includes/class-gdpr-cookie-consent-app-auth.php';
+			$auth = new GDPR_Cookie_Consent_App_Auth();
+			$auth->perform_disconnect();
+
 			$message = 'Pending Cancel';
 		}
 

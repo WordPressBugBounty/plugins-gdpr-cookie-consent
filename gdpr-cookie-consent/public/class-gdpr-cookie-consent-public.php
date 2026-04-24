@@ -1244,6 +1244,31 @@ $selected_script_category = $wpdb->get_var(
 			if ( $the_options['consent_forward'] !== true ) {
 				$the_options['select_sites'] = null;
 			}
+
+			global $wpdb;
+			$youtube_category = array( 'slug' => 'preferences', 'name' => 'Preferences' );
+					
+			$youtube_script = $wpdb->get_row(
+			    "SELECT script_category FROM {$wpdb->prefix}wpl_cookie_scripts 
+			     WHERE script_key = 'youtube_embed' AND script_status = 1 
+			     LIMIT 1"
+			);
+			
+			if ( $youtube_script ) {
+			    $category = $wpdb->get_row( $wpdb->prepare(
+			        "SELECT gdpr_cookie_category_slug, gdpr_cookie_category_name 
+			         FROM {$wpdb->prefix}gdpr_cookie_scan_categories 
+			         WHERE id_gdpr_cookie_category = %d",
+			        $youtube_script->script_category
+			    ));
+			    if ( $category ) {
+			        $youtube_category = array(
+			            'slug' => $category->gdpr_cookie_category_slug,
+			            'name' => $category->gdpr_cookie_category_name,
+			        );
+			    }
+			}
+
 			$cookies_list_data = array(
 				'gdpr_cookies_list'                 		=> wp_json_encode( $categories_json_data),
 				'gdpr_cookiebar_settings'          		 	=> wp_json_encode( Gdpr_Cookie_Consent::gdpr_get_json_settings() ),
@@ -1267,8 +1292,8 @@ $selected_script_category = $wpdb->get_var(
 				'is_gcm_debug_on'							=> isset($the_options['is_gcm_debug_mode']) ? $this->convert_boolean($the_options['is_gcm_debug_mode']) : false,
 				'vendor_data'	                            => Gdpr_Cookie_Consent::gdpr_get_all_vendors(),
 				'cookieSettingsPopupAccentColor'	        => strtoupper(substr($finalColor, 0, -2)) === strtoupper($acceptAllBGColor) ? $the_options['button_accept_all_link_color'] : $acceptAllBGColor,
-				'template_parts' 	                        => $the_options['template_parts']
-        
+				'template_parts' 	                        => $the_options['template_parts'],
+				'youtube_embed_category'					=> $youtube_category
 			);
 
 
