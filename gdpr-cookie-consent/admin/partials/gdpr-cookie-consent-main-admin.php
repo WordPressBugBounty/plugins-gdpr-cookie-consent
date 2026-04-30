@@ -384,25 +384,34 @@ $site_domain = wp_parse_url($site_url, PHP_URL_HOST);
 				<!-- scans -->
 				<?php
 				// if user is connected to the app.wplegalpages then show remaining scans
-				if ( $is_user_connected == true && !$pro_installed ) {
+				if ( ($is_user_connected == true && !$pro_installed) || $is_user_connected == false  ) {
 					?>
 					<div class="gdpr-remaining-scans-content" >
-						<div class="wplp-remaining-scan-header-left">
-							<div class="wplp-scan-label" style="<?php if( $gdpr_plan_warning === true ) {
-								echo 'flex-direction: row;';
-							} ?>">
-								<p><?php echo esc_html( 'Remaining Scans', 'gdpr-cookie-consent' ); ?></p>
-								<p><?php echo esc_html( '& Usage:', 'gdpr-cookie-consent' ); ?></p>
-							</div>
-
-							<?php if( $gdpr_plan_warning === true ) { ?>
-								<div class="wplp-plan-limit-warning">
-									<span><img src="<?php echo esc_url( GDPR_COOKIE_CONSENT_PLUGIN_URL ) . 'admin/images/plan_limit_exceeded.svg'; ?>" alt="Plan Limit Exceeded"></span>
-									<p><?php echo esc_html( 'You have exhausted your current plan.', 'gdpr-cookie-consent' ); ?><br><?php echo esc_html( 'Upgrade to Continue', 'gdpr-cookie-consent'); ?></p>
+						<?php if($is_user_connected == true) { ?>
+							<div class="wplp-remaining-scan-header-left">
+								<div class="wplp-scan-label" style="<?php if( $gdpr_plan_warning === true ) {
+									echo 'flex-direction: row;';
+								} ?>">
+									<p><?php echo esc_html__( 'Remaining Scans', 'gdpr-cookie-consent' ); ?></p>
+									<p><?php echo esc_html__( '& Usage:', 'gdpr-cookie-consent' ); ?></p>
 								</div>
-							<?php } ?>
-						</div>	
-						
+
+								<?php if( $gdpr_plan_warning === true ) { ?>
+									<div class="wplp-plan-limit-warning">
+										<span><img src="<?php echo esc_url( GDPR_COOKIE_CONSENT_PLUGIN_URL ) . 'admin/images/plan_limit_exceeded.svg'; ?>" alt="Plan Limit Exceeded"></span>
+										<p><?php echo esc_html__( 'You have exhausted your current plan.', 'gdpr-cookie-consent' ); ?><br><?php echo esc_html( 'Upgrade to Continue', 'gdpr-cookie-consent'); ?></p>
+									</div>
+								<?php } ?>
+							</div>	
+						<?php } else { ?>
+							<div class="wplp-remaining-scan-header-left">
+								<div class="wplp-scan-label" style="flex-direction: row;">
+									<p><?php echo esc_html__( 'Remaining Usage:', 'gdpr-cookie-consent' ); ?></p>
+								</div>
+							</div>	
+						<?php } ?>
+
+						<?php if($is_user_connected == true) { ?>
 						<div class="gdpr-progress-wrapper">
 							<div class="gdpr-monthly-scans-progress" style="
 								background: 
@@ -474,6 +483,8 @@ $site_domain = wp_parse_url($site_url, PHP_URL_HOST);
 							<?php } ?>
 						</div>
 
+						<?php } ?>
+
 						<div class="gdpr-progress-wrapper">
 							<?php if ( '10Sites' === $api_user_plan || '10sites' === $api_user_plan || '25Sites' === $api_user_plan || '25sites' === $api_user_plan || '50Sites' === $api_user_plan || '50sites' === $api_user_plan || '100Sites' === $api_user_plan || '100sites' === $api_user_plan) { ?>
 								<div class="gdpr-pageviews-progress" style="
@@ -513,6 +524,7 @@ $site_domain = wp_parse_url($site_url, PHP_URL_HOST);
 							<?php } ?>
 						</div>
 
+						<?php if($is_user_connected == true) { ?>
 						<div class="wplp-plan-details">
 							<p><?php echo esc_html('Current Plan: ', 'gdpr-cookie-consent'); ?>
 							<?php if( $api_user_plan !== 'free' ) { ?>
@@ -525,7 +537,37 @@ $site_domain = wp_parse_url($site_url, PHP_URL_HOST);
 								<a class="wplp-scan-header-add-sites gdpr-cookie-consent-admin-upgrade-button"><?php echo esc_html('Add More Sites', 'gdpr-cookie-consent'); ?><img src="<?php echo esc_url( GDPR_COOKIE_CONSENT_PLUGIN_URL ) . 'admin/images/gdpr_add_site.svg'; ?>" alt=""></a>
 							<?php } ?>
 						</div>
+						<?php } ?>
 					</div>
+
+					<?php if($gdpr_monthly_page_views_percent >= 80) { ?>
+							<div class="gdpr-pageviews-notice-wrapper <?php if($gdpr_monthly_page_views_percent < 100) echo 'gdpr-pageviews-notice-warning'; ?>">
+								<div class="gdpr-pageviews-notice-content">
+									<svg width="63" height="59" viewBox="0 0 63 59" fill="none" xmlns="http://www.w3.org/2000/svg">
+										<path d="M28.9463 4.14232C30.1182 2.24145 32.8818 2.24145 34.0537 4.14232L55.9598 39.6757C57.192 41.6744 55.7541 44.25 53.406 44.25H9.59396C7.24592 44.25 5.80804 41.6744 7.04025 39.6757L28.9463 4.14232Z" fill="currentColor"/>
+										<path d="M30.84 30.224L29.3 17.12H33.92L32.352 30.224H30.84ZM31.512 37.42C30.8027 37.42 30.252 37.2707 29.86 36.972C29.4867 36.6733 29.3 36.216 29.3 35.6C29.3 35.096 29.4867 34.676 29.86 34.34C30.2333 34.004 30.8027 33.836 31.568 33.836C32.352 33.836 32.912 33.9947 33.248 34.312C33.584 34.6107 33.752 35.0587 33.752 35.656C33.752 36.2347 33.5653 36.6733 33.192 36.972C32.8187 37.2707 32.2587 37.42 31.512 37.42Z" fill="white"/>
+									</svg>
+
+
+									<div class="gdpr-pageviews-notice-text">
+										<h4>Warning!</h4>
+										<?php if($gdpr_monthly_page_views_percent < 100 ) { ?>
+										<p>You're nearing your monthly limit! You've used 80% of allowed cookie banner views. Upgrade your plan for unlimited views!</p>
+										<?php } else { ?>
+											<p>Limit Reached: You've used all available cookie banner views this month. Upgrade your plan for unlimited banner views!</p>
+										<?php } ?>
+									</div>
+								</div>
+								
+								
+							
+								<?php if( $api_user_plan === 'free' || $api_user_plan === 'Free' ) { ?>
+									<a class="wplp--scan-header-upgrade-plan gdpr-cookie-consent-admin-upgrade-button"><img src="<?php echo esc_url( GDPR_COOKIE_CONSENT_PLUGIN_URL ) . 'admin/images/gdpr_header_upgrade_icon.svg'; ?>" alt=""><?php echo esc_html('Upgrade', 'gdpr-cookie-consent'); ?></a>
+								<?php } else { ?>
+									<a class="wplp-scan-header-add-sites gdpr-cookie-consent-admin-upgrade-button"><?php echo esc_html('Add More Sites', 'gdpr-cookie-consent'); ?><img src="<?php echo esc_url( GDPR_COOKIE_CONSENT_PLUGIN_URL ) . 'admin/images/gdpr_add_site.svg'; ?>" alt=""></a>
+								<?php } ?>
+							</div>
+					<?php } ?>
 					<?php if ( get_transient( 'app_wplp_subscription_payment_status_failed' ) ) { ?>
 					<div class="gdpr-subsription-payment-failed-notice" >
 						<div class="gdpr-payment-fail-icon-wrapper">

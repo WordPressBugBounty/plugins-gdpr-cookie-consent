@@ -286,6 +286,8 @@
 }
 .gdprmodal-dialog .gdprmodal-footer .powered-by-credits {
   font-size: 10px;
+  display: flex;
+  justify-content: center;
 }
 #gdpr-ccpa-gdprmodal .gdprmodal-dialog .gdprmodal-footer .powered-by-credits a {
   color: var(--popup_accent_color);
@@ -2345,6 +2347,7 @@ Bootstrap CSS for frontend UI
     position: relative !important;
     left: unset !important;
     padding-top: 10px !important;
+    margin-left: 0 !important;
   }
   .gdpr_messagebar_detail .gdprmodal-content .gdprmodal-body {
     height: 60vh;
@@ -2358,7 +2361,34 @@ Bootstrap CSS for frontend UI
   }
 }
 
+@media (max-width: 779px) {
+    .gdprmodal-footer {
+        flex-direction: column;
+        align-items: stretch;
+        padding: 1rem;
+    }
+    .gdpr-footer-left {
+        width: 100%;
+        display: flex;
+        gap: 10px;
+        justify-content: flex-start;
+    }
 
+    .gdpr-footer-left button {
+        flex: 1;
+        font-size: 14px;
+    }
+    .gdpr-footer-right {
+        width: 100%;
+        margin-top: 10px;
+        margin-left: 0px !important;
+
+    }
+    .gdpr-footer-right button {
+        width: 100%;
+        font-size: 14px;
+    }
+}
 @media (max-width: 414px) {
   .gdprmodal-content.iabtcf{
     width: 100%;
@@ -2396,7 +2426,12 @@ Bootstrap CSS for frontend UI
 }
 @media (max-width: 990px) {
   .gdprmodal-content {
-    width: 75vw !important;
+    width: 80vw !important;
+  }
+}
+@media (min-width: 991px) and (max-width: 1243px) {
+  .gdprmodal-content {
+    width: 68vw !important;
   }
 }
 @media (max-width: 768px) {

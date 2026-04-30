@@ -586,10 +586,127 @@ if ( ! empty( $the_options['lgpd_notify'] )) {
 	}
 	if ( ! empty( $the_options['show_again' . $suffix] ) ) {
 		?>
-		<div id="<?php echo esc_html( $the_options['show_again_container_id'] ); ?>" style="position: fixed; display:none; bottom: 10px; color: <?php echo esc_html($the_options['button_revoke_consent_text_color' . $suffix]); ?>; background-color: <?php echo esc_html($the_options['button_revoke_consent_background_color' . $suffix]); ?>; <?php if($the_options['show_again_position' . $suffix] === 'right') echo "right: ". esc_html($the_options['show_again_margin' . $suffix]) . "%;"; else echo "left: ". esc_html($the_options['show_again_margin' . $suffix]) . "%;"; ?> border-radius: 5px; box-shadow: 0px 6px 11px gray;">
-		<span><?php echo esc_html__( $cookie_data['dash_show_again_text'], 'gdpr-cookie-consent' ); //phpcs:ignore ?></span>
-	</div>
-		<?php
+		<?php if ( $the_options['show_again_as' . $suffix] === "text" ) { ?>
+			<div id="<?php echo esc_html( $the_options['show_again_container_id'] ); ?>" style="position: fixed; display:none; bottom: 10px; color: <?php echo esc_html($the_options['button_revoke_consent_text_color' . $suffix]); ?>; background-color: <?php echo esc_html($the_options['button_revoke_consent_background_color' . $suffix]); ?>; <?php if($the_options['show_again_position' . $suffix] === 'right') echo "right: ". esc_html($the_options['show_again_margin' . $suffix]) . "%;"; else echo "left: ". esc_html($the_options['show_again_margin' . $suffix]) . "%;"; ?> border-radius: 5px; box-shadow: 0px 6px 11px gray;">
+				<span><?php echo esc_html__( $cookie_data['dash_show_again_text'], 'gdpr-cookie-consent' ); //phpcs:ignore ?></span>
+			</div>
+			<?php } elseif ( $the_options['show_again_as' . $suffix] === "icon" ) { ?>			
+				<?php if ( $the_options['show_again_icon' . $suffix] === "cookie" ) { ?>
+					<div id="<?php echo esc_html( $the_options['show_again_container_id'] ); ?>" 
+						style="
+							position: fixed; 
+							display:none; 
+							bottom: 10px; 
+							color: <?php echo esc_html($the_options['button_revoke_consent_text_color' . $suffix]); ?>; 
+							background-color: <?php echo esc_html($the_options['button_revoke_consent_background_color' . $suffix]); ?>; 
+							<?php if($the_options['show_again_position' . $suffix] === 'right') 
+								echo "right: ". esc_html($the_options['show_again_margin' . $suffix]) . "%;"; 
+							else 
+								echo "left: ". esc_html($the_options['show_again_margin' . $suffix]) . "%;"; ?> 
+							border-radius: 50%; 
+							height: 50px;
+							width: 50px;
+							padding: 4px !important;
+							box-shadow: 0px 6px 11px gray;"
+					>
+						<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
+							<path fill="currentColor" stroke="currentColor" d="M321.5 91.6C320.7 86.2 316.6 81.8 311.2 81C289.1 77.9 266.6 81.9 246.8 92.4L172.8 131.9C153.1 142.4 137.2 158.9 127.4 179L90.7 254.6C80.9 274.7 77.7 297.5 81.6 319.5L96.1 402.3C100 424.4 110.7 444.6 126.8 460.2L187.1 518.6C203.2 534.2 223.7 544.2 245.8 547.3L328.8 559C350.9 562.1 373.4 558.1 393.2 547.6L467.2 508.1C486.9 497.6 502.8 481.1 512.6 460.9L549.3 385.4C559.1 365.3 562.3 342.5 558.4 320.5C557.5 315.2 553.1 311.2 547.8 310.4C496.3 302.2 455 263.3 443.3 213C441.5 205.4 435.3 199.6 427.6 198.4C373 189.7 329.9 146.4 321.4 91.6zM272 208C289.7 208 304 222.3 304 240C304 257.7 289.7 272 272 272C254.3 272 240 257.7 240 240C240 222.3 254.3 208 272 208zM208 400C208 382.3 222.3 368 240 368C257.7 368 272 382.3 272 400C272 417.7 257.7 432 240 432C222.3 432 208 417.7 208 400zM432 336C449.7 336 464 350.3 464 368C464 385.7 449.7 400 432 400C414.3 400 400 385.7 400 368C400 350.3 414.3 336 432 336z"/>
+						</svg>
+					</div>
+				<?php } elseif ( $the_options['show_again_icon' . $suffix] === "shield" ) { ?>
+					<div id="<?php echo esc_html( $the_options['show_again_container_id'] ); ?>" 
+						style="
+							position: fixed; 
+							display:none; 
+							bottom: 10px; 
+							color: <?php echo esc_html($the_options['button_revoke_consent_text_color' . $suffix]); ?>; 
+							background-color: <?php echo esc_html($the_options['button_revoke_consent_background_color' . $suffix]); ?>; 
+							<?php if($the_options['show_again_position' . $suffix] === 'right') 
+								echo "right: ". esc_html($the_options['show_again_margin' . $suffix]) . "%;"; 
+							else 
+								echo "left: ". esc_html($the_options['show_again_margin' . $suffix]) . "%;"; ?> 
+							border-radius: 50%; 
+							height: 50px;
+							width: 50px;
+							padding: 4px !important;
+							box-shadow: 0px 6px 11px gray;"
+					>
+						<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
+							<path fill="currentColor" stroke="currentColor" d="M320 64C324.6 64 329.2 65 333.4 66.9L521.8 146.8C543.8 156.1 560.2 177.8 560.1 204C559.6 303.2 518.8 484.7 346.5 567.2C329.8 575.2 310.4 575.2 293.7 567.2C121.3 484.7 80.6 303.2 80.1 204C80 177.8 96.4 156.1 118.4 146.8L306.7 66.9C310.9 65 315.4 64 320 64z"/>
+						</svg>
+					</div>
+				<?php } elseif ( $the_options['show_again_icon' . $suffix] === "gear" ) { ?>
+					<div id="<?php echo esc_html( $the_options['show_again_container_id'] ); ?>" 
+						style="
+							position: fixed; 
+							display:none; 
+							bottom: 10px; 
+							color: <?php echo esc_html($the_options['button_revoke_consent_text_color' . $suffix]); ?>; 
+							background-color: <?php echo esc_html($the_options['button_revoke_consent_background_color' . $suffix]); ?>; 
+							<?php if($the_options['show_again_position' . $suffix] === 'right') 
+								echo "right: ". esc_html($the_options['show_again_margin' . $suffix]) . "%;"; 
+							else 
+								echo "left: ". esc_html($the_options['show_again_margin' . $suffix]) . "%;"; ?> 
+							border-radius: 50%; 
+							height: 50px;
+							width: 50px;
+							padding: 4px !important;
+							box-shadow: 0px 6px 11px gray;"
+					>
+						<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
+							<path fill="currentColor" stroke="currentColor" d="M259.1 73.5C262.1 58.7 275.2 48 290.4 48L350.2 48C365.4 48 378.5 58.7 381.5 73.5L396 143.5C410.1 149.5 423.3 157.2 435.3 166.3L503.1 143.8C517.5 139 533.3 145 540.9 158.2L570.8 210C578.4 223.2 575.7 239.8 564.3 249.9L511 297.3C511.9 304.7 512.3 312.3 512.3 320C512.3 327.7 511.8 335.3 511 342.7L564.4 390.2C575.8 400.3 578.4 417 570.9 430.1L541 481.9C533.4 495 517.6 501.1 503.2 496.3L435.4 473.8C423.3 482.9 410.1 490.5 396.1 496.6L381.7 566.5C378.6 581.4 365.5 592 350.4 592L290.6 592C275.4 592 262.3 581.3 259.3 566.5L244.9 496.6C230.8 490.6 217.7 482.9 205.6 473.8L137.5 496.3C123.1 501.1 107.3 495.1 99.7 481.9L69.8 430.1C62.2 416.9 64.9 400.3 76.3 390.2L129.7 342.7C128.8 335.3 128.4 327.7 128.4 320C128.4 312.3 128.9 304.7 129.7 297.3L76.3 249.8C64.9 239.7 62.3 223 69.8 209.9L99.7 158.1C107.3 144.9 123.1 138.9 137.5 143.7L205.3 166.2C217.4 157.1 230.6 149.5 244.6 143.4L259.1 73.5zM320.3 400C364.5 399.8 400.2 363.9 400 319.7C399.8 275.5 363.9 239.8 319.7 240C275.5 240.2 239.8 276.1 240 320.3C240.2 364.5 276.1 400.2 320.3 400z"/>
+						</svg>
+					</div>
+				<?php } else {
+					$revoke_icon_img = get_option( GDPR_COOKIE_CONSENT_SETTINGS_REVOKE_ICON . $suffix );
+					
+					if (!empty($revoke_icon_img)) { ?>
+					<div id="<?php echo esc_html( $the_options['show_again_container_id'] ); ?>"
+						style="
+							position: fixed; 
+							display:none; 
+							bottom: 10px;  
+							<?php if($the_options['show_again_position' . $suffix] === 'right') 
+								echo "right: ". esc_html($the_options['show_again_margin' . $suffix]) . "%;"; 
+							else 
+								echo "left: ". esc_html($the_options['show_again_margin' . $suffix]) . "%;"; ?> 
+							padding:0 !important;"
+					>
+						<img 
+							style="
+								height: 50px;
+								width: auto;
+								object-fit: contain;
+							" 
+							alt="revoke-icon" 
+							src="<?php echo esc_url_raw( $revoke_icon_img ); ?>" 
+						>
+					</div>
+					<?php } else { ?>
+						<div id="<?php echo esc_html( $the_options['show_again_container_id'] ); ?>" 
+							style="
+								position: fixed; 
+								display:none; 
+								bottom: 10px; 
+								color: <?php echo esc_html($the_options['button_revoke_consent_text_color' . $suffix]); ?>; 
+								background-color: <?php echo esc_html($the_options['button_revoke_consent_background_color' . $suffix]); ?>; 
+								<?php if($the_options['show_again_position' . $suffix] === 'right') 
+									echo "right: ". esc_html($the_options['show_again_margin' . $suffix]) . "%;"; 
+								else 
+									echo "left: ". esc_html($the_options['show_again_margin' . $suffix]) . "%;"; ?> 
+								border-radius: 50%; 
+								height: 50px;
+								width: 50px;
+								padding: 4px !important;
+								box-shadow: 0px 6px 11px gray;"
+						>
+							<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
+								<path fill="currentColor" stroke="currentColor" d="M321.5 91.6C320.7 86.2 316.6 81.8 311.2 81C289.1 77.9 266.6 81.9 246.8 92.4L172.8 131.9C153.1 142.4 137.2 158.9 127.4 179L90.7 254.6C80.9 274.7 77.7 297.5 81.6 319.5L96.1 402.3C100 424.4 110.7 444.6 126.8 460.2L187.1 518.6C203.2 534.2 223.7 544.2 245.8 547.3L328.8 559C350.9 562.1 373.4 558.1 393.2 547.6L467.2 508.1C486.9 497.6 502.8 481.1 512.6 460.9L549.3 385.4C559.1 365.3 562.3 342.5 558.4 320.5C557.5 315.2 553.1 311.2 547.8 310.4C496.3 302.2 455 263.3 443.3 213C441.5 205.4 435.3 199.6 427.6 198.4C373 189.7 329.9 146.4 321.4 91.6zM272 208C289.7 208 304 222.3 304 240C304 257.7 289.7 272 272 272C254.3 272 240 257.7 240 240C240 222.3 254.3 208 272 208zM208 400C208 382.3 222.3 368 240 368C257.7 368 272 382.3 272 400C272 417.7 257.7 432 240 432C222.3 432 208 417.7 208 400zM432 336C449.7 336 464 350.3 464 368C464 385.7 449.7 400 432 400C414.3 400 400 385.7 400 368C400 350.3 414.3 336 432 336z"/>
+							</svg>
+						</div>
+					<?php }
+				} ?>
+		<?php }
 	}
 }
 if ( ! empty( $the_options['gdpr_notify'] )) {
@@ -602,19 +719,254 @@ if ( ! empty( $the_options['gdpr_notify'] )) {
 	}
 	if ( ! empty( $the_options['show_again' . $suffix] ) ) {
 		?>
-		<div id="<?php echo esc_html( $the_options['show_again_container_id'] ); ?>" style="position: fixed; display:none; bottom: 10px; color: <?php echo esc_html($the_options['button_revoke_consent_text_color' . $suffix]); ?>; background-color: <?php echo esc_html($the_options['button_revoke_consent_background_color' . $suffix]); ?>; <?php if($the_options['show_again_position' . $suffix] === 'right') echo "right: ". esc_html($the_options['show_again_margin' . $suffix]) . "%;"; else echo "left: ". esc_html($the_options['show_again_margin' . $suffix]) . "%;"; ?> border-radius: 5px; box-shadow: 0px 6px 11px gray;">
-		<span><?php echo esc_html__( $cookie_data['dash_show_again_text'], 'gdpr-cookie-consent' ); //phpcs:ignore ?></span>
-	</div>
-		<?php
+		<?php if ( $the_options['show_again_as' . $suffix] === "text" ) { ?>
+			<div id="<?php echo esc_html( $the_options['show_again_container_id'] ); ?>" style="position: fixed; display:none; bottom: 10px; color: <?php echo esc_html($the_options['button_revoke_consent_text_color' . $suffix]); ?>; background-color: <?php echo esc_html($the_options['button_revoke_consent_background_color' . $suffix]); ?>; <?php if($the_options['show_again_position' . $suffix] === 'right') echo "right: ". esc_html($the_options['show_again_margin' . $suffix]) . "%;"; else echo "left: ". esc_html($the_options['show_again_margin' . $suffix]) . "%;"; ?> border-radius: 5px; box-shadow: 0px 6px 11px gray;">
+				<span><?php echo esc_html__( $cookie_data['dash_show_again_text'], 'gdpr-cookie-consent' ); //phpcs:ignore ?></span>
+			</div>
+		<?php } elseif ( $the_options['show_again_as' . $suffix] === "icon" ) { ?>
+				<?php if ( $the_options['show_again_icon' . $suffix] === "cookie" ) { ?>
+					<div id="<?php echo esc_html( $the_options['show_again_container_id'] ); ?>" 
+						style="
+							position: fixed; 
+							display:none; 
+							bottom: 10px; 
+							color: <?php echo esc_html($the_options['button_revoke_consent_text_color' . $suffix]); ?>; 
+							background-color: <?php echo esc_html($the_options['button_revoke_consent_background_color' . $suffix]); ?>; 
+							<?php if($the_options['show_again_position' . $suffix] === 'right') 
+								echo "right: ". esc_html($the_options['show_again_margin' . $suffix]) . "%;"; 
+							else 
+								echo "left: ". esc_html($the_options['show_again_margin' . $suffix]) . "%;"; ?> 
+							border-radius: 50%; 
+							height: 50px;
+							width: 50px;
+							padding: 4px !important;
+							box-shadow: 0px 6px 11px gray;"
+					>
+						<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
+							<path fill="currentColor" stroke="currentColor" d="M321.5 91.6C320.7 86.2 316.6 81.8 311.2 81C289.1 77.9 266.6 81.9 246.8 92.4L172.8 131.9C153.1 142.4 137.2 158.9 127.4 179L90.7 254.6C80.9 274.7 77.7 297.5 81.6 319.5L96.1 402.3C100 424.4 110.7 444.6 126.8 460.2L187.1 518.6C203.2 534.2 223.7 544.2 245.8 547.3L328.8 559C350.9 562.1 373.4 558.1 393.2 547.6L467.2 508.1C486.9 497.6 502.8 481.1 512.6 460.9L549.3 385.4C559.1 365.3 562.3 342.5 558.4 320.5C557.5 315.2 553.1 311.2 547.8 310.4C496.3 302.2 455 263.3 443.3 213C441.5 205.4 435.3 199.6 427.6 198.4C373 189.7 329.9 146.4 321.4 91.6zM272 208C289.7 208 304 222.3 304 240C304 257.7 289.7 272 272 272C254.3 272 240 257.7 240 240C240 222.3 254.3 208 272 208zM208 400C208 382.3 222.3 368 240 368C257.7 368 272 382.3 272 400C272 417.7 257.7 432 240 432C222.3 432 208 417.7 208 400zM432 336C449.7 336 464 350.3 464 368C464 385.7 449.7 400 432 400C414.3 400 400 385.7 400 368C400 350.3 414.3 336 432 336z"/>
+						</svg>
+					</div>
+				<?php } elseif ( $the_options['show_again_icon' . $suffix] === "shield" ) { ?>
+					<div id="<?php echo esc_html( $the_options['show_again_container_id'] ); ?>" 
+						style="
+							position: fixed; 
+							display:none; 
+							bottom: 10px; 
+							color: <?php echo esc_html($the_options['button_revoke_consent_text_color' . $suffix]); ?>; 
+							background-color: <?php echo esc_html($the_options['button_revoke_consent_background_color' . $suffix]); ?>; 
+							<?php if($the_options['show_again_position' . $suffix] === 'right') 
+								echo "right: ". esc_html($the_options['show_again_margin' . $suffix]) . "%;"; 
+							else 
+								echo "left: ". esc_html($the_options['show_again_margin' . $suffix]) . "%;"; ?> 
+							border-radius: 50%; 
+							height: 50px;
+							width: 50px;
+							padding: 4px !important;
+							box-shadow: 0px 6px 11px gray;"
+					>
+						<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
+							<path fill="currentColor" stroke="currentColor" d="M320 64C324.6 64 329.2 65 333.4 66.9L521.8 146.8C543.8 156.1 560.2 177.8 560.1 204C559.6 303.2 518.8 484.7 346.5 567.2C329.8 575.2 310.4 575.2 293.7 567.2C121.3 484.7 80.6 303.2 80.1 204C80 177.8 96.4 156.1 118.4 146.8L306.7 66.9C310.9 65 315.4 64 320 64z"/>
+						</svg>
+					</div>
+				<?php } elseif ( $the_options['show_again_icon' . $suffix] === "gear" ) { ?>
+					<div id="<?php echo esc_html( $the_options['show_again_container_id'] ); ?>" 
+						style="
+							position: fixed; 
+							display:none; 
+							bottom: 10px; 
+							color: <?php echo esc_html($the_options['button_revoke_consent_text_color' . $suffix]); ?>; 
+							background-color: <?php echo esc_html($the_options['button_revoke_consent_background_color' . $suffix]); ?>; 
+							<?php if($the_options['show_again_position' . $suffix] === 'right') 
+								echo "right: ". esc_html($the_options['show_again_margin' . $suffix]) . "%;"; 
+							else 
+								echo "left: ". esc_html($the_options['show_again_margin' . $suffix]) . "%;"; ?> 
+							border-radius: 50%; 
+							height: 50px;
+							width: 50px;
+							padding: 4px !important;
+							box-shadow: 0px 6px 11px gray;"
+					>
+						<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
+							<path fill="currentColor" stroke="currentColor" d="M259.1 73.5C262.1 58.7 275.2 48 290.4 48L350.2 48C365.4 48 378.5 58.7 381.5 73.5L396 143.5C410.1 149.5 423.3 157.2 435.3 166.3L503.1 143.8C517.5 139 533.3 145 540.9 158.2L570.8 210C578.4 223.2 575.7 239.8 564.3 249.9L511 297.3C511.9 304.7 512.3 312.3 512.3 320C512.3 327.7 511.8 335.3 511 342.7L564.4 390.2C575.8 400.3 578.4 417 570.9 430.1L541 481.9C533.4 495 517.6 501.1 503.2 496.3L435.4 473.8C423.3 482.9 410.1 490.5 396.1 496.6L381.7 566.5C378.6 581.4 365.5 592 350.4 592L290.6 592C275.4 592 262.3 581.3 259.3 566.5L244.9 496.6C230.8 490.6 217.7 482.9 205.6 473.8L137.5 496.3C123.1 501.1 107.3 495.1 99.7 481.9L69.8 430.1C62.2 416.9 64.9 400.3 76.3 390.2L129.7 342.7C128.8 335.3 128.4 327.7 128.4 320C128.4 312.3 128.9 304.7 129.7 297.3L76.3 249.8C64.9 239.7 62.3 223 69.8 209.9L99.7 158.1C107.3 144.9 123.1 138.9 137.5 143.7L205.3 166.2C217.4 157.1 230.6 149.5 244.6 143.4L259.1 73.5zM320.3 400C364.5 399.8 400.2 363.9 400 319.7C399.8 275.5 363.9 239.8 319.7 240C275.5 240.2 239.8 276.1 240 320.3C240.2 364.5 276.1 400.2 320.3 400z"/>
+						</svg>
+					</div>
+				<?php } else {
+					$revoke_icon_img = get_option( GDPR_COOKIE_CONSENT_SETTINGS_REVOKE_ICON . $suffix );
+					
+					if (!empty($revoke_icon_img)) { ?>
+					<div id="<?php echo esc_html( $the_options['show_again_container_id'] ); ?>"
+						style="
+							position: fixed; 
+							display:none; 
+							bottom: 10px;  
+							<?php if($the_options['show_again_position' . $suffix] === 'right') 
+								echo "right: ". esc_html($the_options['show_again_margin' . $suffix]) . "%;"; 
+							else 
+								echo "left: ". esc_html($the_options['show_again_margin' . $suffix]) . "%;"; ?> 
+							padding:0 !important"
+					>
+						<img 
+							style="
+								height: 50px;
+								width: auto;
+								object-fit: contain;
+							" 
+							alt="revoke-icon" 
+							src="<?php echo esc_url_raw( $revoke_icon_img ); ?>" 
+						>
+					</div>
+					<?php } else { ?>
+						<div id="<?php echo esc_html( $the_options['show_again_container_id'] ); ?>" 
+							style="
+								position: fixed; 
+								display:none; 
+								bottom: 10px; 
+								color: <?php echo esc_html($the_options['button_revoke_consent_text_color' . $suffix]); ?>; 
+								background-color: <?php echo esc_html($the_options['button_revoke_consent_background_color' . $suffix]); ?>; 
+								<?php if($the_options['show_again_position' . $suffix] === 'right') 
+									echo "right: ". esc_html($the_options['show_again_margin' . $suffix]) . "%;"; 
+								else 
+									echo "left: ". esc_html($the_options['show_again_margin' . $suffix]) . "%;"; ?> 
+								border-radius: 50%; 
+								height: 50px;
+								width: 50px;
+								padding: 4px !important;
+								box-shadow: 0px 6px 11px gray;"
+						>
+							<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
+								<path fill="currentColor" stroke="currentColor" d="M321.5 91.6C320.7 86.2 316.6 81.8 311.2 81C289.1 77.9 266.6 81.9 246.8 92.4L172.8 131.9C153.1 142.4 137.2 158.9 127.4 179L90.7 254.6C80.9 274.7 77.7 297.5 81.6 319.5L96.1 402.3C100 424.4 110.7 444.6 126.8 460.2L187.1 518.6C203.2 534.2 223.7 544.2 245.8 547.3L328.8 559C350.9 562.1 373.4 558.1 393.2 547.6L467.2 508.1C486.9 497.6 502.8 481.1 512.6 460.9L549.3 385.4C559.1 365.3 562.3 342.5 558.4 320.5C557.5 315.2 553.1 311.2 547.8 310.4C496.3 302.2 455 263.3 443.3 213C441.5 205.4 435.3 199.6 427.6 198.4C373 189.7 329.9 146.4 321.4 91.6zM272 208C289.7 208 304 222.3 304 240C304 257.7 289.7 272 272 272C254.3 272 240 257.7 240 240C240 222.3 254.3 208 272 208zM208 400C208 382.3 222.3 368 240 368C257.7 368 272 382.3 272 400C272 417.7 257.7 432 240 432C222.3 432 208 417.7 208 400zM432 336C449.7 336 464 350.3 464 368C464 385.7 449.7 400 432 400C414.3 400 400 385.7 400 368C400 350.3 414.3 336 432 336z"/>
+							</svg>
+						</div>
+					<?php }
+				} ?>
+		<?php }
 	}
 }
 if ( ! empty( $the_options['eprivacy_notify'] ) ) {
 	if ( ! empty( $the_options['show_again' . $suffix] ) ) {
 		?>
-		<div id="<?php echo esc_html( $the_options['show_again_container_id'] ); ?>" style="position: fixed; display:none; bottom: 10px; color: <?php echo esc_html($the_options['button_revoke_consent_text_color' . $suffix]); ?>; background-color: <?php echo esc_html($the_options['button_revoke_consent_background_color' . $suffix]); ?>; <?php if($the_options['show_again_position' . $suffix] === 'right') echo "right: ". esc_html($the_options['show_again_margin' . $suffix]) . "%;"; else echo "left: ". esc_html($the_options['show_again_margin' . $suffix]) . "%;"; ?> border-radius: 5px; box-shadow: 0px 6px 11px gray;">
-			<span><?php echo esc_html__( $cookie_data['dash_show_again_text'], 'gdpr-cookie-consent' );//phpcs:ignore ?></span>
-		</div>
+		<?php if ( $the_options['show_again_as' . $suffix] === "text" ) { ?>
+			<div id="<?php echo esc_html( $the_options['show_again_container_id'] ); ?>" style="position: fixed; display:none; bottom: 10px; color: <?php echo esc_html($the_options['button_revoke_consent_text_color' . $suffix]); ?>; background-color: <?php echo esc_html($the_options['button_revoke_consent_background_color' . $suffix]); ?>; <?php if($the_options['show_again_position' . $suffix] === 'right') echo "right: ". esc_html($the_options['show_again_margin' . $suffix]) . "%;"; else echo "left: ". esc_html($the_options['show_again_margin' . $suffix]) . "%;"; ?> border-radius: 5px; box-shadow: 0px 6px 11px gray;">
+				<span><?php echo esc_html__( $cookie_data['dash_show_again_text'], 'gdpr-cookie-consent' );//phpcs:ignore ?></span>
+			</div>
+		<?php } elseif ( $the_options['show_again_as' . $suffix] === "icon" ) {?>
+				<?php if ( $the_options['show_again_icon' . $suffix] === "cookie" ) { ?>
+					<div id="<?php echo esc_html( $the_options['show_again_container_id'] ); ?>" 
+						style="
+							position: fixed; 
+							display:none; 
+							bottom: 10px; 
+							color: <?php echo esc_html($the_options['button_revoke_consent_text_color' . $suffix]); ?>; 
+							background-color: <?php echo esc_html($the_options['button_revoke_consent_background_color' . $suffix]); ?>; 
+							<?php if($the_options['show_again_position' . $suffix] === 'right') 
+								echo "right: ". esc_html($the_options['show_again_margin' . $suffix]) . "%;"; 
+							else 
+								echo "left: ". esc_html($the_options['show_again_margin' . $suffix]) . "%;"; ?> 
+							border-radius: 50%; 
+							height: 50px;
+							width: 50px;
+							padding: 4px !important;
+							box-shadow: 0px 6px 11px gray;"
+					>
+						<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
+							<path fill="currentColor" stroke="currentColor" d="M321.5 91.6C320.7 86.2 316.6 81.8 311.2 81C289.1 77.9 266.6 81.9 246.8 92.4L172.8 131.9C153.1 142.4 137.2 158.9 127.4 179L90.7 254.6C80.9 274.7 77.7 297.5 81.6 319.5L96.1 402.3C100 424.4 110.7 444.6 126.8 460.2L187.1 518.6C203.2 534.2 223.7 544.2 245.8 547.3L328.8 559C350.9 562.1 373.4 558.1 393.2 547.6L467.2 508.1C486.9 497.6 502.8 481.1 512.6 460.9L549.3 385.4C559.1 365.3 562.3 342.5 558.4 320.5C557.5 315.2 553.1 311.2 547.8 310.4C496.3 302.2 455 263.3 443.3 213C441.5 205.4 435.3 199.6 427.6 198.4C373 189.7 329.9 146.4 321.4 91.6zM272 208C289.7 208 304 222.3 304 240C304 257.7 289.7 272 272 272C254.3 272 240 257.7 240 240C240 222.3 254.3 208 272 208zM208 400C208 382.3 222.3 368 240 368C257.7 368 272 382.3 272 400C272 417.7 257.7 432 240 432C222.3 432 208 417.7 208 400zM432 336C449.7 336 464 350.3 464 368C464 385.7 449.7 400 432 400C414.3 400 400 385.7 400 368C400 350.3 414.3 336 432 336z"/>
+						</svg>
+					</div>
+				<?php } elseif ( $the_options['show_again_icon' . $suffix] === "shield" ) { ?>
+					<div id="<?php echo esc_html( $the_options['show_again_container_id'] ); ?>" 
+						style="
+							position: fixed; 
+							display:none; 
+							bottom: 10px; 
+							color: <?php echo esc_html($the_options['button_revoke_consent_text_color' . $suffix]); ?>; 
+							background-color: <?php echo esc_html($the_options['button_revoke_consent_background_color' . $suffix]); ?>; 
+							<?php if($the_options['show_again_position' . $suffix] === 'right') 
+								echo "right: ". esc_html($the_options['show_again_margin' . $suffix]) . "%;"; 
+							else 
+								echo "left: ". esc_html($the_options['show_again_margin' . $suffix]) . "%;"; ?> 
+							border-radius: 50%; 
+							height: 50px;
+							width: 50px;
+							padding: 4px !important;
+							box-shadow: 0px 6px 11px gray;"
+					>
+						<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
+							<path fill="currentColor" stroke="currentColor" d="M320 64C324.6 64 329.2 65 333.4 66.9L521.8 146.8C543.8 156.1 560.2 177.8 560.1 204C559.6 303.2 518.8 484.7 346.5 567.2C329.8 575.2 310.4 575.2 293.7 567.2C121.3 484.7 80.6 303.2 80.1 204C80 177.8 96.4 156.1 118.4 146.8L306.7 66.9C310.9 65 315.4 64 320 64z"/>
+						</svg>
+					</div>
+				<?php } elseif ( $the_options['show_again_icon' . $suffix] === "gear" ) { ?>
+					<div id="<?php echo esc_html( $the_options['show_again_container_id'] ); ?>" 
+						style="
+							position: fixed; 
+							display:none; 
+							bottom: 10px; 
+							color: <?php echo esc_html($the_options['button_revoke_consent_text_color' . $suffix]); ?>; 
+							background-color: <?php echo esc_html($the_options['button_revoke_consent_background_color' . $suffix]); ?>; 
+							<?php if($the_options['show_again_position' . $suffix] === 'right') 
+								echo "right: ". esc_html($the_options['show_again_margin' . $suffix]) . "%;"; 
+							else 
+								echo "left: ". esc_html($the_options['show_again_margin' . $suffix]) . "%;"; ?> 
+							border-radius: 50%; 
+							height: 50px;
+							width: 50px;
+							padding: 4px !important;
+							box-shadow: 0px 6px 11px gray;"
+					>
+						<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
+							<path fill="currentColor" stroke="currentColor" d="M259.1 73.5C262.1 58.7 275.2 48 290.4 48L350.2 48C365.4 48 378.5 58.7 381.5 73.5L396 143.5C410.1 149.5 423.3 157.2 435.3 166.3L503.1 143.8C517.5 139 533.3 145 540.9 158.2L570.8 210C578.4 223.2 575.7 239.8 564.3 249.9L511 297.3C511.9 304.7 512.3 312.3 512.3 320C512.3 327.7 511.8 335.3 511 342.7L564.4 390.2C575.8 400.3 578.4 417 570.9 430.1L541 481.9C533.4 495 517.6 501.1 503.2 496.3L435.4 473.8C423.3 482.9 410.1 490.5 396.1 496.6L381.7 566.5C378.6 581.4 365.5 592 350.4 592L290.6 592C275.4 592 262.3 581.3 259.3 566.5L244.9 496.6C230.8 490.6 217.7 482.9 205.6 473.8L137.5 496.3C123.1 501.1 107.3 495.1 99.7 481.9L69.8 430.1C62.2 416.9 64.9 400.3 76.3 390.2L129.7 342.7C128.8 335.3 128.4 327.7 128.4 320C128.4 312.3 128.9 304.7 129.7 297.3L76.3 249.8C64.9 239.7 62.3 223 69.8 209.9L99.7 158.1C107.3 144.9 123.1 138.9 137.5 143.7L205.3 166.2C217.4 157.1 230.6 149.5 244.6 143.4L259.1 73.5zM320.3 400C364.5 399.8 400.2 363.9 400 319.7C399.8 275.5 363.9 239.8 319.7 240C275.5 240.2 239.8 276.1 240 320.3C240.2 364.5 276.1 400.2 320.3 400z"/>
+						</svg>
+					</div>
+				<?php } else {
+					$revoke_icon_img = get_option( GDPR_COOKIE_CONSENT_SETTINGS_REVOKE_ICON . $suffix );
+					
+					if (!empty($revoke_icon_img)) { ?>
+					<div id="<?php echo esc_html( $the_options['show_again_container_id'] ); ?>"
+						style="
+							position: fixed; 
+							display:none; 
+							bottom: 10px;  
+							<?php if($the_options['show_again_position' . $suffix] === 'right') 
+								echo "right: ". esc_html($the_options['show_again_margin' . $suffix]) . "%;"; 
+							else 
+								echo "left: ". esc_html($the_options['show_again_margin' . $suffix]) . "%;"; ?> 
+							padding:0 !important;"
+					>
+						<img 
+							style="
+								height: 50px;
+								width: auto;
+								object-fit: contain;
+							" 
+							alt="revoke-icon" 
+							src="<?php echo esc_url_raw( $revoke_icon_img ); ?>" 
+						>
+					</div>
+					<?php } else { ?>
+						<div id="<?php echo esc_html( $the_options['show_again_container_id'] ); ?>" 
+							style="
+								position: fixed; 
+								display:none; 
+								bottom: 10px; 
+								color: <?php echo esc_html($the_options['button_revoke_consent_text_color' . $suffix]); ?>; 
+								background-color: <?php echo esc_html($the_options['button_revoke_consent_background_color' . $suffix]); ?>; 
+								<?php if($the_options['show_again_position' . $suffix] === 'right') 
+									echo "right: ". esc_html($the_options['show_again_margin' . $suffix]) . "%;"; 
+								else 
+									echo "left: ". esc_html($the_options['show_again_margin' . $suffix]) . "%;"; ?> 
+								border-radius: 50%; 
+								height: 50px;
+								width: 50px;
+								padding: 4px !important;
+								box-shadow: 0px 6px 11px gray;"
+						>
+							<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
+								<path fill="currentColor" stroke="currentColor" d="M321.5 91.6C320.7 86.2 316.6 81.8 311.2 81C289.1 77.9 266.6 81.9 246.8 92.4L172.8 131.9C153.1 142.4 137.2 158.9 127.4 179L90.7 254.6C80.9 274.7 77.7 297.5 81.6 319.5L96.1 402.3C100 424.4 110.7 444.6 126.8 460.2L187.1 518.6C203.2 534.2 223.7 544.2 245.8 547.3L328.8 559C350.9 562.1 373.4 558.1 393.2 547.6L467.2 508.1C486.9 497.6 502.8 481.1 512.6 460.9L549.3 385.4C559.1 365.3 562.3 342.5 558.4 320.5C557.5 315.2 553.1 311.2 547.8 310.4C496.3 302.2 455 263.3 443.3 213C441.5 205.4 435.3 199.6 427.6 198.4C373 189.7 329.9 146.4 321.4 91.6zM272 208C289.7 208 304 222.3 304 240C304 257.7 289.7 272 272 272C254.3 272 240 257.7 240 240C240 222.3 254.3 208 272 208zM208 400C208 382.3 222.3 368 240 368C257.7 368 272 382.3 272 400C272 417.7 257.7 432 240 432C222.3 432 208 417.7 208 400zM432 336C449.7 336 464 350.3 464 368C464 385.7 449.7 400 432 400C414.3 400 400 385.7 400 368C400 350.3 414.3 336 432 336z"/>
+							</svg>
+						</div>
+					<?php }
+				} ?>
 		<?php
+		}
 	}
 }
 

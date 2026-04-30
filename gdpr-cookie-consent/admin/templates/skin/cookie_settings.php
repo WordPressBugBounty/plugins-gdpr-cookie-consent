@@ -185,7 +185,7 @@ if ( ! defined( 'ABSPATH' ) ) {
                      <div class="gdpr-about-cookies"><?php echo esc_html( $the_options['about_message'] ); ?></div>
                      <div class="gdpr-about-cookies iabtcf"><?php echo esc_html( $the_options['about_message'] ); ?></div>
                      <div v-if="gcm_is_on" class="gdpr-about-cookies-gcm">
-                        <?php echo esc_html("For more information on how Google's third party cookies operate and handle your data, see: "); ?><a :style="{'color': cookieSettingsPopupAccentColor}" href="https://business.safety.google/privacy" target="blank"><?php echo esc_html("Google's Privacy Policy"); ?></a>
+                        <?php echo esc_html__("For more information on how Google's third party cookies operate and handle your data, see: ", "gdpr-cookie-consent"); ?><a :style="{'color': cookieSettingsPopupAccentColor}" href="https://business.safety.google/privacy" target="blank"><?php echo esc_html__("Google's Privacy Policy","gdpr-cookie-consent"); ?></a>
                      </div>
                      <ul class="gdpr-iab-navbar">
                         <li class="gdpr-iab-navbar-item" id="gdprIABTabCategory">
@@ -861,10 +861,58 @@ if ( ! defined( 'ABSPATH' ) ) {
                   </div>
 				</div>
 			</div>
-			<div class="gdprmodal-footer">
-            
-				<div v-show="show_credits" class="powered-by-credits"  :style="{'--popup_accent_color': cookieSettingsPopupAccentColor, 'text-align':'center', 'font-size': '10px', 'margin-bottom':'-10px', 'margin-right': 'auto'}"><?php echo wp_kses_post( $credit_link  ); ?></div>
-					
+			<div class="gdprmodal-footer" style=" display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+				<div class="gdpr-footer-left" style="display:flex; gap:10px; flex-wrap:wrap;">
+            <!-- DECLINE -->
+            <button type="button" class="cookie-settings-popup-close" data-gdpr_action="reject" data-dismiss="gdprmodal"
+            :style="{
+               'background-color': ab_testing_enabled
+                ? this[`accept_all_background_color${active_test_banner_tab}`]
+                : gdpr_policy === 'both' ? accept_all_background_color1 : accept_all_background_color,
+  					'color': ab_testing_enabled
+                ? this[`accept_all_text_color${active_test_banner_tab}`]
+                : gdpr_policy === 'both' ? accept_all_text_color1 : accept_all_text_color,
+  					'border-style': ab_testing_enabled 
+                ? this[`accept_all_style${active_test_banner_tab}`]
+                : gdpr_policy === 'both' ? accept_all_style1 : accept_all_style,
+  					'border-width': ab_testing_enabled
+                ? this[`accept_all_border_width${active_test_banner_tab}`] + 'px'
+                : gdpr_policy === 'both' ? accept_all_border_width1 + 'px' : accept_all_border_width + 'px',
+  					'border-color': ab_testing_enabled
+                ? this[`accept_all_border_color${active_test_banner_tab}`]
+                : gdpr_policy === 'both' ? accept_all_border_color1 : accept_all_border_color,
+  					'border-radius': ab_testing_enabled
+                ? this[`accept_all_border_radius${active_test_banner_tab}`] + 'px'
+                : gdpr_policy === 'both' ? accept_all_border_radius1 + 'px' : accept_all_border_radius + 'px',
+               'padding': '12px 29px',
+               }" ><?php echo esc_html( $the_options['button_decline_text']   );?></button>
+               <!-- ACCEPT ALL -->
+            <button type="button" class="cookie-settings-popup-save" data-gdpr_action="accept_all" data-dismiss="gdprmodal"
+            :style="{
+               'background-color': ab_testing_enabled
+                ? this[`accept_all_background_color${active_test_banner_tab}`]
+                : gdpr_policy === 'both' ? accept_all_background_color1 : accept_all_background_color,
+  					'color': ab_testing_enabled
+                ? this[`accept_all_text_color${active_test_banner_tab}`]
+                : gdpr_policy === 'both' ? accept_all_text_color1 : accept_all_text_color,
+  					'border-style': ab_testing_enabled 
+                ? this[`accept_all_style${active_test_banner_tab}`]
+                : gdpr_policy === 'both' ? accept_all_style1 : accept_all_style,
+  					'border-width': ab_testing_enabled
+                ? this[`accept_all_border_width${active_test_banner_tab}`] + 'px'
+                : gdpr_policy === 'both' ? accept_all_border_width1 + 'px' : accept_all_border_width + 'px',
+  					'border-color': ab_testing_enabled
+                ? this[`accept_all_border_color${active_test_banner_tab}`]
+                : gdpr_policy === 'both' ? accept_all_border_color1 : accept_all_border_color,
+  					'border-radius': ab_testing_enabled
+                ? this[`accept_all_border_radius${active_test_banner_tab}`] + 'px'
+                : gdpr_policy === 'both' ? accept_all_border_radius1 + 'px' : accept_all_border_radius + 'px',
+               'padding': '12px 29px',
+             
+               }" ><?php echo esc_html($the_options['button_accept_all_text']);?></button>
+                        </div>
+				<div class="gdpr-footer-right" style="display:flex; align-items:center; flex-wrap:wrap;">
+               <!-- SAVE AND ACCEPT -->
 				<button type="button" class="cookie-settings-popup-save" data-gdpr_action="accept" data-dismiss="gdprmodal"
             :style="{
                'background-color': ab_testing_enabled
@@ -895,7 +943,11 @@ if ( ! defined( 'ABSPATH' ) ) {
                         : multiple_legislation_cookie_bar_border_radius2
                     ) / 3 + 10}px`
                   : `${parseInt(cookie_bar_border_radius) / 3 + 10}px`
-               }" >Save And Accept</button>
+               }" ><?php echo esc_html__("Save And Accept", "gdpr-cookie-consent")?></button>
+               </div>
+                  <div style="width:100%;">
+				         <div v-show="show_credits" class="powered-by-credits"  :style="{'--popup_accent_color': cookieSettingsPopupAccentColor, 'text-align':'center', 'font-size': '10px', 'margin-bottom':'-10px', 'margin-right': 'auto'}"><?php echo wp_kses_post( $credit_link  ); ?></div>
+                  </div>
 			</div>
 		</div>
 	</div>

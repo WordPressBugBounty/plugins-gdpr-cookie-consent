@@ -4,7 +4,7 @@ Donate link: https://wplegalpages.com/
 Tags: cookie banner, cookie consent, cookie notice, eu cookie law, gdpr
 Requires at least: 3.3.1
 Tested up to: 6.9
-Stable tag: 4.2.8
+Stable tag: 4.2.9
 Requires PHP: 7.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
@@ -195,6 +195,14 @@ Yes, the plugin supports multiple languages, ensuring that your cookie consent b
 11.Consent Log table
 
 == Change Log ==
+
+= 4.2.9 =
+* New Features
+    * Added a Gutenberg block to automatically display the scanned cookies table on the Cookie Policy page, making updates seamless and dynamic.
+    * Introduced an option to show “Revoke Consent” as an icon, improving visibility and user accessibility.
+    * Added Reject and Accept All buttons in the Cookie Settings popup to align with GDPR requirements.
+* Improvements
+    * Refactored the Cookie Scanner script for better performance and reliability.
 
 = 4.2.8 =
 * Fixed script blocker conflicts affecting Elementor youtube embeds.
@@ -793,6 +801,14 @@ Yes, the plugin supports multiple languages, ensuring that your cookie consent b
 * Initial version
 
 == Upgrade Notice ==
+
+= 4.2.9 =
+* New Features
+    * Added a Gutenberg block to automatically display the scanned cookies table on the Cookie Policy page, making updates seamless and dynamic.
+    * Introduced an option to show “Revoke Consent” as an icon, improving visibility and user accessibility.
+    * Added Reject and Accept All buttons in the Cookie Settings popup to align with GDPR requirements.
+* Improvements
+    * Refactored the Cookie Scanner script for better performance and reliability.
 
 = 4.2.8 =
 * Fixed script blocker conflicts affecting Elementor youtube embeds.

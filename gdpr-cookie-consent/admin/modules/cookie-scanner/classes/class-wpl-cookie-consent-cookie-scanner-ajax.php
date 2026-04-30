@@ -231,8 +231,6 @@ class Gdpr_Cookie_Consent_Cookie_Scanner_Ajax extends Gdpr_Cookie_Consent_Cookie
 			'hash'				  => $hash
 		);
 
-		
-
 		$response = wp_remote_post(
 			'https://app.wplegalpages.com/wp-json/wplcookies/v2/start_scan',
 			array(

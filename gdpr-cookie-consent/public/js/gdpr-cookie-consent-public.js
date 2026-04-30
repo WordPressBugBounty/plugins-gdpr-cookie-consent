@@ -216,6 +216,7 @@ GDPR_CCPA_COOKIE_EXPIRE =
   var vendor_data = gdpr_cookies_obj.vendor_data;
   var cookieSettingsPopupAccentColor  = gdpr_cookies_obj.cookieSettingsPopupAccentColor;
   var template_parts = gdpr_cookies_obj.template_parts;
+  var gdpr_monthly_page_views_percent = Number( gdpr_cookies_obj.gdpr_monthly_page_views_percent );
   var current_vendor_index = 0;
   var next_vendors_loaded = false;
   // Set the value for the Multiple Legislation Banner Selection
@@ -283,7 +284,6 @@ GDPR_CCPA_COOKIE_EXPIRE =
 
       this.attachEvents();
       this.configButtons();
-
       // changing the color and background of cookie setting button.
       
 
@@ -2673,6 +2673,11 @@ banner.style.display = "none";
       force_display_show_again,
       user_triggered
     ) {
+      if(gdpr_monthly_page_views_percent >= 100){
+          document.querySelector('#gdpr-cookie-consent-bar').style.display = 'none';
+          document.querySelector('#gdpr-cookie-consent-show-again').style.display = 'none';
+          return;
+      }
       user_triggered = (typeof user_triggered === 'undefined') ? false : user_triggered;
       function userInteracted() {
             // Make the AJAX call

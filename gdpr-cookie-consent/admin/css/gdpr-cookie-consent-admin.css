@@ -6861,6 +6861,34 @@ fieldset:disabled #gdpr-cookie-consent-bar a.btn {
     flex-direction: column-reverse;
   }
 }
+
+@media (max-width: 779px) {
+    .gdprmodal-footer {
+        flex-direction: column;
+        align-items: stretch;
+        padding: 1rem;
+    }
+    .gdpr-footer-left {
+        width: 100%;
+        display: flex;
+        gap: 10px;
+        justify-content: flex-start;
+    }
+    .gdpr-footer-left button {
+        flex: 1;
+        font-size: 14px;
+    }
+    .gdpr-footer-right {
+        width: 100%;
+        margin-top: 10px;
+        margin-left: 0px !important;
+    }
+    .gdpr-footer-right button {
+        width: 100%;
+        font-size: 14px;
+        margin: 10px 0 0 0 !important;
+    }
+}
 @media (max-width: 600px) {
   #gdpr-cookie-consent-bar.gdpr-banner.gdpr-column
     .gdpr_messagebar_content
@@ -7864,7 +7892,7 @@ button.btn.gdpr-renew-now-btn.pro,
 .gdpr-eu_visitors_message-ccpa,
 .gdpr-eu_visitors_message-both,
 .gdpr-eu_visitors_message-both-ccpa,
-.gdpr-iab_message,
+.gdpr-iab_message, .gdpr-cookie_notice_message,
 .gdpr-show_credits_message,
 .gdpr-export-message,
 .gdpr-import-message {
@@ -7881,6 +7909,7 @@ button.btn.gdpr-renew-now-btn.pro,
   position: relative;
 }
 .gdpr-disabled-iab-integration:hover .gdpr-iab_message,
+.gdpr-disabled-cookie-notice-integration:hover .gdpr-cookie_notice_message,
 .gdpr-disabled-show-credits:hover .gdpr-show_credits_message,
 .gdpr-disabled-export-settings:hover .gdpr-export-message,
 .gdpr-disabled-import-settings:hover .gdpr-import-message{
@@ -7926,7 +7955,7 @@ display: block !important;
   text-align: center;
   z-index: 99;
 }
-.gdpr-gacm_message-gdpr,.gdpr-iab_message, .gdpr-gcm_message-gdpr, .gdpr-cookie-scanning-limit-exhaust-monthly-free-notice, .gdpr-cookie-scanning-available-in-notice {
+.gdpr-gacm_message-gdpr,.gdpr-iab_message, .gdpr-cookie_notice_message, .gdpr-gcm_message-gdpr, .gdpr-cookie-scanning-limit-exhaust-monthly-free-notice, .gdpr-cookie-scanning-available-in-notice {
   width: 140px;
   position: absolute;
   left: 90px;
@@ -10487,6 +10516,64 @@ div#gdpr-scan-history {
   text-align: center;
 }
 
+.wplp-compliance-main .gdpr-pageviews-notice-wrapper{
+  background-color: #f1c0c0;
+  color: #f1456a;
+  border: 1px solid #c38c8c;
+  border-left: 7px solid #f1456a;
+  font-size: 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  padding-bottom: 5px;
+  border-radius: 10px;
+  box-shadow: 5px 5px 10px rgb(20,20,20, 0.2);
+}
+.wplp-compliance-main .gdpr-pageviews-notice-wrapper.gdpr-pageviews-notice-warning{
+  background-color: #f1e6c0 !important;
+  color: #f1a145 !important;
+  border: 1px solid #c3ad8c !important;
+  border-left: 7px solid #f1a145 !important;
+}
+
+.wplp-compliance-main .gdpr-pageviews-notice-wrapper .gdpr-pageviews-notice-content{
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.wplp-compliance-main .gdpr-pageviews-notice-wrapper .gdpr-pageviews-notice-content .gdpr-pageviews-notice-text{
+  display: flex;
+  flex-direction: column;
+}
+.wplp-compliance-main .gdpr-pageviews-notice-wrapper .gdpr-pageviews-notice-content .gdpr-pageviews-notice-text h4 {
+  font-size: 24px;
+  font-weight: 700;
+}
+.wplp-compliance-main .gdpr-pageviews-notice-wrapper a.wplp--scan-header-upgrade-plan {
+    padding: 12px 20px;
+    border: none;
+    border-radius: 4px;
+    display: flex;
+    flex-direction: row;
+    gap: 8px;
+    background-color: #f1456a;
+    cursor: pointer;
+    color: white;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 18px;
+    text-align: center;
+    vertical-align: middle;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    margin-top: -5px;
+}
+.wplp-compliance-main .gdpr-pageviews-notice-wrapper.gdpr-pageviews-notice-warning a.wplp--scan-header-upgrade-plan {
+  background-color: #f1a145 !important;
+}
 .wplp-compliance-main
   .wplp-compliance-content-wrapper
   .gdpr-remaining-scans-content
@@ -10514,7 +10601,7 @@ div#gdpr-scan-history {
   .wplp-compliance-content-wrapper
   .gdpr-remaining-scans-content
   .wplp-plan-details 
-  a.wplp--scan-header-upgrade-plan {
+  a.wplp--scan-header-upgrade-plan{
   padding: 8px 10px;
   border: none;
   border-radius: 4px;

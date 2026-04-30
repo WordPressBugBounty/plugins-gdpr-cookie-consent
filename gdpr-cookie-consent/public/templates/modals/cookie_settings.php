@@ -903,15 +903,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 					</div>
 				</div>
 			</div>
-			<div class="gdprmodal-footer" style="--popup_accent_color: <?php echo esc_html( '#' . ltrim($cookieSettingsPopupAccentColor, '#') ); ?>;">
-				<?php
-				if ( ! empty( $cookie_data['show_credits'] ) ) {
-					?>
-				<div class="powered-by-credits" style="margin-left: <?php echo esc_attr( $top_value ); ?>px;"><?php echo wp_kses_post( $cookie_data['credits'] ); ?></div>
-					<?php
-				}
-				?>
-				<button id="cookie_action_save" type="button" class="gdpr_action_button btn" data-gdpr_action="accept" data-dismiss="gdprmodal"
+			<div class="gdprmodal-footer" style="--popup_accent_color: <?php echo esc_html( '#' . ltrim($cookieSettingsPopupAccentColor, '#') ); ?>; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+				<div class="gdpr-footer-left" style="display:flex; gap:10px; flex-wrap:wrap;">
+				<!-- DECLINE -->
+				<button id="cookie_action_reject" type="button" class="gdpr_action_button btn" data-gdpr_action="reject" data-dismiss="gdprmodal"
 					style="
 						background-color: <?php 
 							echo esc_html(
@@ -946,8 +941,101 @@ if ( ! defined( 'ABSPATH' ) ) {
 						 		: ( $the_options['cookie_usage_for'] === 'both' ? $the_options['button_accept_all_btn_border_radius1'] : $the_options['button_accept_all_btn_border_radius'] )
 						 	); ?>px;
 						padding: 12px 29px;
-						margin-right: <?php echo esc_attr( $top_value ); ?>px;
+						/* margin-right: <?php echo esc_attr( $top_value ); ?>px; */
+					"><?php echo esc_html( $cookie_data['dash_button_decline_text'] ); ?></button>
+
+					<!-- Accept All -->
+					<button id="cookie_action_accept_all" type="button" class="gdpr_action_button btn" data-gdpr_action="accept_all" data-dismiss="gdprmodal"
+					style="
+						background-color: <?php 
+							echo esc_html(
+							( $ab_options['ab_testing_enabled'] === true || $ab_options['ab_testing_enabled'] === 'true')
+							 	? ( $the_options[ 'button_accept_all_button_color' . $chosenBanner ] )
+							 	: ( $the_options['cookie_usage_for'] === 'both' ? $the_options['button_accept_all_button_color1'] : $the_options['button_accept_all_button_color'] )
+							); ?>;
+						color: <?php 
+							echo esc_html(
+								( $ab_options['ab_testing_enabled'] === true || $ab_options['ab_testing_enabled'] === 'true')
+						 		? ( $the_options[ 'button_accept_all_link_color' . $chosenBanner ] )
+						 		: ( $the_options['cookie_usage_for'] === 'both' ? $the_options['button_accept_all_link_color1'] : $the_options['button_accept_all_link_color'] )
+							); ?>;
+						border-style: <?php 
+							echo esc_html(( $ab_options['ab_testing_enabled'] === true || $ab_options['ab_testing_enabled'] === 'true')
+						 		? ( $the_options[ 'button_accept_all_btn_border_style' . $chosenBanner ] )
+						 		: ( $the_options['cookie_usage_for'] === 'both' ? $the_options['button_accept_all_btn_border_style1'] : $the_options['button_accept_all_btn_border_style'] )
+						 	); ?>;
+						border-width: <?php 
+							echo esc_html(( $ab_options['ab_testing_enabled'] === true || $ab_options['ab_testing_enabled'] === 'true')
+						 		? ( $the_options[ 'button_accept_all_btn_border_width' . $chosenBanner ] . 'px' )	
+						 		: ( $the_options['cookie_usage_for'] === 'both' ? $the_options['button_accept_all_btn_border_width1'] : $the_options['button_accept_all_btn_border_width'] )
+						 	); ?>px;
+						border-color: <?php 
+							echo esc_html(( $ab_options['ab_testing_enabled'] === true || $ab_options['ab_testing_enabled'] === 'true')
+						 		? ( $the_options[ 'button_accept_all_btn_border_color' . $chosenBanner ] )
+						 		: ( $the_options['cookie_usage_for'] === 'both' ? $the_options['button_accept_all_btn_border_color1'] : $the_options['button_accept_all_btn_border_color'] )
+						 	); ?>;
+						border-radius: <?php 
+							echo esc_html(( $ab_options['ab_testing_enabled'] === true || $ab_options['ab_testing_enabled'] === 'true')
+						 		? ( $the_options[ 'button_accept_all_btn_border_radius' . $chosenBanner ] . 'px' )
+						 		: ( $the_options['cookie_usage_for'] === 'both' ? $the_options['button_accept_all_btn_border_radius1'] : $the_options['button_accept_all_btn_border_radius'] )
+						 	); ?>px;
+						padding: 12px 29px;
+						/* margin-right: <?php echo esc_attr( $top_value ); ?>px; */
+					"><?php echo esc_html( $cookie_data['dash_button_accept_all_text'] ); ?></button>
+
+				</div>
+
+
+				<!-- Save and Accept Button -->
+				<div class="gdpr-footer-right" style="display:flex; align-items:center; flex-wrap:wrap;">
+					<button id="cookie_action_save" type="button" class="gdpr_action_button btn" data-gdpr_action="accept" data-dismiss="gdprmodal"
+					style="
+						background-color: <?php 
+							echo esc_html(
+							( $ab_options['ab_testing_enabled'] === true || $ab_options['ab_testing_enabled'] === 'true')
+							 	? ( $the_options[ 'button_accept_all_button_color' . $chosenBanner ] )
+							 	: ( $the_options['cookie_usage_for'] === 'both' ? $the_options['button_accept_all_button_color1'] : $the_options['button_accept_all_button_color'] )
+							); ?>;
+						color: <?php 
+							echo esc_html(
+								( $ab_options['ab_testing_enabled'] === true || $ab_options['ab_testing_enabled'] === 'true')
+						 		? ( $the_options[ 'button_accept_all_link_color' . $chosenBanner ] )
+						 		: ( $the_options['cookie_usage_for'] === 'both' ? $the_options['button_accept_all_link_color1'] : $the_options['button_accept_all_link_color'] )
+							); ?>;
+						border-style: <?php 
+							echo esc_html(( $ab_options['ab_testing_enabled'] === true || $ab_options['ab_testing_enabled'] === 'true')
+						 		? ( $the_options[ 'button_accept_all_btn_border_style' . $chosenBanner ] )
+						 		: ( $the_options['cookie_usage_for'] === 'both' ? $the_options['button_accept_all_btn_border_style1'] : $the_options['button_accept_all_btn_border_style'] )
+						 	); ?>;
+						border-width: <?php 
+							echo esc_html(( $ab_options['ab_testing_enabled'] === true || $ab_options['ab_testing_enabled'] === 'true')
+						 		? ( $the_options[ 'button_accept_all_btn_border_width' . $chosenBanner ] . 'px' )	
+						 		: ( $the_options['cookie_usage_for'] === 'both' ? $the_options['button_accept_all_btn_border_width1'] : $the_options['button_accept_all_btn_border_width'] )
+						 	); ?>px;
+						border-color: <?php 
+							echo esc_html(( $ab_options['ab_testing_enabled'] === true || $ab_options['ab_testing_enabled'] === 'true')
+						 		? ( $the_options[ 'button_accept_all_btn_border_color' . $chosenBanner ] )
+						 		: ( $the_options['cookie_usage_for'] === 'both' ? $the_options['button_accept_all_btn_border_color1'] : $the_options['button_accept_all_btn_border_color'] )
+						 	); ?>;
+						border-radius: <?php 
+							echo esc_html(( $ab_options['ab_testing_enabled'] === true || $ab_options['ab_testing_enabled'] === 'true')
+						 		? ( $the_options[ 'button_accept_all_btn_border_radius' . $chosenBanner ] . 'px' )
+						 		: ( $the_options['cookie_usage_for'] === 'both' ? $the_options['button_accept_all_btn_border_radius1'] : $the_options['button_accept_all_btn_border_radius'] )
+						 	); ?>px;
+						padding: 12px 29px;
 					"><?php echo esc_html( $cookie_data['save_button'] ); ?></button>
+				</div>
+
+				<div style="width:100%; margin-top:10px;">
+					<?php
+				if ( ! empty( $cookie_data['show_credits'] ) ) {
+					?>
+				<div class="powered-by-credits" style="margin-left: <?php echo esc_attr( $top_value ); ?>px;"><?php echo wp_kses_post( $cookie_data['credits'] ); ?></div>
+					<?php
+				}
+				?>
+				</div>
+
 			</div>
 		</div>
 	</div>

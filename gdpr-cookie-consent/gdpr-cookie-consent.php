@@ -10,7 +10,7 @@
  * Plugin Name:       Cookie Banner for GDPR / CCPA - WPLP Cookie Consent
  * Plugin URI:        https://wplegalpages.com/
  * Description:       Cookie Consent will help you put up a subtle banner in the footer of your website to showcase compliance status regarding the EU Cookie law.
- * Version:           4.2.8
+ * Version:           4.2.9
  * Author:            WPLP Compliance Platform
  * Author URI:        https://wplegalpages.com
  * License:           GPLv3
@@ -31,7 +31,7 @@ define( 'GDPR_COOKIE_CONSENT_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 /**
  * Currently plugin version.
  */
-define( 'GDPR_COOKIE_CONSENT_VERSION', '4.2.8' );
+define( 'GDPR_COOKIE_CONSENT_VERSION', '4.2.9' );
 define( 'GDPR_COOKIE_CONSENT_PLUGIN_DEVELOPMENT_MODE', false );
 define( 'GDPR_COOKIE_CONSENT_PLUGIN_BASENAME', plugin_basename( __FILE__ ) );
 define( 'GDPR_COOKIE_CONSENT_PLUGIN_PATH', plugin_dir_path( __FILE__ ) );
@@ -42,6 +42,11 @@ define( 'GDPR_COOKIE_CONSENT_SETTINGS_LOGO_IMAGE_FIELD', GDPR_COOKIE_CONSENT_DB_
 define( 'GDPR_COOKIE_CONSENT_SETTINGS_LOGO_IMAGE_FIELD1', GDPR_COOKIE_CONSENT_DB_KEY_PREFIX . 'LogoImage1' . GDPR_COOKIE_CONSENT_LATEST_VERSION_NUMBER );
 define( 'GDPR_COOKIE_CONSENT_SETTINGS_LOGO_IMAGE_FIELD2', GDPR_COOKIE_CONSENT_DB_KEY_PREFIX . 'LogoImage2' . GDPR_COOKIE_CONSENT_LATEST_VERSION_NUMBER );
 define( 'GDPR_COOKIE_CONSENT_SETTINGS_LOGO_IMAGE_FIELDML1', GDPR_COOKIE_CONSENT_DB_KEY_PREFIX . 'LogoImageML1' . GDPR_COOKIE_CONSENT_LATEST_VERSION_NUMBER );
+
+define( 'GDPR_COOKIE_CONSENT_SETTINGS_REVOKE_ICON', GDPR_COOKIE_CONSENT_DB_KEY_PREFIX . 'RevokeIcon' . GDPR_COOKIE_CONSENT_LATEST_VERSION_NUMBER );
+define( 'GDPR_COOKIE_CONSENT_SETTINGS_REVOKE_ICON1', GDPR_COOKIE_CONSENT_DB_KEY_PREFIX . 'RevokeIcon1' . GDPR_COOKIE_CONSENT_LATEST_VERSION_NUMBER );
+define( 'GDPR_COOKIE_CONSENT_SETTINGS_REVOKE_ICON2', GDPR_COOKIE_CONSENT_DB_KEY_PREFIX . 'RevokeIcon2' . GDPR_COOKIE_CONSENT_LATEST_VERSION_NUMBER );
+
 define( 'GDPR_COOKIE_CONSENT_SETTINGS_VENDOR', 'vendordata' );
 define( 'GDPR_COOKIE_CONSENT_SETTINGS_GACM_VENDOR', 'gacmvendordata' );
 define( 'GDPR_COOKIE_CONSENT_SETTINGS_VENDOR_CONSENT', 'iabtcfConsent' );
@@ -166,6 +171,11 @@ function uninstall_gdpr_cookie_consent() {
 	delete_option( GDPR_COOKIE_CONSENT_SETTINGS_LOGO_IMAGE_FIELD1 );
 	delete_option( GDPR_COOKIE_CONSENT_SETTINGS_LOGO_IMAGE_FIELD2 );
 	delete_option( GDPR_COOKIE_CONSENT_SETTINGS_LOGO_IMAGE_FIELDML1 );
+
+	delete_option( GDPR_COOKIE_CONSENT_SETTINGS_REVOKE_ICON );
+	delete_option( GDPR_COOKIE_CONSENT_SETTINGS_REVOKE_ICON1 );
+	delete_option( GDPR_COOKIE_CONSENT_SETTINGS_REVOKE_ICON2 );
+
 	delete_option('gdpr_default_template_object');
 }
 /**
