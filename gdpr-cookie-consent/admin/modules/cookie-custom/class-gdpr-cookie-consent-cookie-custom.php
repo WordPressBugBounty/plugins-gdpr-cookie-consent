@@ -126,7 +126,7 @@ class Gdpr_Cookie_Consent_Cookie_Custom {
 	public function gdpr_get_categories_arr( $mode = false ) {
 		global $wpdb;
 		$out      = array();
-		$data_arr = $wpdb->get_results( 'SELECT * FROM ' . $wpdb->prefix . 'gdpr_cookie_scan_categories ORDER BY id_gdpr_cookie_category ASC', ARRAY_A ); // db call ok; no-cache ok.
+		$data_arr = $wpdb->get_results( 'SELECT * FROM `' . $wpdb->prefix . 'gdpr_cookie_scan_categories` ORDER BY id_gdpr_cookie_category ASC', ARRAY_A ); // db call ok; no-cache ok.
 		if ( $data_arr ) {
 			if ( $mode ) {
 				foreach ( $data_arr as $key => $value ) {
@@ -311,7 +311,7 @@ class Gdpr_Cookie_Consent_Cookie_Custom {
 		// Creating post cookies table.
 		$table_name = $wpdb->prefix . $this->post_cookies_table;
 		$find       = $table_name;
-		$like       = $wild . $wpdb->esc_like( $find ) . $wild;
+		$like 		= $wpdb->esc_like( $find );
 		$result     = $wpdb->get_results( $wpdb->prepare( 'SHOW TABLES LIKE %s', array( $like ) ), ARRAY_N ); // db call ok; no-cache ok.
 		if ( ! $result ) {
 			$create_table_sql = "CREATE TABLE `$table_name`(
@@ -330,7 +330,7 @@ class Gdpr_Cookie_Consent_Cookie_Custom {
 		// Creating categories table.
 		$table_name = $wpdb->prefix . $this->category_table;
 		$find       = $table_name;
-		$like       = $wild . $wpdb->esc_like( $find ) . $wild;
+		$like       = $wpdb->esc_like( $find );
 		$result     = $wpdb->get_results( $wpdb->prepare( 'SHOW TABLES LIKE %s', array( $like ) ), ARRAY_N ); // db call ok; no-cache ok.
 		if ( ! $result ) {
 			$create_table_sql = "CREATE TABLE `$table_name`(
@@ -363,7 +363,7 @@ class Gdpr_Cookie_Consent_Cookie_Custom {
 				$cat_slug        = isset( $category['slug'] ) ? $category['slug'] : '';
 				// Check if slug already exists
 				$categories_exists = $wpdb->get_var( $wpdb->prepare(
-					"SELECT COUNT(*) FROM {$wpdb->prefix}gdpr_cookie_scan_categories WHERE gdpr_cookie_category_slug = %s",
+					"SELECT COUNT(*) FROM `{$wpdb->prefix}gdpr_cookie_scan_categories` WHERE gdpr_cookie_category_slug = %s",
 					$cat_slug
 				) );
 				if ( $categories_exists == 0 ) {
@@ -390,12 +390,12 @@ class Gdpr_Cookie_Consent_Cookie_Custom {
 			'data'  => array(),
 		);
 
-		$count_arr = $wpdb->get_row( 'SELECT COUNT(id_gdpr_cookie_post_cookies) AS ttnum FROM ' . $wpdb->prefix . 'gdpr_cookie_post_cookies', ARRAY_A ); // db call ok; no-cache ok.
+		$count_arr = $wpdb->get_row( 'SELECT COUNT(id_gdpr_cookie_post_cookies) AS ttnum FROM `' . $wpdb->prefix . 'gdpr_cookie_post_cookies`', ARRAY_A ); // db call ok; no-cache ok.
 		if ( $count_arr ) {
 			$out['total'] = $count_arr['ttnum'];
 		}
 
-		$data_arr = $wpdb->get_results( $wpdb->prepare( 'SELECT * FROM ' . $wpdb->prefix . 'gdpr_cookie_post_cookies ORDER BY id_gdpr_cookie_post_cookies DESC LIMIT %d, %d', array( $offset, $limit ) ), ARRAY_A ); // db call ok; no-cache ok.
+		$data_arr = $wpdb->get_results( $wpdb->prepare( 'SELECT * FROM `' . $wpdb->prefix . 'gdpr_cookie_post_cookies` ORDER BY id_gdpr_cookie_post_cookies DESC LIMIT %d, %d', array( $offset, $limit ) ), ARRAY_A ); // db call ok; no-cache ok.
 		if ( $data_arr ) {
 			$out['data'] = $data_arr;
 		}

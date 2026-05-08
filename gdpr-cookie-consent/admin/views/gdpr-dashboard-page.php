@@ -38,14 +38,20 @@ $legalpages_activation_url = wp_nonce_url( 'plugins.php?action=activate&amp;plug
 $help_page_tab_url = admin_url() . 'admin.php?page=wplp-dashboard#help-page';
 $all_legal_pages_url = admin_url() . 'admin.php?page=legal-pages#all_legal_pages';
 $create_legalpages_url = admin_url() . 'admin.php?page=wplegal-wizard#/';
-
+$script_blocker_url = admin_url() . 'admin.php?page=gdpr-cookie-consent#script_blocker';
 // Require the class file for gdpr cookie consent api framework settings.
 require_once GDPR_COOKIE_CONSENT_PLUGIN_PATH . 'includes/settings/class-gdpr-cookie-consent-settings.php';
 
 // Instantiate a new object of the GDPR_Cookie_Consent_Settings class.
 $this->settings = new GDPR_Cookie_Consent_Settings();
-
-// Call the is_connected() method from the instantiated object to check if the user is connected.
+$api_user_plan     = $this->settings->get_plan();
+$gdpr_monthly_page_views = get_option('wpl_monthly_page_views', 0);
+$gdpr_monthly_page_views_limit = 0;
+if ( 'free' === $api_user_plan ) { 
+	$gdpr_monthly_page_views_limit = 20000;
+} else if ( '3sites' === $api_user_plan ) {
+	$gdpr_monthly_page_views_limit = 100000;
+}// Call the is_connected() method from the instantiated object to check if the user is connected.
 $is_user_connected = $this->settings->is_connected();
 
 $class_for_blur_content = $is_user_connected ? '' : 'gdpr-blur-background'; // Add a class for styling purposes.
@@ -174,7 +180,11 @@ $response = wp_remote_post(
 			'wpl_cl_bypass'                    => get_option( 'wpl_cl_bypass' ),
 			'consent_log_table'                => $consent_log_table,
 			'admin_url'                        => admin_url(),
-			'cookie_usage_for'                 => $gdpr_policy
+			'cookie_usage_for'                 => $gdpr_policy,
+			'script_blocker_url'			   => $script_blocker_url,
+			'plan'						       => $api_user_plan,
+			'gdpr_monthly_page_views'		   => $gdpr_monthly_page_views,
+			'gdpr_monthly_page_views_limit'   => $gdpr_monthly_page_views_limit,
 		),
 	)
 );

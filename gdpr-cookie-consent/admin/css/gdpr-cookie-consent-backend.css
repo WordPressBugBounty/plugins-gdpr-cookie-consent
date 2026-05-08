@@ -360,6 +360,12 @@ a .export-btn:hover {
 }
 .gdpr-overlay {
   background-color: rgba(20, 23, 34, 0.85);
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.5) 50%,
+    rgba(255, 255, 255, 0.8) 80%,
+    rgba(255, 255, 255, 0.95) 95%
+  );
   border-radius: 10px;
 }
 #gdpr-disconnect-wpcc-notice .api-connect-to-account-btn {
@@ -548,7 +554,7 @@ a .export-btn:hover {
   border: 1px solid #d4d4d8;
 }
 .gdpr-dashboard-promotional-card-header {
-  border-bottom: 1px solid #f2f2f2;
+  border-bottom: none !important;
 }
 
 .gdpr-cookie-summary-last-scan {

@@ -82,7 +82,7 @@ class Gdpr_Cookie_Consent_Script_Blocker {
 		// Creating main table.
 		$table_name = $wpdb->prefix . $this->main_table;
 		$find       = $table_name;
-		$like       = $wild . $wpdb->esc_like( $find ) . $wild;
+		$like 		= $wpdb->esc_like( $find );
 
 		$result = $wpdb->get_results( $wpdb->prepare( 'SHOW TABLES LIKE %s', array( $like ) ), ARRAY_N ); // db call ok; no-cache ok.
 		if ( ! $result ) {
@@ -97,7 +97,7 @@ class Gdpr_Cookie_Consent_Script_Blocker {
 			);";
 			dbDelta( $create_table_sql );
 		}
-		$total_data = $wpdb->get_row( 'SELECT COUNT(id) AS ttnum FROM ' . $wpdb->prefix . 'wpl_cookie_scripts', ARRAY_A ); // db call ok; no-cache ok.
+		$total_data = $wpdb->get_row( 'SELECT COUNT(id) AS ttnum FROM `' . $wpdb->prefix . 'wpl_cookie_scripts`', ARRAY_A ); // db call ok; no-cache ok.
 		if ( '0' === $total_data['ttnum'] || $total_data['ttnum'] ) {
 			// Get category id for Unclassified.
 			$data_arr = $this->get_category_by_slug( 'unclassified' );
@@ -263,7 +263,7 @@ class Gdpr_Cookie_Consent_Script_Blocker {
 				),
 			);
 			foreach ( $records as $key => $value ) {
-				$data_exists = $wpdb->get_row( $wpdb->prepare( 'SELECT id FROM ' . $wpdb->prefix . 'wpl_cookie_scripts WHERE `script_key`=%s', array( $value['script_key'] ) ), ARRAY_A ); // db call ok; no-cache ok.
+				$data_exists = $wpdb->get_row( $wpdb->prepare( 'SELECT id FROM `' . $wpdb->prefix . 'wpl_cookie_scripts` WHERE `script_key`=%s', array( $value['script_key'] ) ), ARRAY_A ); // db call ok; no-cache ok.
 				if ( $data_exists ) {
 					// Update the script_title and script_description if the entry exists.
 					$wpdb->update(
@@ -900,12 +900,12 @@ class Gdpr_Cookie_Consent_Script_Blocker {
 			'data'  => array(),
 		);
 
-		$count_arr = $wpdb->get_row( 'SELECT COUNT(id) AS ttnum FROM ' . $wpdb->prefix . 'wpl_cookie_scripts', ARRAY_A ); // db call ok; no-cache ok.
+		$count_arr = $wpdb->get_row( 'SELECT COUNT(id) AS ttnum FROM `' . $wpdb->prefix . 'wpl_cookie_scripts`', ARRAY_A ); // db call ok; no-cache ok.
 		if ( $count_arr ) {
 			$out['total'] = $count_arr['ttnum'];
 		}
 
-		$data_arr = $wpdb->get_results( $wpdb->prepare( 'SELECT * FROM ' . $wpdb->prefix . 'wpl_cookie_scripts ORDER BY id ASC LIMIT %d, %d', array( $offset, $limit ) ), ARRAY_A ); // db call ok; no-cache ok.
+		$data_arr = $wpdb->get_results( $wpdb->prepare( 'SELECT * FROM `' . $wpdb->prefix . 'wpl_cookie_scripts` ORDER BY id ASC LIMIT %d, %d', array( $offset, $limit ) ), ARRAY_A ); // db call ok; no-cache ok.
 		if ( $data_arr ) {
 			$out['data'] = $data_arr;
 		}
@@ -922,7 +922,7 @@ class Gdpr_Cookie_Consent_Script_Blocker {
 		global $wpdb;
 		$table_name = $wpdb->prefix . 'gdpr_cookie_scan_categories';
 		if ( $wpdb->get_var( "SHOW TABLES LIKE '$table_name'" ) == $table_name ) {
-			$data_arr = $wpdb->get_results( 'SELECT `id_gdpr_cookie_category`, `gdpr_cookie_category_slug`, `gdpr_cookie_category_name` FROM ' . $wpdb->prefix . 'gdpr_cookie_scan_categories' );
+			$data_arr = $wpdb->get_results( 'SELECT `id_gdpr_cookie_category`, `gdpr_cookie_category_slug`, `gdpr_cookie_category_name` FROM `' . $wpdb->prefix . 'gdpr_cookie_scan_categories`' );
 		} // db call ok; no-cache ok.
 		return $data_arr;
 	}
@@ -940,7 +940,7 @@ class Gdpr_Cookie_Consent_Script_Blocker {
 		$table_name = $wpdb->prefix . 'gdpr_cookie_scan_categories';
 		if ( $wpdb->get_var( "SHOW TABLES LIKE '$table_name'" ) == $table_name ) {
 			if ( isset( $id ) && ! empty( $id ) ) {
-				$data_arr = $wpdb->get_results( $wpdb->prepare( 'SELECT `id_gdpr_cookie_category`, `gdpr_cookie_category_slug`, `gdpr_cookie_category_name` FROM ' . $wpdb->prefix . 'gdpr_cookie_scan_categories WHERE id_gdpr_cookie_category = %d', array( $id ) ) );  // db call ok; no-cache ok.
+				$data_arr = $wpdb->get_results( $wpdb->prepare( 'SELECT `id_gdpr_cookie_category`, `gdpr_cookie_category_slug`, `gdpr_cookie_category_name` FROM `' . $wpdb->prefix . 'gdpr_cookie_scan_categories` WHERE id_gdpr_cookie_category = %d', array( $id ) ) );  // db call ok; no-cache ok.
 			}
 		}
 		return $data_arr;
@@ -959,7 +959,7 @@ class Gdpr_Cookie_Consent_Script_Blocker {
 		$table_name = $wpdb->prefix . 'gdpr_cookie_scan_categories';
 		if ( $wpdb->get_var( "SHOW TABLES LIKE '$table_name'" ) == $table_name ) {
 			if ( isset( $slug ) && ! empty( $slug ) ) {
-				$data_arr = $wpdb->get_results( $wpdb->prepare( 'SELECT `id_gdpr_cookie_category`, `gdpr_cookie_category_slug`, `gdpr_cookie_category_name` FROM ' . $wpdb->prefix . 'gdpr_cookie_scan_categories WHERE gdpr_cookie_category_slug = %s', array( $slug ) ) );  // db call ok; no-cache ok.
+				$data_arr = $wpdb->get_results( $wpdb->prepare( 'SELECT `id_gdpr_cookie_category`, `gdpr_cookie_category_slug`, `gdpr_cookie_category_name` FROM `' . $wpdb->prefix . 'gdpr_cookie_scan_categories` WHERE gdpr_cookie_category_slug = %s', array( $slug ) ) );  // db call ok; no-cache ok.
 			}
 		}
 		return $data_arr;

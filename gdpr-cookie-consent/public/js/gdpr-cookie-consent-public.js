@@ -288,15 +288,15 @@ GDPR_CCPA_COOKIE_EXPIRE =
       
 
       // bypassed consent.
-      window.addEventListener("load", function () {
-        const cancelImg = document.getElementById("cookie-banner-cancle-img");
-        if (cancelImg) {
-          cancelImg.onclick = function () {
-            GDPR.bypassed_close();
-            GDPR.logConsent("bypassed");
-          };
+      document.addEventListener("click", function (e) {
+        const closeBtn = e.target.closest("#cookie-banner-cancle-img");
+        if (closeBtn) {
+          e.stopPropagation();
+          e.preventDefault();
+          GDPR.bypassed_close();
+          GDPR.logConsent("bypassed");
         }
-      });
+      }, true);
       if (is_iab_on) {
         window.addEventListener("load", function () {
           GDPR.render_vendor_list();

@@ -79,6 +79,9 @@ var gen = new Vue({
       edit_discovered_cookies_img: require("../admin/images/edit-discovered-cookies.svg"),
       close_round_img: require("../admin/images/Close_round.svg"),
       account_connection: require("../admin/images/account_connection.svg"),
+      account_connection_new: require("../admin/images/account_connection_new.svg"),
+      lightening: require("../admin/images/lightening.svg"),
+      warning: require("../admin/images/warning.svg"),
       pluginBasePath: '/wp-content/plugins/gdpr-cookie-consent/includes/templates/logo_images/',
       closeOnBackdrop: true,
       centered: true,
@@ -11920,6 +11923,7 @@ var abt = new Vue({
       success_error_message: "",
       ab_testing_data: '',
       account_connection: require("../admin/images/account_connection.svg"),
+      account_connection_new: require("../admin/images/account_connection_new.svg"),
       pluginBasePath: '/wp-content/plugins/gdpr-cookie-consent/includes/templates/logo_images/',
       edit_discovered_cookies_img: require("../admin/images/edit-discovered-cookies.svg"),
       gdpr_policy: settings_obj.the_options.hasOwnProperty("cookie_usage_for")
@@ -12661,6 +12665,7 @@ var ckm = new Vue({
       cookie_list_tab: true,
       show_custom_cookie_popup: false,
       account_connection: require("../admin/images/account_connection.svg"),
+      account_connection_new: require("../admin/images/account_connection_new.svg"),
       pluginBasePath: '/wp-content/plugins/gdpr-cookie-consent/includes/templates/logo_images/',
       edit_discovered_cookies_img: require("../admin/images/edit-discovered-cookies.svg"),
       custom_cookie_categories:

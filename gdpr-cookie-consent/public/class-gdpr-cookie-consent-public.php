@@ -576,16 +576,16 @@ class Gdpr_Cookie_Consent_Public {
 
 			// Fetch Youtube category
 			//$total_results = $wpdb->get_row( $wpdb->prepare( 'SELECT id FROM ' . $wpdb->prefix . 'wpl_cookie_scripts WHERE `script_key`=%s', array( $value['script_key'] ) ), ARRAY_A ); // db call ok; no-cache ok.
-$selected_script_category = $wpdb->get_var(
-    $wpdb->prepare(
-        "SELECT cat.gdpr_cookie_category_name
-         FROM {$wpdb->prefix}wpl_cookie_scripts AS script
-         JOIN {$wpdb->prefix}gdpr_cookie_scan_categories AS cat
-           ON script.script_category = cat.id_gdpr_cookie_category
-         WHERE script.script_title = %s",
-        'Youtube Embed'
-    )
-);
+			$selected_script_category = $wpdb->get_var(
+			    $wpdb->prepare(
+			        "SELECT cat.gdpr_cookie_category_name
+			         FROM `{$wpdb->prefix}wpl_cookie_scripts` AS script
+			         JOIN `{$wpdb->prefix}gdpr_cookie_scan_categories` AS cat
+			           ON script.script_category = cat.id_gdpr_cookie_category
+			         WHERE script.script_title = %s",
+			        'Youtube Embed'
+			    )
+			);
 
 			wp_localize_script(
 				$this->plugin_name,
@@ -1260,15 +1260,15 @@ $selected_script_category = $wpdb->get_var(
 			$youtube_category = array( 'slug' => 'preferences', 'name' => 'Preferences' );
 					
 			$youtube_script = $wpdb->get_row(
-			    "SELECT script_category FROM {$wpdb->prefix}wpl_cookie_scripts 
-			     WHERE script_key = 'youtube_embed' AND script_status = 1 
-			     LIMIT 1"
+	    		"SELECT script_category FROM `{$wpdb->prefix}wpl_cookie_scripts`
+	    		 WHERE script_key = 'youtube_embed' AND script_status = 1 
+	    		 LIMIT 1"
 			);
 			
 			if ( $youtube_script ) {
 			    $category = $wpdb->get_row( $wpdb->prepare(
 			        "SELECT gdpr_cookie_category_slug, gdpr_cookie_category_name 
-			         FROM {$wpdb->prefix}gdpr_cookie_scan_categories 
+			         FROM `{$wpdb->prefix}gdpr_cookie_scan_categories` 
 			         WHERE id_gdpr_cookie_category = %d",
 			        $youtube_script->script_category
 			    ));

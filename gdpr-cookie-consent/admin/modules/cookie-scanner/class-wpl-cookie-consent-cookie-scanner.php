@@ -307,7 +307,7 @@ class Gdpr_Cookie_Consent_Cookie_Scanner {
 				}
 			}
 			// Query to count the number of rows in the wp_wpl_cookie_scan table
-			$cookie_scan_count = $wpdb->get_var( "SELECT COUNT(*) FROM {$wpdb->prefix}wpl_cookie_scan" );
+			$cookie_scan_count = $wpdb->get_var( "SELECT COUNT(*) FROM `{$wpdb->prefix}wpl_cookie_scan`" );
 
 			// Check if the table is empty or not
 			if ( $cookie_scan_count == 0 ) {
@@ -376,7 +376,7 @@ class Gdpr_Cookie_Consent_Cookie_Scanner {
 		global $wpdb;
 
 		// Query the data from wp_wpl_cookie_scan table
-		$results = $wpdb->get_results( "SELECT created_at, status, total_url, total_cookies,total_category FROM {$wpdb->prefix}wpl_cookie_scan ORDER BY created_at DESC LIMIT 25" );
+		$results = $wpdb->get_results( "SELECT created_at, status, total_url, total_cookies,total_category FROM `{$wpdb->prefix}wpl_cookie_scan` ORDER BY created_at DESC LIMIT 25" );
 	
 		// if ( empty( $results ) ) {
 		// 	return new WP_Error( 'no_cookies', 'No cookie scan history found', array( 'status' => 404 ) );
@@ -443,7 +443,7 @@ class Gdpr_Cookie_Consent_Cookie_Scanner {
 		global $wpdb;
 
 		// Query the data from wp_wpl_cookie_scan table
-		$results = $wpdb->get_results( "SELECT created_at, status, total_url, total_cookies FROM {$wpdb->prefix}wpl_cookie_scan LIMIT 25" );
+		$results = $wpdb->get_results( "SELECT created_at, status, total_url, total_cookies FROM `{$wpdb->prefix}wpl_cookie_scan` LIMIT 25" );
 
 		/**
 		 * Send a POST request to the GDPR API endpoint 'get_data'
@@ -650,7 +650,7 @@ class Gdpr_Cookie_Consent_Cookie_Scanner {
 
 		// Creating main table.
 		$table_name   = $wpdb->prefix . $this->main_table;
-		$search_query = "SHOW TABLES LIKE '%" . $table_name . "%'";
+		$search_query = $wpdb->prepare( 'SHOW TABLES LIKE %s', $wpdb->esc_like( $table_name ) );
 		if ( ! $wpdb->get_results( $search_query, ARRAY_N ) ) {
 			$create_table_sql = "CREATE TABLE `$table_name`(
 			    `id_wpl_cookie_scan` INT NOT NULL AUTO_INCREMENT,
@@ -668,7 +668,7 @@ class Gdpr_Cookie_Consent_Cookie_Scanner {
 
 		// Creating url table.
 		$table_name   = $wpdb->prefix . $this->url_table;
-		$search_query = "SHOW TABLES LIKE '%" . $table_name . "%'";
+		$search_query = $wpdb->prepare( 'SHOW TABLES LIKE %s', $wpdb->esc_like( $table_name ) );
 		if ( ! $wpdb->get_results( $search_query, ARRAY_N ) ) {
 			$create_table_sql = "CREATE TABLE `$table_name`(
 			    `id_wpl_cookie_scan_url` INT NOT NULL AUTO_INCREMENT,
@@ -683,7 +683,7 @@ class Gdpr_Cookie_Consent_Cookie_Scanner {
 
 		// Creating cookies table.
 		$table_name   = $wpdb->prefix . $this->cookies_table;
-		$search_query = "SHOW TABLES LIKE '%" . $table_name . "%'";
+		$search_query = $wpdb->prepare( 'SHOW TABLES LIKE %s', $wpdb->esc_like( $table_name ) );
 		if ( ! $wpdb->get_results( $search_query, ARRAY_N ) ) {
 			$create_table_sql = "CREATE TABLE `$table_name`(
 			    `id_wpl_cookie_scan_cookies` INT NOT NULL AUTO_INCREMENT,
@@ -702,7 +702,7 @@ class Gdpr_Cookie_Consent_Cookie_Scanner {
 
 		// Creating categories table.
 		$table_name   = $wpdb->prefix . $this->category_table;
-		$search_query = "SHOW TABLES LIKE '%" . $table_name . "%'";
+		$search_query = $wpdb->prepare( 'SHOW TABLES LIKE %s', $wpdb->esc_like( $table_name ) );
 		if ( ! $wpdb->get_results( $search_query, ARRAY_N ) ) {
 			$create_table_sql = "CREATE TABLE `$table_name`(
 				 `id_gdpr_cookie_category` INT NOT NULL AUTO_INCREMENT,
@@ -778,7 +778,7 @@ class Gdpr_Cookie_Consent_Cookie_Scanner {
 		$out = true;
 		// Checking main table.
 		$table_name   = $wpdb->prefix . $this->main_table;
-		$search_query = "SHOW TABLES LIKE '%" . $table_name . "%'";
+		$search_query = $wpdb->prepare( 'SHOW TABLES LIKE %s', $wpdb->esc_like( $table_name ) );
 		if ( ! $wpdb->get_results( $search_query, ARRAY_N ) ) {
 			$out = false;
 		}
@@ -1033,8 +1033,7 @@ class Gdpr_Cookie_Consent_Cookie_Scanner {
 			array('id_wpl_cookie_scan' => $scan_id) // Replace 'id' with the actual primary key name
 		);
 
-		$sql      = "SELECT * FROM $cookies_table INNER JOIN $cat_table ON $cookies_table.category_id = $cat_table.id_gdpr_cookie_category INNER JOIN $url_table ON $cookies_table.id_wpl_cookie_scan_url = $url_table.id_wpl_cookie_scan_url WHERE $cookies_table.id_wpl_cookie_scan='$scan_id' ORDER BY id_wpl_cookie_scan_cookies ASC" . ( $limit > 0 ? " LIMIT $offset,$limit" : '' );
-		$data_arr = $wpdb->get_results( $sql, ARRAY_A );
+		$sql = "SELECT * FROM `$cookies_table` INNER JOIN `$cat_table` ON `$cookies_table`.category_id = `$cat_table`.id_gdpr_cookie_category INNER JOIN `$url_table` ON `$cookies_table`.id_wpl_cookie_scan_url = `$url_table`.id_wpl_cookie_scan_url WHERE `$cookies_table`.id_wpl_cookie_scan='$scan_id' ORDER BY id_wpl_cookie_scan_cookies ASC" . ( $limit > 0 ? " LIMIT $offset,$limit" : '' );		$data_arr = $wpdb->get_results( $sql, ARRAY_A );
 		if ( $data_arr ) {
 			$out['data'] = $data_arr;
 		}
@@ -1060,20 +1059,20 @@ class Gdpr_Cookie_Consent_Cookie_Scanner {
 			$scan_table    = $wpdb->prefix . 'wpl_cookie_scan'; // Replace with your actual scan table name
 		
 			// Get the latest scan ID with current_action = 'scan_pages'
-			$latest_scan_id = $wpdb->get_var("SELECT id_wpl_cookie_scan FROM $scan_table WHERE status = '2' ORDER BY created_at DESC LIMIT 1");
+			$latest_scan_id = $wpdb->get_var("SELECT id_wpl_cookie_scan FROM `$scan_table` WHERE status = '2' ORDER BY created_at DESC LIMIT 1");
 		
 			if ($latest_scan_id) {
-				$count_sql     = "SELECT COUNT(id_wpl_cookie_scan_cookies) AS ttnum FROM $cookies_table";
+				$count_sql     = "SELECT COUNT(id_wpl_cookie_scan_cookies) AS ttnum FROM `$cookies_table`";
 				$count_arr     = $wpdb->get_row($count_sql, ARRAY_A);
 				if ( $count_arr ) {
 					$out['total'] = $count_arr['ttnum'];
 				}
 		
-				$sql      = $wpdb->prepare(
-					"SELECT * FROM $cookies_table 
-					 INNER JOIN $cat_table ON $cookies_table.category_id = $cat_table.id_gdpr_cookie_category 
-					 ORDER BY id_wpl_cookie_scan_cookies ASC" . ( $limit > 0 ? " LIMIT %d,%d" : '' ),
-					$offset, $limit
+				$sql = $wpdb->prepare(
+				    "SELECT * FROM `$cookies_table` 
+				     INNER JOIN `$cat_table` ON `$cookies_table`.category_id = `$cat_table`.id_gdpr_cookie_category 
+				     ORDER BY id_wpl_cookie_scan_cookies ASC" . ( $limit > 0 ? " LIMIT %d,%d" : '' ),
+				    $offset, $limit
 				);
 		
 				$data_arr = $wpdb->get_results($sql, ARRAY_A);
