@@ -85,7 +85,7 @@ class Gdpr_Cookie_Consent {
 		if ( defined( 'GDPR_COOKIE_CONSENT_VERSION' ) ) {
 			$this->version = GDPR_COOKIE_CONSENT_VERSION;
 		} else {
-			$this->version = '4.3.0';
+			$this->version = '4.3.1';
 		}
 		add_action(
 			'current_screen',
@@ -1077,6 +1077,8 @@ class Gdpr_Cookie_Consent {
 			'footer_dependency'					 	 => '',
 			'gdpr_css_text'                          => '',
 			'do_not_track_on'                        => false,
+			'ip_anonymization_on'                   => false,
+			'ip_masking_level'                       => "2",
 			'data_req_editor_message'                => '&lt;p&gt;Hi {name}&lt;/p&gt;&lt;p&gt;We have received your request on {blogname}. Depending on the specific request and legal obligations we might follow-up.&lt;/p&gt;&lt;p&gt;&amp;nbsp;&lt;/p&gt;&lt;p&gt;Kind regards,&lt;/p&gt;&lt;p&gt;&amp;nbsp;&lt;/p&gt;&lt;p&gt;{blogname}&lt;/p&gt;',
 			'data_req_subject'                       => 'We have received your request',
 			'enable_safe'                            => false,

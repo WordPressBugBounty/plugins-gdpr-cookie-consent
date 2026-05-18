@@ -176,6 +176,52 @@ if ( ! defined( 'ABSPATH' ) ) {
 									</c-col>
 								</c-row>
 								<?php } ?>
+								<!--  Anonymize IP address - All laws-->
+								<c-row>
+									<c-col class="col-sm-4 relative">
+										<label>
+											<?php esc_attr_e( 'Anonymize IP Address', 'gdpr-cookie-consent' ); ?>
+											<tooltip text="<?php esc_html_e( 'Masks visitor IP addresses in consent logs to enhance privacy compliance. Higher masking reduces geo-location accuracy.', 'gdpr-cookie-consent' ); ?>"></tooltip>
+										</label>
+									</c-col>
+									<c-col class="col-sm-8">
+										<div class="gdpr-disabled-export-settings">
+										<c-switch 
+											v-bind="labelIcon" 
+											v-model="ip_anonymization_on" 
+											id="gdpr-cookie-consent-ip-anonymization" 
+											variant="3d" 
+											color="success" 
+											:checked="ip_anonymization_on" 
+											:disabled="!logging_on"
+											style="!logging_on ? 'cursor:not-allowed' : ''"
+											v-on:update:checked="onSwitchIpAnonymization">
+										</c-switch>
+										 <p v-if="!logging_on" class="gdpr-export-message">
+											<?php esc_attr_e( 'To use this feature, turn on "Enable Consent Logging"', 'gdpr-cookie-consent' ); ?>
+										</p>
+										<input type="hidden" name="gcc-ip-anonymization-enabled" v-model="ip_anonymization_on">
+									</div>
+									</c-col>
+								</c-row>
+
+								<!-- IP Masking Level-->
+								<c-row v-show="logging_on && ip_anonymization_on"> 
+									<c-col class="col-sm-4">
+										<label><?php esc_html_e( 'Select how many bytes to mask', 'gdpr-cookie-consent' ); ?></label>
+									</c-col>
+									<c-col class="col-sm-8">
+										<v-select
+											class="form-group"
+											id="gdpr-cookie-consent-ip-masking-level"
+											:reduce="label => label.code"
+											:options="ip_masking_options"
+											v-model="ip_masking_level"
+											:searchable="false">
+										</v-select>
+										<input type="hidden" name="gcc-ip-masking-level" v-model="ip_masking_level">
+									</c-col>
+								</c-row>
                             </c-card-body>
                         </c-card>
                     </c-tab> 
@@ -193,13 +239,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 									</c-col>
 								</c-row>
 								<c-row>
-									<c-col class="col-sm-4"><label><?php esc_attr_e( 'Show Credits', 'gdpr-cookie-consent' ); ?> <tooltip text="<?php esc_html_e( 'If you are happy with the product and want to share credit with the developer, you can display credits under the Cookie Settings.', 'gdpr-cookie-consent' ); ?>"></tooltip>  <span class="probadge bg-badge"><?php esc_attr_e( 'Pro', 'gdpr-cookie-consent' ); ?></span></label></c-col>
+									<c-col class="col-sm-4"><label><?php esc_attr_e( 'Hide Credits', 'gdpr-cookie-consent' ); ?> <tooltip text="<?php esc_html_e( 'If you are happy with the product and want to share credit with the developer, you can display credits under the Cookie Settings.', 'gdpr-cookie-consent' ); ?>"></tooltip>  <span class="probadge bg-badge"><?php esc_attr_e( 'Pro', 'gdpr-cookie-consent' ); ?></span></label></c-col>
 									<c-col class="col-sm-8">
 										<div class="gdpr-disabled-show-credits">
 										<?php 
 											$is_disabled = (!$is_user_connected || $api_user_plan === 'free');
 										?>
-										<c-switch v-bind="labelIcon" v-model="show_credits" id="gdpr-cookie-consent-show-credits" variant="3d"  color="success" :checked="<?php echo $is_disabled ? 'true' : 'show_credits'; ?>" v-on:update:checked="onSwitchShowCredits"  <?php echo $is_disabled ? 'disabled' : ''; ?>></c-switch>
+										<c-switch v-bind="labelIcon" v-model="show_credits" id="gdpr-cookie-consent-show-credits" variant="3d"  color="success" :checked="<?php echo $is_disabled ? 'false' : '!show_credits'; ?>" v-on:update:checked="onSwitchShowCredits"  <?php echo $is_disabled ? 'disabled' : ''; ?>></c-switch>
 										<input type="hidden" name="gcc-show-credits" v-model="show_credits">
 										<?php if ($is_disabled): ?>
 											<p class="gdpr-show_credits_message">

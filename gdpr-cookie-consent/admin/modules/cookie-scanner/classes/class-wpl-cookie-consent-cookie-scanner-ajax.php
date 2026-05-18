@@ -114,7 +114,14 @@ class Gdpr_Cookie_Consent_Cookie_Scanner_Ajax extends Gdpr_Cookie_Consent_Cookie
 			if ( $scan_limit_int > 5 ) {
 				exit();
 			}
+		} else if ( '3sites' === strtolower( $this->plan ) ) {
+			$scan_limit     = get_transient( 'gdpr_monthly_scan_limit_exhausted' );
+			$scan_limit_int = (int) $scan_limit;
+			if ( $scan_limit_int > 50 ) {
+				exit();
+			}
 		}
+
 		if ( isset( $_POST['wpl_scanner_action'] ) ) {
 			$wpl_scan_action = sanitize_text_field( wp_unslash( $_POST['wpl_scanner_action'] ) );
 			$allowed_actions = array( 'get_pages', 'scan_pages', 'stop_scan', 'check_api', 'scan_cookie_list', 'update_scan_cookie', 'get_post_scan_cookies', 'get_scanned_cookies_list' );

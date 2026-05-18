@@ -51,6 +51,10 @@ if ( 'free' === $api_user_plan ) {
 	$scan_limit     = get_transient( 'gdpr_monthly_scan_limit_exhausted' );
 	$scan_limit_int = (int) $scan_limit; 
 	$gdpr_monthly_scan_percent = ( ( $scan_limit_int ) / 5 ) * 100;
+} else if ( '3sites' === strtolower( $api_user_plan ) ) {
+	$scan_limit     = get_transient( 'gdpr_monthly_scan_limit_exhausted' );
+	$scan_limit_int = (int) $scan_limit; 
+	$gdpr_monthly_scan_percent = ( ( $scan_limit_int ) / 50 ) * 100;
 }
 
 $gdpr_monthly_page_views = get_option('wpl_monthly_page_views', 0);
@@ -418,7 +422,7 @@ $site_domain = wp_parse_url($site_url, PHP_URL_HOST);
 									radial-gradient(closest-side, white 90%, transparent 80% 100%), 
 									conic-gradient( <?php echo ( $gdpr_monthly_scan_percent < 35 ) ? esc_html('#469955', 'gdpr-cookie-consent') : ( ( $gdpr_monthly_scan_percent < 75 ) ? esc_html('#ca8b25', 'gdpr-cookie-consent') : esc_html('#c93a38', 'gdpr-cookie-consent') ); ?> <?php echo esc_html( $gdpr_monthly_scan_percent ); ?>%, <?php echo ( $gdpr_monthly_scan_percent < 35 ) ? esc_html('#e6f5ee', 'gdpr-cookie-consent') : ( ( $gdpr_monthly_scan_percent < 75 ) ? esc_html('#fef7c3', 'gdpr-cookie-consent') : esc_html('#f8e6e6', 'gdpr-cookie-consent') ); ?> 0);"
 							>
-								<?php if ( 'free' === $api_user_plan ) { ?>
+								<?php if ( 'free' === $api_user_plan || '3sites' === strtolower( $api_user_plan ) ) { ?>
 									<span style="color: <?php echo ( $gdpr_monthly_scan_percent < 35 ) ? esc_html('#469955', 'gdpr-cookie-consent') : ( ( $gdpr_monthly_scan_percent < 75 ) ? esc_html('#ca8b25', 'gdpr-cookie-consent') : esc_html('#c93a38', 'gdpr-cookie-consent') ); ?>;"><?php echo esc_attr( ceil( $gdpr_monthly_scan_percent ) ); ?>%</span>
   									<progress value="<?php echo esc_attr( ceil( $gdpr_monthly_scan_percent ) ); ?>" min="0" max="100" style="visibility:hidden;height:0;width:0;"></progress>
 								<?php } else { ?>
@@ -430,14 +434,22 @@ $site_domain = wp_parse_url($site_url, PHP_URL_HOST);
 
 							<div class="gdpr-progress-content">
 								<h3><?php echo esc_html( 'Scans / Month', 'gdpr-cookie-consent' ); ?></h3>
-								<?php if ( 'free' === $api_user_plan ) { ?>
-										<p><?php echo esc_html( $scan_limit_int . ' / 5', 'gdpr-cookie-consent' ) ?>
+								<?php
+									$plan = strtolower( $api_user_plan );
+
+									$limit = 5;
+									if ( '3sites' === $plan ) {
+									    $limit = 50;
+									}
+								?>
+								<?php if ( in_array( $plan, [ 'free', '3sites' ], true ) ) { ?>
+										<p><?php echo esc_html( $scan_limit_int . ' / ' . $limit, 'gdpr-cookie-consent' ) ?>
 											<span>
 												<?php if ( $gdpr_monthly_scan_percent >= 75 ) {
         											echo '<img src="' . esc_url( GDPR_COOKIE_CONSENT_PLUGIN_URL . 'admin/images/limit_warning.svg' ) . '" alt="">'; 
 												} ?>
 											</span>
-										<p><?php echo esc_html( ( 5 - $scan_limit_int ) . ' Remaining', 'gdpr-cookie-consent' ); ?></p>
+										<p><?php echo esc_html( ( $limit - $scan_limit_int ) . ' Remaining', 'gdpr-cookie-consent' ); ?></p>
 								<?php } else { ?>
 										<p><?php echo esc_html( 'Unlimited', 'gdpr-cookie-consent' ) ?></p>
 								<?php } ?>

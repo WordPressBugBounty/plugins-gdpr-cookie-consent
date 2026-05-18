@@ -325,7 +325,7 @@ class Gdpr_Cookie_Consent_Cookie_Scanner {
 			}
 			$api_gdpr_cookie_scan = '';
 
-			if ( 'free' !== $this->plan ) {
+			if ( 'free' !== $this->plan && '3sites' !== strtolower( $this->plan ) ) {
 				delete_transient( 'gdpr_monthly_scan_limit_exhausted' );
 			}
 
