@@ -4,7 +4,7 @@ Donate link: https://wplegalpages.com/
 Tags: cookie banner, cookie consent, cookie notice, eu cookie law, gdpr
 Requires at least: 3.3.1
 Tested up to: 6.9
-Stable tag: 4.3.1
+Stable tag: 4.3.2
 Requires PHP: 7.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
@@ -195,6 +195,14 @@ Yes, the plugin supports multiple languages, ensuring that your cookie consent b
 11.Consent Log table
 
 == Change Log ==
+
+= 4.3.2 =
+* What's New
+    * **Drag & Drop Cookie Banner Builder:** Introduced an intuitive drag-and-drop builder, offering ultimate design flexibility. You can now easily customize layouts, rearrange elements, and match the banner perfectly with your brand identity without needing any code.
+* Improvements
+    * **CCPA Revisit Consent Option:** Added a dedicated revisit consent feature for the CCPA banner. Users can now easily recall, change, or update their preferences at any time to remain fully compliant with regulatory standards.
+* Bug Fixes
+    * General Maintenance: Minor bug fixes and performance improvements under the hood to ensure smoother operation and better compatibility
 
 = 4.3.1 =
 * Improvements*
@@ -817,6 +825,14 @@ Yes, the plugin supports multiple languages, ensuring that your cookie consent b
 * Initial version
 
 == Upgrade Notice ==
+
+= 4.3.2 =
+* What's New
+    * **Drag & Drop Cookie Banner Builder:** Introduced an intuitive drag-and-drop builder, offering ultimate design flexibility. You can now easily customize layouts, rearrange elements, and match the banner perfectly with your brand identity without needing any code.
+* Improvements
+    * **CCPA Revisit Consent Option:** Added a dedicated revisit consent feature for the CCPA banner. Users can now easily recall, change, or update their preferences at any time to remain fully compliant with regulatory standards.
+* Bug Fixes
+    * General Maintenance: Minor bug fixes and performance improvements under the hood to ensure smoother operation and better compatibility
 
 = 4.3.1 =
 * Improvements*

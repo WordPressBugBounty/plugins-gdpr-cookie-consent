@@ -728,6 +728,8 @@ class Gdpr_Cookie_Consent_Public {
 			$the_options['head_lgpd']                 = $head_lgpd;
 			$the_options['version']                   = $this->version;
 			$the_options['show_again_container_id']   = $this->gdprcookieconsent_remove_hash( $the_options['show_again_div_id'] );
+			$the_options['ccpa_show_again_container_id']   = $this->gdprcookieconsent_remove_hash( $the_options['ccpa_show_again_div_id'] );
+
 			$the_options['container_id']              = $this->gdprcookieconsent_remove_hash( $the_options['notify_div_id'] );
 			$the_options['button_accept_action_id']   = $this->gdprcookieconsent_remove_hash( $the_options['button_accept_action'] );
 			$the_options['button_readmore_action_id'] = $this->gdprcookieconsent_remove_hash( $the_options['button_readmore_action'] );
@@ -958,8 +960,10 @@ class Gdpr_Cookie_Consent_Public {
 				$cookie_data['dash_button_cancel_text'] = $the_options['button_cancel_text'];
 				if( $ab_options['ab_testing_enabled'] === true || $ab_options['ab_testing_enabled'] === 'true' ) {
 					$cookie_data['dash_show_again_text'] = $the_options['show_again_text' . $chosenBanner];
+					$cookie_data['ccpa_dash_show_again_text'] = $the_options['ccpa_show_again_text' . $chosenBanner];
 				} else {
 					$cookie_data['dash_show_again_text'] = $the_options['show_again_text'];
+					$cookie_data['ccpa_dash_show_again_text'] = $the_options['ccpa_show_again_text'];
 				}
 				$cookie_data['dash_optout_text'] = $the_options['optout_text'];
 				$cookie_data['dash_notify_message_iabtcf'] = $the_options['notify_message'];
@@ -1054,6 +1058,7 @@ class Gdpr_Cookie_Consent_Public {
 				$cookie_data['dash_button_confirm_text'] = $the_options['button_confirm_text'];
 				$cookie_data['dash_button_cancel_text'] = $the_options['button_cancel_text'];
 				$cookie_data['dash_show_again_text'] = $the_options['show_again_text'];
+				$cookie_data['ccpa_dash_show_again_text'] = $the_options['ccpa_show_again_text'];
 				$cookie_data['dash_optout_text'] = $the_options['optout_text'];
 				$cookie_data['dash_notify_message_iabtcf'] = $the_options['notify_message'];
 				$cookie_data['dash_about_message_iabtcf']  = $the_options['about_message'];
@@ -1110,6 +1115,7 @@ class Gdpr_Cookie_Consent_Public {
 								'dash_button_confirm_text',
 								'dash_button_cancel_text',
 								'dash_show_again_text',
+								'ccpa_dash_show_again_text',
 								'dash_optout_text',
 								'gdpr_cookie_category_description_necessary',
 								'gdpr_cookie_category_name_necessary',
@@ -1166,7 +1172,7 @@ class Gdpr_Cookie_Consent_Public {
 						
 			$template_object = json_decode($the_options['selected_template_json'], true);			
 			// include plugin_dir_path( __FILE__ ) . 'templates/default.php';
-			include plugin_dir_path(__FILE__) . 'templates/cookie-notice.php';
+			include_once plugin_dir_path(__FILE__) . 'templates/cookie-notice.php';
 			?>
 			<style>
 				.gdpr_messagebar_detail .category-group .category-item .description-container .group-toggle .checkbox input:checked+label,
@@ -1299,6 +1305,12 @@ class Gdpr_Cookie_Consent_Public {
 				'button_revoke_consent_background_color1'	=> $the_options['button_revoke_consent_background_color1'],
 				'button_revoke_consent_text_color2' 		=> $the_options['button_revoke_consent_text_color2'],
 				'button_revoke_consent_background_color2'	=> $the_options['button_revoke_consent_background_color2'],
+				'ccpa_button_revoke_consent_text_color' 			=> $the_options['ccpa_button_revoke_consent_text_color'],
+				'ccpa_button_revoke_consent_background_color'	=> $the_options['ccpa_button_revoke_consent_background_color'],
+				'ccpa_button_revoke_consent_text_color1' 		=> $the_options['ccpa_button_revoke_consent_text_color1'],
+				'ccpa_button_revoke_consent_background_color1'	=> $the_options['ccpa_button_revoke_consent_background_color1'],
+				'ccpa_button_revoke_consent_text_color2' 		=> $the_options['ccpa_button_revoke_consent_text_color2'],
+				'ccpa_button_revoke_consent_background_color2'	=> $the_options['ccpa_button_revoke_consent_background_color2'],
 				'chosenBanner'								=> $chosenBanner,
 				'is_iabtcf_on'                              => $the_options['is_iabtcf_on'],
 				'is_gcm_on'									=> $this->convert_boolean($the_options['is_gcm_on']),

@@ -51,16 +51,26 @@ if ( 'popup' === $the_options['cookie_bar_as'] ) {
 			return "rgba($r, $g, $b, $opacity)";
 		}
 	}
+	//temporary
+	// $the_options = array();
+	// $chosenBanner = 1;
+	// $template_object = array();
+	// $cookie_data = array();
+	// $ab_options = array();
 	
 //styling for banner
 
 	$ab_testing_enabled = (!isset($ab_options['ab_testing_enabled']) || ($ab_options['ab_testing_enabled'] === "false" || $ab_options['ab_testing_enabled'] === false)) ? "false" : "true";
 
-	$notice_container_styles = "position: fixed; display: none; flex-direction: column; gap: 15px; border-radius: {$the_options[($ab_testing_enabled === "true" ? 'cookie_bar_border_radius' . $chosenBanner : ($the_options['cookie_usage_for'] === 'both' ? 'multiple_legislation_cookie_bar_border_radius1' : 'background_border_radius'))]}px;";
-
-	if ( $the_options['cookie_bar_as'] === 'banner' ) { $notice_container_styles .= "left: 0px; {$the_options['notify_position_vertical']}: 0px;"; $notice_container_styles .= " box-shadow: 2px 5px 11px 4px #dddddd;"; } 
+	$notice_container_styles = "position: fixed; display: none; flex-direction: column; border-radius: {$the_options[($ab_testing_enabled === "true" ? 'cookie_bar_border_radius' . $chosenBanner :  'background_border_radius')]}px;";
+	if ( $the_options['cookie_bar_as'] === 'banner' ) { 
+		$notice_container_styles .= "left: 15px; {$the_options['notify_position_vertical']}: 15px;"; 
+		$notice_container_styles .= "padding-inline: " . ($ab_testing_enabled === "true" ? $the_options['cookie_bar_horizontal_padding' . $chosenBanner] : $the_options["cookie_bar_horizontal_padding"]) . "px;";
+		$notice_container_styles .= "padding-block: " . ($ab_testing_enabled === "true" ? $the_options['cookie_bar_vertical_padding' . $chosenBanner] : $the_options["cookie_bar_vertical_padding"]) . "px;";
+	} 
 	elseif ( $the_options['cookie_bar_as'] === 'popup' ) { 
 		$notice_container_styles .= "top:50%; left: 50%; transform: translateX(-50%) translateY(-50%);";
+		$notice_container_styles .= "padding: " . ($ab_testing_enabled === "true" ? $the_options['cookie_bar_padding' . $chosenBanner] : $the_options["cookie_bar_padding"]) . "px;";
 	} 
 	else { switch ( $the_options['notify_position_horizontal'] ) { 
 			case 'left': $notice_container_styles .= "left: 15px; bottom: 15px;"; break;
@@ -68,16 +78,55 @@ if ( 'popup' === $the_options['cookie_bar_as'] ) {
 			case 'top_left': $notice_container_styles .= "left: 15px; top: 15px;"; break;
 			case 'top_right': $notice_container_styles .= "right: 15px; top: 15px;"; break;
 		}
-		$notice_container_styles .= " box-shadow: rgba(0, 0, 0, 0.25) 0px 14px 28px, rgba(0, 0, 0, 0.22) 0px 10px 10px;";
+		$notice_container_styles .= "padding: " . ($ab_testing_enabled === "true" ? $the_options['cookie_bar_padding' . $chosenBanner] : $the_options["cookie_bar_padding"]) . "px;";
 	}
-	$notice_container_styles .= "background: " . hex_to_rgba($ab_testing_enabled === "true" ? $the_options['cookie_bar_color' . $chosenBanner] : ($the_options['cookie_usage_for'] === 'both' ? $the_options['multiple_legislation_cookie_bar_color1'] : $the_options['background']), $ab_testing_enabled === 'true' ? $the_options['cookie_bar_opacity' . $chosenBanner] : ($the_options['cookie_usage_for'] === 'both' ? $the_options['multiple_legislation_cookie_bar_opacity1'] : $the_options['opacity'])) . ";"; 
-	$notice_container_styles .= "color: " . ($ab_testing_enabled === "true" ? $the_options['cookie_text_color' . $chosenBanner] : ($the_options['cookie_usage_for'] === 'both' ? $the_options['multiple_legislation_cookie_text_color1'] : $the_options["text"])) . ";"; 
-	$notice_container_styles .= "border-style: " . ($ab_testing_enabled === "true" ? $the_options['border_style' . $chosenBanner] : ($the_options['cookie_usage_for'] === 'both' ? $the_options['multiple_legislation_border_style1'] : $the_options["background_border_style"])) . ";"; 
-	$notice_container_styles .= "border-color: " . ($ab_testing_enabled === "true" ? $the_options['cookie_border_color' . $chosenBanner] : ($the_options['cookie_usage_for'] === 'both' ? $the_options['multiple_legislation_cookie_border_color1'] : $the_options["background_border_color"])) . ";"; 
-	$notice_container_styles .= "border-width: " . ($ab_testing_enabled === "true" ? $the_options['cookie_bar_border_width' . $chosenBanner] : ($the_options['cookie_usage_for'] === 'both' ? $the_options['multiple_legislation_cookie_bar_border_width1'] : $the_options["background_border_width"])) . "px;"; 
-	$notice_container_styles .= "font-family: " . ($ab_testing_enabled === "true" ? $the_options['cookie_font' . $chosenBanner] : ($the_options['cookie_usage_for'] === 'both' ? $the_options['multiple_legislation_cookie_font1'] : $the_options["font_family"])) . ";"; 
+	$notice_container_styles .= "background: " . hex_to_rgba($ab_testing_enabled === "true" ? $the_options['cookie_bar_color' . $chosenBanner] : $the_options['background'], $ab_testing_enabled === 'true' ? $the_options['cookie_bar_opacity' . $chosenBanner] : $the_options['opacity']) . ";"; 
+	$notice_container_styles .= "border-style: " . ($ab_testing_enabled === "true" ? $the_options['border_style' . $chosenBanner] : $the_options["background_border_style"]) . ";"; 
+	$notice_container_styles .= "border-color: " . ($ab_testing_enabled === "true" ? $the_options['cookie_border_color' . $chosenBanner] : $the_options["background_border_color"]) . ";"; 
+	$notice_container_styles .= "border-width: " . ($ab_testing_enabled === "true" ? $the_options['cookie_bar_border_width' . $chosenBanner] : $the_options["background_border_width"]) . "px;"; 
+	$notice_container_styles .= "font-family: " . ($ab_testing_enabled === "true" ? $the_options['cookie_font' . $chosenBanner] : $the_options["font_family"]) . ";"; 
+	$notice_container_styles .= "gap: " . ($ab_testing_enabled === "true" ? $the_options['cookie_bar_spacing' . $chosenBanner] : $the_options["cookie_bar_spacing"]) . "px;";
+	$notice_container_styles .= "backdrop-filter: blur(" . ($ab_testing_enabled === "true" ? $the_options['cookie_bar_blur' . $chosenBanner] : $the_options["cookie_bar_blur"])*20 . "px);";
+	$notice_container_styles .= "box-shadow: " . ($ab_testing_enabled === "true" ? $the_options['cookie_bar_shadow_size' . $chosenBanner] : $the_options["cookie_bar_shadow_size"]) . "px " . ($ab_testing_enabled === "true" ? $the_options['cookie_bar_shadow_size' . $chosenBanner] : $the_options["cookie_bar_shadow_size"]) . "px " . ($ab_testing_enabled === "true" ? $the_options['cookie_bar_shadow_size' . $chosenBanner] * 2 : $the_options["cookie_bar_shadow_size"] * 2) . "px " . hex_to_rgba($ab_testing_enabled === "true" ? $the_options['cookie_bar_shadow_color' . $chosenBanner] : $the_options["cookie_bar_shadow_color"], 0.5) . ";";
+	
+	$suffix =  ($ab_testing_enabled === "true" ? $chosenBanner : '');
+	$banner_layouts = json_decode($the_options['banner_layouts'], true);
+	$banner_structure = json_decode($the_options['banner_structure'], true);
+	if ( ! is_array( $banner_structure ) ) {
+		$banner_structure = array();
+	}
 
-	$suffix =  ($ab_testing_enabled === "true" ? $chosenBanner : ($the_options['cookie_usage_for'] === 'both' ? '1' : ''));
+	$c5_buttons = isset( $banner_structure['c5'] ) && is_array( $banner_structure['c5'] )
+		? $banner_structure['c5']
+		: array( 'accept_all', 'accept', 'settings' );
+
+	$c6_buttons = isset( $banner_structure['c6'] ) && is_array( $banner_structure['c6'] )
+		? $banner_structure['c6']
+		: array( 'decline' );
+
+	$is_button_visible = function( $item ) use ( $the_options, $suffix ) {
+		switch ( $item ) {
+			case 'acceptAll':
+			case 'accept_all':
+				return filter_var( $the_options['button_accept_all_is_on' . $suffix], FILTER_VALIDATE_BOOLEAN );
+
+			case 'accept':
+				return filter_var( $the_options['button_accept_is_on' . $suffix], FILTER_VALIDATE_BOOLEAN );
+
+			case 'decline':
+				return filter_var( $the_options['button_decline_is_on' . $suffix], FILTER_VALIDATE_BOOLEAN );
+
+			case 'settings':
+				return $the_options['cookie_usage_for'] !== 'eprivacy'
+					&& filter_var( $the_options['button_settings_is_on' . $suffix], FILTER_VALIDATE_BOOLEAN );
+
+			default:
+				return false;
+		}
+	};
+
+	$visible_c5_items = array_values( array_filter( $c5_buttons, $is_button_visible ) );
+	$visible_c6_items = array_values( array_filter( $c6_buttons, $is_button_visible ) );
 	$opt_out_style_attr = "color: {$the_options['button_donotsell_link_color' . $suffix]}";
 
 	$logo_style_attr = '';
@@ -86,9 +135,17 @@ if ( 'popup' === $the_options['cookie_bar_as'] ) {
 	} 
 
 	$heading_style_attr = "";
-	foreach ($template_object['heading'] as $key => $value) {
-		$heading_style_attr .= esc_attr($key) . ':' . esc_attr($value) . ';';
-	}  
+	$heading_style_attr .= "color: {$the_options['cookie_heading_color' . $suffix]};";
+	$heading_style_attr .= "font-size: {$the_options['heading_text_size' . $suffix]}px;";
+	$heading_style_attr .= "font-weight: {$the_options['heading_text_weight' . $suffix]};";
+
+	$text_style_attr = "";
+	$text_style_attr .= "color: {$the_options['cookie_text_color' . $suffix]};";
+	$text_style_attr .= "font-size: {$the_options['cookie_font_size' . $suffix]}px;";
+	$text_style_attr .= "font-weight: {$the_options['cookie_text_weight' . $suffix]};";
+	$text_style_attr .= "text-align: {$the_options['banner_text_alignment' . $suffix]};";
+
+
 	$readmore_style_attr = "";
 	$readmore_style_attr .= " color: {$the_options['button_readmore_link_color' . $suffix]};";
 	if (
@@ -104,198 +161,264 @@ if ( 'popup' === $the_options['cookie_bar_as'] ) {
 	} else {
 		$readmore_style_attr .= "text-decoration: none;";
 	}
-
-	if ( ! empty( $the_options['button_readmore_as_button' . $suffix] ) && filter_var($the_options['button_readmore_as_button' . $suffix], FILTER_VALIDATE_BOOLEAN)) {
-		$padding_key = 'button_padding';
-		$padding_value = $template_object['static-settings'][$padding_key] ?? '';
-		$readmore_style_attr .= "display: block; width:fit-content; margin-top: 5px;";
-		$readmore_style_attr .= "border-style: {$the_options['button_readmore_button_border_style' . $suffix]};";
-		$readmore_style_attr .= "border-color: {$the_options['button_readmore_button_border_color' . $suffix]};";
-		$readmore_style_attr .= "border-width: {$the_options['button_readmore_button_border_width' . $suffix]}px;";
-		$readmore_style_attr .= "border-radius: {$the_options['button_readmore_button_border_radius' . $suffix]}px;";
-		$readmore_style_attr .= "padding: {$padding_value};";
-		$rgba_color = hex_to_rgba($the_options['button_readmore_button_color' . $suffix], $the_options['button_readmore_button_opacity' . $suffix]);
-		$readmore_style_attr .= "background: {$rgba_color};";
-	}
-	else{
-		$readmore_style_attr .= "display: inline-block;";
-	}
+	$readmore_style_attr .= "display: inline-block;";
+	
 	
 
 	$accept_style_attr = "";
 	$accept_style_attr .=  " color: {$the_options["button_accept_link_color" . $suffix]};";
 	if ( ! empty( $the_options['button_accept_as_button' . $suffix] ) && filter_var($the_options['button_accept_as_button' . $suffix], FILTER_VALIDATE_BOOLEAN)) {
-		$padding_key = 'button_padding';
-		$padding_value = $template_object['static-settings'][$padding_key] ?? '';
 		$accept_style_attr .= "border-style: {$the_options['button_accept_button_border_style' . $suffix]};";
 		$accept_style_attr .= "border-color: {$the_options['button_accept_button_border_color' . $suffix]};";
 		$accept_style_attr .= "border-width: {$the_options['button_accept_button_border_width' . $suffix]}px;";
 		$accept_style_attr .= "border-radius: {$the_options['button_accept_button_border_radius' . $suffix]}px;";
-		$accept_style_attr .= "padding: {$padding_value};";
+		$accept_style_attr .= "padding-inline: 16px; padding-block: 8px;";
 		$rgba_color = hex_to_rgba($the_options['button_accept_button_color' . $suffix], $the_options['button_accept_button_opacity' . $suffix]);
 		$accept_style_attr .= "background: {$rgba_color};";
 	}
-	$accept_style_attr .= "min-width: " . ($template_object['accept_button']['min-width'] ?? '') . ";";
-	$accept_style_attr .= "display: " . ($template_object['accept_button']['display'] ?? '') . ";";
-	$accept_style_attr .= "justify-content: " . ($template_object['accept_button']['justify-content'] ?? '') . ";";
-	$accept_style_attr .= "align-items: " . ($template_object['accept_button']['align-items'] ?? '') . ";";
-	$accept_style_attr .= "text-align: " . ($template_object['accept_button']['text-align'] ?? '') . ";";
-
-	$accept_style_attr .= isset($template_object['accept_button']['width']) ? "width : {$template_object['accept_button']['width']};" : '';
+	$accept_style_attr .= "font-size: {$the_options['button_font_size' . $suffix]}px;";
+	$accept_style_attr .= "font-weight: {$the_options['button_text_weight' . $suffix]};";
+	$button_accept_button_width = $the_options['button_accept_button_width' . $suffix] === 'full' ? '100%' : 'fit-content';
+	$accept_style_attr .= "width: {button_accept_button_width};";
+	$accept_style_attr .= "min-width: {$the_options['button_accept_button_min_width' . $suffix]}px;";
 
 
 	$accept_all_style_attr = "";
 	$accept_all_style_attr .=  " color: {$the_options["button_accept_all_link_color" . $suffix]};";
 
 	if ( ! empty( $the_options['button_accept_all_as_button' . $suffix] ) && filter_var($the_options['button_accept_all_as_button' . $suffix], FILTER_VALIDATE_BOOLEAN)) {
-		$padding_key = 'button_padding';
-		$padding_value = $template_object['static-settings'][$padding_key] ?? '';
 		$accept_all_style_attr .= "border-style: {$the_options['button_accept_all_btn_border_style' . $suffix]};";
 		$accept_all_style_attr .= "border-color: {$the_options['button_accept_all_btn_border_color' . $suffix]};";
 		$accept_all_style_attr .= "border-width: {$the_options['button_accept_all_btn_border_width' . $suffix]}px;";
 		$accept_all_style_attr .= "border-radius: {$the_options['button_accept_all_btn_border_radius' . $suffix]}px;";
-		$accept_all_style_attr .= "padding: {$padding_value};";
+		$accept_all_style_attr .= "padding-inline: 16px; padding-block: 8px;";
 		$rgba_color = hex_to_rgba($the_options['button_accept_all_button_color' . $suffix], $the_options['button_accept_all_btn_opacity' . $suffix]);
 		$accept_all_style_attr .= "background: {$rgba_color};";
 	}
-	$accept_all_style_attr .= "min-width: " . ($template_object['accept_all_button']['min-width'] ?? '') . ";";
-	$accept_all_style_attr .= "display: " . ($template_object['accept_all_button']['display'] ?? '') . ";";
-	$accept_all_style_attr .= "justify-content: " . ($template_object['accept_all_button']['justify-content'] ?? '') . ";";
-	$accept_all_style_attr .= "align-items: " . ($template_object['accept_all_button']['align-items'] ?? '') . ";";
-	$accept_all_style_attr .= "text-align: " . ($template_object['accept_all_button']['text-align'] ?? '') . ";";
-
-    $accept_all_style_attr .= isset($template_object['accept_all_button']['width']) ? "width : {$template_object['accept_all_button']['width']};" : '';
+	$accept_all_style_attr .= "font-size: {$the_options['button_font_size' . $suffix]}px;";
+	$accept_all_style_attr .= "font-weight: {$the_options['button_text_weight' . $suffix]};";
+	$button_accept_all_btn_width = $the_options['button_accept_all_btn_width' . $suffix] === 'full' ? '100%' : 'fit-content';
+	$accept_all_style_attr .= "width: {$button_accept_all_btn_width};";
+	$accept_all_style_attr .= "min-width: {$the_options['button_accept_all_btn_min_width' . $suffix]}px;";
 
 
 	
 	$settings_style_attr ="";
 	$settings_style_attr .=  " color: {$the_options["button_settings_link_color" . $suffix]};";
 	if ( ! empty( $the_options['button_settings_as_button' . $suffix] ) && filter_var($the_options['button_settings_as_button' . $suffix], FILTER_VALIDATE_BOOLEAN)) {
-		$padding_key = 'button_padding';
-		$padding_value = $template_object['static-settings'][$padding_key];
 		$settings_style_attr .= "border-style: {$the_options['button_settings_button_border_style' . $suffix]};";
 		$settings_style_attr .= "border-color: {$the_options['button_settings_button_border_color' . $suffix]};";
 		$settings_style_attr .= "border-width: {$the_options['button_settings_button_border_width' . $suffix]}px;";
 		$settings_style_attr .= "border-radius: {$the_options['button_settings_button_border_radius' . $suffix]}px;";
-		$settings_style_attr .= "padding: {$padding_value};";
+		$settings_style_attr .= "padding-inline: 16px; padding-block: 8px;";
 		$rgba_color = hex_to_rgba($the_options['button_settings_button_color' . $suffix], $the_options['button_settings_button_opacity' . $suffix]);
 		$settings_style_attr .= "background: {$rgba_color};";
 	}
-	$settings_style_attr .= "min-width: " . ($template_object['settings_button']['min-width'] ?? '') . ";";
-	$settings_style_attr .= "display: " . ($template_object['settings_button']['display'] ?? '') . ";";
-	$settings_style_attr .= "justify-content: " . ($template_object['settings_button']['justify-content'] ?? '') . ";";
-	$settings_style_attr .= "align-items: " . ($template_object['settings_button']['align-items'] ?? '') . ";";
-	$settings_style_attr .= "text-align: " . ($template_object['settings_button']['text-align'] ?? '') . ";";
-
-	$settings_style_attr .= isset($template_object['settings_button']['width']) ? "width : {$template_object['settings_button']['width']};" : '';
+	$settings_style_attr .= "font-size: {$the_options['button_font_size' . $suffix]}px;";
+	$settings_style_attr .= "font-weight: {$the_options['button_text_weight' . $suffix]};";
+	$button_settings_button_width = $the_options['button_settings_button_width' . $suffix] === 'full' ? '100%' : 'fit-content';
+	$settings_style_attr .= "width: {$button_settings_button_width};";
+	$settings_style_attr .= "min-width: {$the_options['button_settings_button_min_width' . $suffix]}px;";
 
 
 	$decline_style_attr ="";
 	$decline_style_attr .=  " color: {$the_options["button_decline_link_color" . $suffix]};";
 	if ( ! empty( $the_options['button_decline_as_button' . $suffix] ) && filter_var($the_options['button_decline_as_button' . $suffix], FILTER_VALIDATE_BOOLEAN)) {
-		$padding_key = 'button_padding';
-		$padding_value = $template_object['static-settings'][$padding_key];
 		$decline_style_attr .= "border-style: {$the_options['button_decline_button_border_style' . $suffix]};";
 		$decline_style_attr .= "border-color: {$the_options['button_decline_button_border_color' . $suffix]};";
 		$decline_style_attr .= "border-width: {$the_options['button_decline_button_border_width' . $suffix]}px;";
 		$decline_style_attr .= "border-radius: {$the_options['button_decline_button_border_radius' . $suffix]}px;";
-		$decline_style_attr .= "padding: {$padding_value};";
+		$decline_style_attr .= "padding-inline: 16px; padding-block: 8px;";
 		$rgba_color = hex_to_rgba($the_options['button_decline_button_color' . $suffix], $the_options['button_decline_button_opacity' . $suffix]);
 		$decline_style_attr .= "background: {$rgba_color};";
 	}
-	$decline_style_attr .= "min-width: " . ($template_object['decline_button']['min-width'] ?? '') . ";";
-	$decline_style_attr .= "display: " . ($template_object['decline_button']['display'] ?? '') . ";";
-	$decline_style_attr .= "justify-content: " . ($template_object['decline_button']['justify-content'] ?? '') . ";";
-	$decline_style_attr .= "align-items: " . ($template_object['decline_button']['align-items'] ?? '') . ";";
-	$decline_style_attr .= "text-align: " . ($template_object['decline_button']['text-align'] ?? '') . ";";
+	$decline_style_attr .= "font-size: {$the_options['button_font_size' . $suffix]}px;";
+	$decline_style_attr .= "font-weight: {$the_options['button_text_weight' . $suffix]};";
+	$button_decline_button_width = $the_options['button_decline_button_width' . $suffix] === 'full' ? '100%' : 'fit-content';
+	$decline_style_attr .= "width: {$button_decline_button_width};";
+	$decline_style_attr .= "min-width: {$the_options['button_decline_button_min_width' . $suffix]}px;";
 
-	$decline_style_attr .= isset($template_object['decline_button']['width']) ? "width: {$template_object['decline_button']['width']};" : '';
-
-	$badging_color = $the_options['button_accept_all_button_color' . $suffix] === ($ab_testing_enabled === "true" ? $the_options['cookie_bar_color' . $chosenBanner] : ($the_options['cookie_usage_for'] === 'both' ? $the_options['multiple_legislation_cookie_bar_color1'] : $the_options['background'])) ? $template_object['accept_all_button']['background-color'] ?? '' : $the_options['button_accept_all_button_color' . $suffix];
+	$badging_color = $the_options['button_accept_all_button_color' . $suffix] === ($ab_testing_enabled === "true" ? $the_options['cookie_bar_color' . $chosenBanner] : $the_options['background']) ? $template_object['accept_all_button']['background-color'] ?? '' : $the_options['button_accept_all_button_color' . $suffix];
 	$decoration_styles_attr = '';
 	if(isset($template_object['decoration'])) foreach ($template_object['decoration'] as $key => $value) {
 		$decoration_styles_attr .= esc_attr($key) . ':' . esc_attr($value) . ';';
 	} 
+	$render_cookie_button = function( $button ) use ( $the_options, $suffix, $cookie_data, $decline_style_attr, $settings_style_attr, $accept_style_attr, $accept_all_style_attr ) {
+		switch ( $button ) {
+			case 'decline':
+				if ( filter_var( $the_options['button_decline_is_on' . $suffix] ?? false, FILTER_VALIDATE_BOOLEAN ) ) : ?>
+					<a id="cookie_action_reject" class="<?php echo esc_html( $the_options['button_decline_classes'] ); ?>" tabindex="0" aria-label="Reject"
+						<?php
+						if ( 'CONSTANT_OPEN_URL' === $the_options['button_decline_action' . $suffix] ) {
+							?>
+							href="<?php echo esc_html( $the_options['button_decline_url' . $suffix] ); ?>"
+							<?php
+							if ( ! empty( $the_options['button_decline_new_win' . $suffix] ) ) {
+								?>
+								target="_blank"
+								<?php
+							} else {
+								?>
+								href="#"
+								<?php
+							}
+						}
+						?>
+						data-gdpr_action="reject" style="<?php echo esc_attr( $decline_style_attr ); ?>" >
+						<?php
+						echo isset( $the_options['is_dynamic_lang_on'] ) && ( $the_options['is_dynamic_lang_on'] === 'true' || $the_options['is_dynamic_lang_on'] === true || $the_options['is_dynamic_lang_on'] === '1' )
+							? esc_html( $cookie_data['dash_button_decline_text'] )
+							: esc_html( $the_options['button_decline_text' . $suffix] ?? '', 'gdpr-cookie-consent' );
+						?>
+					</a>
+				<?php endif;
+				break;
+
+			case 'settings':
+				if ( $the_options['cookie_usage_for'] !== 'eprivacy' && ! empty( $the_options['button_settings_is_on' . $suffix] ) && filter_var( $the_options['button_settings_is_on' . $suffix], FILTER_VALIDATE_BOOLEAN ) ) : ?>
+					<a id="cookie_action_settings" class="<?php echo esc_html( $the_options['button_settings_classes'] ); ?>" tabindex="0" aria-label="Cookie Settings" href="#"
+						data-gdpr_action="settings" data-toggle="gdprmodal" data-target="#gdpr-gdprmodal" style="<?php echo esc_attr( $settings_style_attr ); ?>">
+						<?php
+						echo isset( $the_options['is_dynamic_lang_on'] ) && ( $the_options['is_dynamic_lang_on'] === 'true' || $the_options['is_dynamic_lang_on'] === true || $the_options['is_dynamic_lang_on'] === '1' )
+							? esc_html( $cookie_data['dash_button_settings_text'] )
+							: esc_html( $the_options['button_settings_text' . $suffix] ?? '', 'gdpr-cookie-consent' );
+						?>
+					</a>
+				<?php endif;
+				break;
+
+			case 'accept':
+				if ( filter_var( $the_options['button_accept_is_on' . $suffix] ?? false, FILTER_VALIDATE_BOOLEAN ) ) : ?>
+					<a id="cookie_action_accept" class="<?php echo esc_html( $the_options['button_accept_classes'] ); ?>" tabindex="0" aria-label="Accept"
+						<?php
+						if ( 'CONSTANT_OPEN_URL' === $the_options['button_accept_action' . $suffix] ) {
+							?>
+							href="<?php echo esc_html( $the_options['button_accept_url' . $suffix] ); ?>"
+							<?php
+							if ( ! empty( $the_options['button_accept_new_win' . $suffix] ) ) {
+								?>
+								target="_blank"
+								<?php
+							}
+						} else {
+							?>
+							href="#"
+							<?php
+						}
+						?>
+						data-gdpr_action="accept" style="<?php echo esc_attr( $accept_style_attr ); ?>" >
+						<?php
+						echo isset( $the_options['is_dynamic_lang_on'] ) && ( $the_options['is_dynamic_lang_on'] === 'true' || $the_options['is_dynamic_lang_on'] === true || $the_options['is_dynamic_lang_on'] === '1' )
+							? esc_html( $cookie_data['dash_button_accept_text'] )
+							: esc_html( $the_options['button_accept_text' . $suffix] ?? '', 'gdpr-cookie-consent' );
+						?>
+					</a>
+				<?php endif;
+				break;
+
+			case 'accept_all':
+			case 'acceptAll':
+				if ( filter_var( $the_options['button_accept_all_is_on' . $suffix] , FILTER_VALIDATE_BOOLEAN ) ) : ?>
+					<a id="cookie_action_accept_all" class="<?php echo esc_html( $the_options['button_accept_all_classes'] ); ?>" tabindex="0" aria-label="Accept All"
+						<?php
+						if ( 'CONSTANT_OPEN_URL' === $the_options['button_accept_all_action' . $suffix] ) {
+							?>
+							href="<?php echo esc_html( $the_options['button_accept_all_url' . $suffix] ); ?>"
+							<?php
+							if ( ! empty( $the_options['button_accept_all_new_win' . $suffix] ) ) {
+								?>
+								target="_blank"
+								<?php
+							}
+						} else {
+							?>
+							href="#"
+							<?php
+						}
+						?>
+						data-gdpr_action="accept_all" style="<?php echo esc_attr( $accept_all_style_attr ); ?>" >
+						<?php
+						echo ( isset( $the_options['is_dynamic_lang_on'] ) && ( $the_options['is_dynamic_lang_on'] === 'true' || $the_options['is_dynamic_lang_on'] === true || $the_options['is_dynamic_lang_on'] === '1' ) )
+							? esc_html( $cookie_data['dash_button_accept_all_text'] )
+							: esc_html( $the_options['button_accept_all_text' . $suffix] ?? '' );
+						?>
+					</a>
+				<?php endif;
+				break;
+		}
+	};
 ?>
 
 <div id="<?php echo esc_html( $the_options['container_id'] ); ?>" class="<?php echo esc_html( $the_options['container_class'] ); ?> <?php echo esc_html( $the_options['theme_class'] ); ?>"  style="<?php echo esc_attr($notice_container_styles); ?>">	
-	<span id="cookie-banner-cancle-img" style="cursor: pointer; display: inline-flex; align-items: center; justify-content: center; position: absolute; top:20px; right: <?php echo 20 + ((int)$the_options[($ab_testing_enabled === "true" ? 'cookie_bar_border_radius' . $chosenBanner : ($the_options['cookie_usage_for'] === 'both' ? 'multiple_legislation_cookie_bar_border_radius1' : 'background_border_radius'))]) / 2;?>px; height: 20px; width: 20px; border-radius: 50%; color: <?php echo $the_options['cookie_usage_for'] == 'ccpa' ?  esc_html($the_options['button_donotsell_link_color' . $suffix]) : ((bool)$the_options['button_accept_all_as_button' . $suffix] === 'true' || (bool)$the_options['button_accept_all_as_button' . $suffix] === true || (bool)$the_options['button_accept_all_as_button' . $suffix] === 1 ? esc_html($the_options['button_accept_all_button_color' . $suffix]) : esc_html($the_options["button_accept_all_link_color" . $suffix]));?>;">
+	<?php if(filter_var( $the_options['bypass_button_is_on' . $suffix] ?? false, FILTER_VALIDATE_BOOLEAN )) { ?>
+	<span id="cookie-banner-cancle-img" style="cursor: pointer; display: inline-flex; align-items: center; justify-content: center; position: absolute; top:<?php echo 5 + ((int)$the_options[($ab_testing_enabled === "true" ? 'cookie_bar_spacing' . $chosenBanner : 'cookie_bar_spacing')]) / 2;?>px; right: <?php echo 5 + ((int)$the_options[($ab_testing_enabled === "true" ? 'cookie_bar_spacing' . $chosenBanner : 'cookie_bar_spacing')]) / 2 + ((int)$the_options[($ab_testing_enabled === "true" ? 'cookie_bar_border_radius' . $chosenBanner : 'background_border_radius')]) / 2;?>px; height: 20px; width: 20px; border-radius: 50%; color: <?php echo esc_html($the_options['bypass_button_text_color' . $suffix]);?>; scale: <?php echo esc_html($the_options['bypass_button_size'. $suffix]) == 'lg' ? '115%' : (esc_html($the_options['bypass_button_size'. $suffix]) == 'sm' ? '85%' : '100%'); ?>;">
 		<svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20" xmlns="http://www.w3.org/2000/svg">
 			<path fill-rule="evenodd" clip-rule="evenodd" d="M5.29289 5.29289C5.68342 4.90237 6.31658 4.90237 6.70711 5.29289L12 10.5858L17.2929 5.29289C17.6834 4.90237 18.3166 4.90237 18.7071 5.29289C19.0976 5.68342 19.0976 6.31658 18.7071 6.70711L13.4142 12L18.7071 17.2929C19.0976 17.6834 19.0976 18.3166 18.7071 18.7071C18.3166 19.0976 17.6834 19.0976 17.2929 18.7071L12 13.4142L6.70711 18.7071C6.31658 19.0976 5.68342 19.0976 5.29289 18.7071C4.90237 18.3166 4.90237 17.6834 5.29289 17.2929L10.5858 12L5.29289 6.70711C4.90237 6.31658 4.90237 5.68342 5.29289 5.29289Z" fill="currentColor"/>
 		</svg>
 	</span>
-	<?php
-	if($ab_options['ab_testing_enabled'] === "false" || $ab_options['ab_testing_enabled'] === false){
-		if($the_options['cookie_usage_for'] == 'both'){
-			$get_banner_img = get_option( GDPR_COOKIE_CONSENT_SETTINGS_LOGO_IMAGE_FIELDML1 );
-			if (!empty($get_banner_img)) {
-				?>
-					<img style = "<?php echo esc_attr($logo_style_attr); ?>" class="gdpr_logo_image" alt="logo-image" src="<?php echo esc_url_raw( $get_banner_img ); ?>" >
-					<?php
-			}
-			else{
-				if ( isset( $template_object['logo']['src'] ) && is_string( $template_object['logo']['src'] ) && $template_object['logo']['src'] !== '' ) { ?><img alt="Logo image" style="<?php echo esc_attr( $logo_style_attr ); ?>" class="gdpr_logo_image" src="<?php echo esc_url( GDPR_COOKIE_CONSENT_PLUGIN_URL . 'includes/templates/logo_images/' . sanitize_file_name( $template_object['logo']['src'] ) ); ?>"><?php }
-			}
-		}else{
-			$get_banner_img = get_option( GDPR_COOKIE_CONSENT_SETTINGS_LOGO_IMAGE_FIELD );
-			if (!empty($get_banner_img)) {
-				?>
-					<img style = "<?php echo esc_attr($logo_style_attr); ?>" class="gdpr_logo_image" alt="logo-image" src="<?php echo esc_url_raw( $get_banner_img ); ?>" >
-					<?php
-			}
-			else{
-				if ( isset( $template_object['logo']['src'] ) && is_string( $template_object['logo']['src'] ) && $template_object['logo']['src'] !== '' ) { ?><img alt="Logo image" style="<?php echo esc_attr( $logo_style_attr ); ?>" class="gdpr_logo_image" src="<?php echo esc_url( GDPR_COOKIE_CONSENT_PLUGIN_URL . 'includes/templates/logo_images/' . sanitize_file_name( $template_object['logo']['src'] ) ); ?>"><?php }
-			}
-		}
-	}
-	else{
-		if($ab_options['ab_testing_enabled'] === "true" || $ab_options['ab_testing_enabled'] === true){
-			if($chosenBanner == 1) {
-				$get_banner_img1 = get_option( GDPR_COOKIE_CONSENT_SETTINGS_LOGO_IMAGE_FIELD1 );
-				if (!empty($get_banner_img1)) {
-					?>
-						<img style = "<?php echo esc_attr($logo_style_attr); ?>" class="gdpr_logo_image" alt="logo-image" src="<?php echo esc_url_raw( $get_banner_img1 ); ?>" >
-						<?php
-				}
-				else{
-					if ( isset( $template_object['logo']['src'] ) && is_string( $template_object['logo']['src'] ) && $template_object['logo']['src'] !== '' ) { ?><img alt="Logo image" style="<?php echo esc_attr( $logo_style_attr ); ?>" class="gdpr_logo_image" src="<?php echo esc_url( GDPR_COOKIE_CONSENT_PLUGIN_URL . 'includes/templates/logo_images/' . sanitize_file_name( $template_object['logo']['src'] ) ); ?>"><?php }
-				}
-			}elseif($chosenBanner == 2){
-					$get_banner_img2 = get_option( GDPR_COOKIE_CONSENT_SETTINGS_LOGO_IMAGE_FIELD2 );
-					if (!empty($get_banner_img2)) {
-					?>
-						<img style = "<?php echo esc_attr($logo_style_attr); ?>" class="gdpr_logo_image" alt="logo-image" src="<?php echo esc_url_raw( $get_banner_img2 ); ?>" >
-						<?php
-				}
-				else{
-					if ( isset( $template_object['logo']['src'] ) && is_string( $template_object['logo']['src'] ) && $template_object['logo']['src'] !== '' ) { ?><img alt="Logo image" style="<?php echo esc_attr( $logo_style_attr ); ?>" class="gdpr_logo_image" src="<?php echo esc_url( GDPR_COOKIE_CONSENT_PLUGIN_URL . 'includes/templates/logo_images/' . sanitize_file_name( $template_object['logo']['src'] ) ); ?>"><?php }
-				}
-			}
-		}
-	} ?>
-
-	<?php if($decoration_styles_attr !== ''){ ?>
-		<div  style = "<?php echo esc_attr($decoration_styles_attr); ?>" class="gdpr_banner_decoration"></div>
 	<?php } ?>
+	<div class="gdpr_notice_header" style="flex-direction: <?php echo esc_attr($banner_layouts['c1']['direction'] ?? 'row') == 'col' ? ($banner_structure['c1'][0] === 'logo' ? 'column' : 'column-reverse') : ($banner_structure['c1'][0] === 'logo' ? 'row' : 'row-reverse'); ?>; <?php echo $banner_layouts['c1']['direction'] === 'row' ? 'align-items: center; justify-content: ' . ($banner_layouts['c1']['justify'] ===  'between' ? 'space-between' : ($banner_layouts['c1']['justify'] ?? '')) : 'align-items: ' . ($banner_layouts['c1']['justify'] ?? '') ?>">
+		<?php
+		if($ab_options['ab_testing_enabled'] === "false" || $ab_options['ab_testing_enabled'] === false){
+			if(filter_var( $the_options['logo_is_on'] ?? false, FILTER_VALIDATE_BOOLEAN )) {
+				$get_banner_img = get_option( GDPR_COOKIE_CONSENT_SETTINGS_LOGO_IMAGE_FIELD );
+				if (!empty($get_banner_img) && filter_var( $the_options['use_uploaded_logo'] ?? false, FILTER_VALIDATE_BOOLEAN )) {
+					?>
+						<img style = "<?php echo esc_attr($logo_style_attr); ?>" class="gdpr_logo_image" alt="logo-image" src="<?php echo esc_url_raw( $get_banner_img ); ?>" >
+						<?php
+				}
+				else{
+					?><img alt="Logo image" style="<?php echo esc_attr( $logo_style_attr ); ?>" class="gdpr_logo_image" src="<?php echo esc_url( GDPR_COOKIE_CONSENT_PLUGIN_URL . 'includes/templates/logo_images/banner_' . sanitize_file_name( $the_options['default_logo'] ) . '.svg' ); ?>"><?php 
+				}
+			}
+		}
+		else{
+			if($ab_options['ab_testing_enabled'] === "true" || $ab_options['ab_testing_enabled'] === true){
+				if($chosenBanner == 1) {
+					if(filter_var( $the_options['logo_is_on1'] ?? false, FILTER_VALIDATE_BOOLEAN )) {
+						$get_banner_img1 = get_option( GDPR_COOKIE_CONSENT_SETTINGS_LOGO_IMAGE_FIELD1 );
+						if (!empty($get_banner_img1) && filter_var( $the_options['use_uploaded_logo1'] ?? false, FILTER_VALIDATE_BOOLEAN )) {
+							?>
+								<img style = "<?php echo esc_attr($logo_style_attr); ?>" class="gdpr_logo_image" alt="logo-image" src="<?php echo esc_url_raw( $get_banner_img1 ); ?>" >
+								<?php
+						}
+						else{
+							?><img alt="Logo image" style="<?php echo esc_attr( $logo_style_attr ); ?>" class="gdpr_logo_image" src="<?php echo esc_url( GDPR_COOKIE_CONSENT_PLUGIN_URL . 'includes/templates/logo_images/banner_' . sanitize_file_name( $the_options['default_logo1'] ) . '.svg' ); ?>"><?php 
+						}
+					}
+				}elseif($chosenBanner == 2){
+					if(filter_var( $the_options['logo_is_on2'] ?? false, FILTER_VALIDATE_BOOLEAN )) {
+						$get_banner_img2 = get_option( GDPR_COOKIE_CONSENT_SETTINGS_LOGO_IMAGE_FIELD2 );
+						if (!empty($get_banner_img2) && filter_var( $the_options['use_uploaded_logo2'] ?? false, FILTER_VALIDATE_BOOLEAN )) {
+							?>
+								<img style = "<?php echo esc_attr($logo_style_attr); ?>" class="gdpr_logo_image" alt="logo-image" src="<?php echo esc_url_raw( $get_banner_img2 ); ?>" >
+								<?php
+						}
+						else{
+							?><img alt="Logo image" style="<?php echo esc_attr( $logo_style_attr ); ?>" class="gdpr_logo_image" src="<?php echo esc_url( GDPR_COOKIE_CONSENT_PLUGIN_URL . 'includes/templates/logo_images/banner_' . sanitize_file_name( $the_options['default_logo2'] ) . '.svg' ); ?>"><?php 
+						}
+					}
+				}
+			}
+		} ?>
+		<?php
+		if(filter_var( $the_options['heading_is_on' . $suffix] ?? false, FILTER_VALIDATE_BOOLEAN )) {
+			if ( ($the_options['cookie_usage_for'] === 'gdpr' || $the_options['cookie_usage_for'] === 'both' ) && strlen($the_options['bar_heading_text']) > 0) : ?>
+				<h3 class = "<?php if($the_options['cookie_usage_for'] === 'both') echo 'gdpr_heading';?>" style = "<?php echo esc_attr($heading_style_attr); ?>" ><?php echo esc_html($the_options['bar_heading_text'] ?? ''); ?></h3>
+			<?php elseif (( $the_options['cookie_usage_for'] === 'lgpd' ) && strlen($the_options['bar_heading_lgpd_text']) > 0) : ?>
+				<h3 style = "<?php echo esc_attr($heading_style_attr); ?>" ><?php echo esc_html($the_options['bar_heading_lgpd_text'] ?? ''); ?></h3>
+			<?php endif; 
+		} ?>
+	</div>
+
 	
 
-	<div class="<?php echo esc_attr($template_object['static-settings']['layout'] ?? '');?>">
+	<div class=" gdpr_main_body"  style="display: flex; flex-direction: <?php echo esc_attr($banner_layouts['c2']['direction'] ?? 'row') == 'col' ? ($banner_structure['c2'][0] === 'bannerText' ? 'column' : 'column-reverse') : ($banner_structure['c2'][0] === 'bannerText' ? 'row' : 'row-reverse'); ?>; <?php echo "gap: " . ($ab_testing_enabled === "true" ? $the_options['cookie_bar_spacing' . $chosenBanner] : $the_options["cookie_bar_spacing"]) . "px;"; echo $banner_layouts['c2']['direction'] == 'row' ? 'align-items:center;' : '' ;?>" >
 		<div class="gdpr-notice-content-body">
 			<div style="display: flex; flex-direction: column; gap: 10px;">
-				<?php
-					if ( ($the_options['cookie_usage_for'] === 'gdpr' || $the_options['cookie_usage_for'] === 'both' ) && strlen($the_options['bar_heading_text']) > 0) : ?>
-						<h3 class = "<?php if($the_options['cookie_usage_for'] === 'both') echo 'gdpr_heading';?>" style = "<?php echo esc_attr($heading_style_attr); ?>" ><?php echo esc_html($the_options['bar_heading_text'] ?? ''); ?></h3>
-					<?php elseif ( ($the_options['cookie_usage_for'] === 'gdpr' || $the_options['cookie_usage_for'] === 'both' ) && strlen($the_options['bar_heading_text']) === 0 && $template_object['name'] === 'blue_split') : ?> 
-						<h3 style = "<?php echo esc_attr($heading_style_attr); ?>" ><?php echo esc_html__("We value your privacy", 'gdpr-cookie-consent'); ?></h3>
-					<?php elseif (( $the_options['cookie_usage_for'] === 'lgpd' ) && strlen($the_options['bar_heading_lgpd_text']) > 0) : ?>
-						<h3 style = "<?php echo esc_attr($heading_style_attr); ?>" ><?php echo esc_html($the_options['bar_heading_lgpd_text'] ?? ''); ?></h3>
-					<?php elseif ( ($the_options['cookie_usage_for'] === 'lgpd') && strlen($the_options['bar_heading_lgpd_text']) === 0 && $template_object['name'] === 'blue_split') : ?> 
-						<h3 style = "<?php echo esc_attr($heading_style_attr); ?>" ><?php echo esc_html__("We value your privacy", 'gdpr-cookie-consent'); ?></h3>
-					<?php elseif( $template_object['name'] === 'blue_split' ) : ?> 
-						<h3 style = "<?php echo esc_attr($heading_style_attr); ?>" ><?php echo esc_html__("We value your privacy", 'gdpr-cookie-consent'); ?></h3>
-					<?php endif; ?>
+				
 					
-				<p  class = "<?php if($the_options['cookie_usage_for'] === 'both') echo 'gdpr';?>">
+				<p style="<?php echo esc_attr($text_style_attr); ?>"  class = "<?php if($the_options['cookie_usage_for'] === 'both') echo 'gdpr';?>">
 					<?php if ( $the_options['cookie_usage_for'] === 'gdpr'  || $the_options['cookie_usage_for'] === 'both' ) : ?>
 						<span>
 							<?php
@@ -426,7 +549,7 @@ if ( 'popup' === $the_options['cookie_bar_as'] ) {
 			</div>
 		
 		<?php if($the_options['cookie_usage_for'] === 'both') : ?>
-			<p class = "ccpa">
+			<p style="<?php echo esc_attr($text_style_attr); ?>" class = "ccpa">
 				<span>
 					<?php
 					echo wp_kses(
@@ -455,102 +578,28 @@ if ( 'popup' === $the_options['cookie_bar_as'] ) {
 				>	
 					<?php echo isset($the_options["is_dynamic_lang_on"]) && ($the_options["is_dynamic_lang_on"] === "true" || $the_options["is_dynamic_lang_on"] === true || $the_options["is_dynamic_lang_on"] === "1")
 						? esc_html( $cookie_data['dash_button_donotsell_text'] )
-						: esc_html( $the_options['button_donotsell_text1'] ?? '', 'gdpr-cookie-consent' ); 
+						: esc_html( $the_options['button_donotsell_text'] ?? '', 'gdpr-cookie-consent' ); 
 					?>
 				</a>
 			</p>
 		<?php endif; ?>
 		</div>
 		<?php if ( $the_options['cookie_usage_for'] !== 'ccpa' ) : ?>
-			<div class="gdpr group-description-buttons cookie_notice_buttons <?php echo esc_attr($template_object['static-settings']['layout'] ?? '') . '-buttons';?>">
-				<div class="left_buttons"><?php 
-					if ( filter_var( $the_options['button_decline_is_on' . $suffix] ?? false, FILTER_VALIDATE_BOOLEAN )) : ?>
-						<a id="cookie_action_reject" class="<?php echo esc_html( $the_options['button_decline_classes'] ); ?>" tabindex="0" aria-label="Reject"
-							<?php
-							if ( 'CONSTANT_OPEN_URL' === $the_options['button_decline_action' . $suffix] ) {
-							?>
-								href="<?php echo esc_html( $the_options['button_decline_url' . $suffix] ); ?>"
-								<?php
-								if ( ! empty( $the_options['button_decline_new_win' . $suffix] ) ) {
-								?>
-									target="_blank"
-								<?php
-								} else {
-								?>
-									href="#"
-								<?php
-								}
-							}
-							?>
-							data-gdpr_action="reject"  style="<?php echo esc_attr($decline_style_attr); ?>" >
-								<?php echo isset($the_options["is_dynamic_lang_on"]) && ($the_options["is_dynamic_lang_on"] === "true" || $the_options["is_dynamic_lang_on"] === true || $the_options["is_dynamic_lang_on"] === "1")
-										? esc_html( $cookie_data['dash_button_decline_text'] )
-										: esc_html( $the_options['button_decline_text'. $suffix] ?? '', 'gdpr-cookie-consent' ); 
-								?>
-						</a>
-					<?php endif;
-					if ( $the_options['cookie_usage_for'] !== 'eprivacy' && ! empty( $the_options['button_settings_is_on' . $suffix] ) && filter_var( $the_options['button_settings_is_on' . $suffix], FILTER_VALIDATE_BOOLEAN )) : ?>
-						<a id="cookie_action_settings" class="<?php echo esc_html( $the_options['button_settings_classes'] ); ?>" tabindex="0" aria-label="Cookie Settings" href="#"
-							data-gdpr_action="settings" data-toggle="gdprmodal" data-target="#gdpr-gdprmodal" style="<?php echo esc_attr($settings_style_attr); ?>">
-							<?php echo isset($the_options["is_dynamic_lang_on"]) && ($the_options["is_dynamic_lang_on"] === "true" || $the_options["is_dynamic_lang_on"] === true || $the_options["is_dynamic_lang_on"] === "1")
-										? esc_html( $cookie_data['dash_button_settings_text'] )
-										: esc_html( $the_options['button_settings_text'. $suffix] ?? '', 'gdpr-cookie-consent' ); 
-							?>
-						</a>
-					<?php endif;
-				?></div>
-				<div class="right_buttons"><?php  
-					if ( filter_var( $the_options['button_accept_is_on' . $suffix] ?? false, FILTER_VALIDATE_BOOLEAN )) : ?>
-						<a id="cookie_action_accept" class="<?php echo esc_html( $the_options['button_accept_classes'] ); ?>" tabindex="0" aria-label="Accept"
-							<?php
-							if ( 'CONSTANT_OPEN_URL' === $the_options['button_accept_action' . $suffix] ) {
-							?>
-								href="<?php echo esc_html( $the_options['button_accept_url' . $suffix] ); ?>"
-								<?php
-								if ( ! empty( $the_options['button_accept_new_win' . $suffix] ) ) {
-								?>
-									target="_blank"
-								<?php
-								}
-							} else {
-							?>
-								href="#"
-							<?php
-							}
-							?>
-							data-gdpr_action="accept" style="<?php echo esc_attr($accept_style_attr); ?>" >
-								<?php echo isset($the_options["is_dynamic_lang_on"]) && ($the_options["is_dynamic_lang_on"] === "true" || $the_options["is_dynamic_lang_on"] === true || $the_options["is_dynamic_lang_on"] === "1")
-										? esc_html( $cookie_data['dash_button_accept_text'] )
-										: esc_html( $the_options['button_accept_text'. $suffix] ?? '', 'gdpr-cookie-consent' ); 
-								?>
-						</a>
-					<?php endif;
-					if ( filter_var( $the_options['button_accept_all_is_on' . $suffix] ?? false, FILTER_VALIDATE_BOOLEAN )) : ?>
-						<a id="cookie_action_accept_all" class="<?php echo esc_html( $the_options['button_accept_all_classes'] ); ?>" tabindex="0" aria-label="Accept All"
-							<?php
-							if ( 'CONSTANT_OPEN_URL' === $the_options['button_accept_all_action' . $suffix] ) {
-							?>
-								href="<?php echo esc_html( $the_options['button_accept_all_url' . $suffix] ); ?>"
-								<?php
-								if ( ! empty( $the_options['button_accept_all_new_win' . $suffix] ) ) {
-								?>
-									target="_blank"
-								<?php
-								}
-							} else {
-							?>
-								href="#"
-							<?php
-							}
-							?>
-							data-gdpr_action="accept_all" style="<?php echo esc_attr($accept_all_style_attr); ?>" >
-								<?php echo ( isset( $the_options['is_dynamic_lang_on'] ) && ($the_options["is_dynamic_lang_on"] === "true" || $the_options["is_dynamic_lang_on"] === true || $the_options["is_dynamic_lang_on"] === "1") )
-										? esc_html( $cookie_data['dash_button_accept_all_text'] )
-										: esc_html( $the_options['button_accept_all_text' . $suffix] ?? '' );
-								?>
-						</a>	
-					<?php endif;
-				?></div>
+			<div class="gdpr group-description-buttons cookie_notice_buttons" style="display: flex; flex-direction: <?php echo esc_attr($banner_layouts['c4']['direction'] ?? 'row') == 'col' ? 'column' : 'row'; ?>; <?php echo "gap: " . ($ab_testing_enabled === "true" ? $the_options['cookie_bar_spacing' . $chosenBanner] : $the_options["cookie_bar_spacing"]) . "px;"; echo $banner_layouts['c2']['direction'] == 'row' ? 'width: 40%' : '' ;?>">
+				<div class="left_buttons" style="display: <?php echo count($visible_c5_items) > 0 ? 'flex' : 'none'; ?>; flex-direction: <?php echo esc_attr($banner_layouts['c5']['direction'] ?? 'row') == 'col' ? 'column' : 'row'; ?>; <?php echo "gap: " . ($ab_testing_enabled === "true" ? $the_options['cookie_bar_spacing' . $chosenBanner] : $the_options["cookie_bar_spacing"]) / 1.5 . "px;"; ?> <?php echo $banner_layouts['c5']['direction'] === 'row' ? 'align-items: center; justify-content: ' . ($banner_layouts['c5']['justify'] ===  'between' ? 'space-between' : ($banner_layouts['c5']['justify'] ?? '')) : 'align-items: ' . ($banner_layouts['c5']['justify'] ?? '') ?>">
+					<?php 
+					foreach ( $c5_buttons as $button ) {
+						$render_cookie_button( $button );
+					}
+					?>
+				</div>
+				<div class="right_buttons" style="display: <?php echo count($visible_c6_items) > 0 ? 'flex' : 'none'; ?>;  flex-direction: <?php echo esc_attr($banner_layouts['c6']['direction'] ?? 'row') == 'col' ? 'column' : 'row'; ?>; <?php echo "gap: " . ($ab_testing_enabled === "true" ? $the_options['cookie_bar_spacing' . $chosenBanner] : $the_options["cookie_bar_spacing"]) / 1.5 . "px;"; ?> <?php echo $banner_layouts['c6']['direction'] === 'row' ? 'align-items: center; justify-content: ' . ($banner_layouts['c6']['justify'] ===  'between' ? 'space-between' : ($banner_layouts['c6']['justify'] ?? '')) : 'align-items: ' . ($banner_layouts['c6']['justify'] ?? '') ?>">
+					<?php  
+					foreach ( $c6_buttons as $button ) {
+						$render_cookie_button( $button );
+					}
+					?>
+				</div>
 			</div>
 		<?php endif; ?>
 		
@@ -558,7 +607,7 @@ if ( 'popup' === $the_options['cookie_bar_as'] ) {
 	<?php
     if ( ! empty( $cookie_data['show_credits'] ) ) {
     ?>
-    	<div class="powered-by-credits"  style="--popup_accent_color: <?php echo esc_html( '#' . ltrim($badging_color, '#') ); ?>; text-align:center; font-size: 10px; margin-bottom:-10px;"><?php echo wp_kses_post( $cookie_data['credits'] ); ?></div>
+    	<div class="powered-by-credits"  style="--popup_accent_color: <?php echo esc_html( '#' . ltrim($badging_color, '#') ); ?>; text-align:center; font-size: 10px; margin-top:<?php echo -1 * ($ab_testing_enabled === "true" ? $the_options['cookie_bar_spacing' . $chosenBanner] : $the_options["cookie_bar_spacing"]) + 5?>px;"><?php echo wp_kses_post( $cookie_data['credits'] ); ?></div>
     <?php
     }
     ?>
@@ -976,4 +1025,14 @@ if ( ! empty( $the_options['ccpa_notify'] ) ) {
 		<?php include plugin_dir_path( __FILE__ ) . 'modals/cookie_settings.php'; ?>
 	</div>
 	<?php
+		if ( ! empty( $the_options['ccpa_show_again' . $suffix] ) ) {
+		?>
+		
+		<div id="<?php echo esc_html( $the_options['ccpa_show_again_container_id'] ); ?>" style="position: fixed; display:none; bottom: 10px; color: <?php echo esc_html($the_options['ccpa_button_revoke_consent_text_color' . $suffix]); ?>; background-color: <?php echo esc_html($the_options['ccpa_button_revoke_consent_background_color' . $suffix]); ?>; <?php if($the_options['ccpa_show_again_position' . $suffix] === 'right') echo "right: ". esc_html($the_options['ccpa_show_again_margin' . $suffix]) . "%;"; else echo "left: ". esc_html($the_options['ccpa_show_again_margin' . $suffix]) . "%;"; ?> border-radius: 5px; box-shadow: 0px 6px 11px gray;">
+			<?php
+		?>
+			<span><?php echo esc_html__( $cookie_data['ccpa_dash_show_again_text'], 'gdpr-cookie-consent' );//phpcs:ignore ?></span>
+		</div>
+		<?php
+	}
 }

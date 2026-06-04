@@ -43,13 +43,15 @@ if ( ! defined( 'ABSPATH' ) ) {
 	$opacityHex = strtoupper(str_pad(dechex((int) floor($opacity * 255)), 2, '0', STR_PAD_LEFT));
     $finalColor = strtoupper($color . $opacityHex);
     
-	$acceptAllBGColor = ( $ab_options['ab_testing_enabled'] === true || $ab_options['ab_testing_enabled'] === 'true') ? $the_options[ 'button_accept_all_button_color' . $chosenBanner ] : ( $the_options['cookie_usage_for'] === 'both' ? $the_options[ 'button_accept_all_button_color1'] : $the_options['button_accept_all_button_color'] );
+	$acceptAllBGColor = ( $ab_options['ab_testing_enabled'] === true || $ab_options['ab_testing_enabled'] === 'true') ? $the_options[ 'button_accept_all_button_color' . $chosenBanner ] : $the_options['button_accept_all_button_color'] ;
+	$accpetAllOpacity = ( $ab_options['ab_testing_enabled'] === true || $ab_options['ab_testing_enabled'] === 'true') ? $the_options[ 'button_accept_all_btn_opacity' . $chosenBanner ] : $the_options['button_accept_all_btn_opacity'] ;
+	$AcceptAllopacityHex = strtoupper(str_pad(dechex((int) floor($accpetAllOpacity * 255)), 2, '0', STR_PAD_LEFT));
+    $AcceptAllfinalColor = strtoupper($acceptAllBGColor . $AcceptAllopacityHex);
 
-	$acceptAllBGColor = $abTesting
-		? $the_options[ 'button_accept_all_button_color' . $chosenBanner ]
-		: ( $the_options['cookie_usage_for'] === 'both' 
-			? $the_options[ 'button_accept_all_button_color1'] 
-			: $the_options['button_accept_all_button_color'] );
+	$declineBGColor = ( $ab_options['ab_testing_enabled'] === true || $ab_options['ab_testing_enabled'] === 'true') ? $the_options[ 'button_decline_button_color' . $chosenBanner ] : $the_options['button_decline_button_color'] ;
+	$declineOpacity = ( $ab_options['ab_testing_enabled'] === true || $ab_options['ab_testing_enabled'] === 'true') ? $the_options[ 'button_decline_button_opacity' . $chosenBanner ] : $the_options['button_decline_button_opacity'] ;
+	$declineopacityHex = strtoupper(str_pad(dechex((int) floor($declineOpacity * 255)), 2, '0', STR_PAD_LEFT));
+    $declinefinalColor = strtoupper($declineBGColor . $declineopacityHex);
 
 	if (strtoupper(substr($finalColor, 0, -2)) === strtoupper($acceptAllBGColor)) {
         $cookieSettingsPopupAccentColor = $the_options['button_accept_all_link_color'];
@@ -67,45 +69,47 @@ if ( ! defined( 'ABSPATH' ) ) {
 		<div class="gdprmodal-content" 
         style="
             background-color: <?php 
-				echo esc_html($the_options['cookie_usage_for'] === "both" 
-					? strtoupper($the_options['multiple_legislation_cookie_bar_color1'] . strtoupper( str_pad(dechex((int) floor($the_options['multiple_legislation_cookie_bar_opacity1'] * 255)), 2, '0', STR_PAD_LEFT) ))
-					: $finalColor
-				)?>;
+				echo $finalColor; ?>;
             color: <?php 
 				echo esc_html(( $ab_options['ab_testing_enabled'] === true || $ab_options['ab_testing_enabled'] === 'true')
 			 		? ( $the_options[ 'cookie_text_color' . $chosenBanner ] )
-			 		: ( $the_options['cookie_usage_for'] === 'both' ? $the_options['multiple_legislation_cookie_text_color1'] : $the_options['text'] )
+			 		: $the_options['cookie_text_color'] 
 				); ?>;
             border-style: <?php 
 				echo esc_html(( $ab_options['ab_testing_enabled'] === true || $ab_options['ab_testing_enabled'] === 'true')
 			 		? ( $the_options[ 'border_style' . $chosenBanner ] )
-			 		: ( $the_options['cookie_usage_for'] === 'both' ? $the_options['multiple_legislation_border_style1'] : $the_options['background_border_style'] )
+			 		: $the_options['background_border_style'] 
 			 	); ?>;
             border-width: <?php 
 				echo esc_html(( $ab_options['ab_testing_enabled'] === true || $ab_options['ab_testing_enabled'] === 'true')
 			 		? ( $the_options[ 'cookie_bar_border_width' . $chosenBanner ] . 'px' )
-			 		: ( $the_options['cookie_usage_for'] === 'both' ? $the_options['multiple_legislation_cookie_bar_border_width1'] : $the_options['background_border_width'] . 'px' )
+			 		: $the_options['background_border_width'] . 'px' 
 				); ?>;
             border-radius: <?php 
 				echo esc_html(( $ab_options['ab_testing_enabled'] === true || $ab_options['ab_testing_enabled'] === 'true')
 			 		? ( $the_options[ 'cookie_bar_border_radius' . $chosenBanner ] . 'px' )
-			 		: ( $the_options['cookie_usage_for'] === 'both' ? $the_options['multiple_legislation_cookie_bar_border_radius1'] : $the_options['background_border_radius'] . 'px')
+			 		: $the_options['background_border_radius'] . 'px'
 			 	); ?>;
             border-color: <?php 
 				echo esc_html(( $ab_options['ab_testing_enabled'] === true || $ab_options['ab_testing_enabled'] === 'true')
 			 		? ( $the_options[ 'cookie_border_color' . $chosenBanner ] )
-			 		: ( $the_options['cookie_usage_for'] === 'both' ? $the_options['multiple_legislation_cookie_border_color1'] : $the_options['background_border_color'] )
+			 		: $the_options['background_border_color'] 
 				); ?>;
 			font-family: <?php 
 				echo esc_html(( $ab_options['ab_testing_enabled'] === true || $ab_options['ab_testing_enabled'] === 'true')
 			 		? ( $the_options[ 'cookie_font' . $chosenBanner ] )
-			 		: ( $the_options['cookie_usage_for'] === 'both' ? $the_options['multiple_legislation_cookie_font1'] : $the_options['font_family'] )
+			 		: $the_options['font_family'] 
 				); ?>;
+			backdrop-filter: blur( <?php 
+				echo esc_html(( $ab_options['ab_testing_enabled'] === true || $ab_options['ab_testing_enabled'] === 'true') 
+					? $the_options['cookie_bar_blur' . $chosenBanner] 
+					: $the_options["cookie_bar_blur"])*20 . 'px';
+				 ?>);
         ">
 			<div class="gdprmodal-header">
             
 				<button type="button" class="gdpr_action_button close" data-dismiss="gdprmodal" data-gdpr_action="close" 
-                style="cursor: pointer; display: inline-flex; align-items: center; justify-content: center; position: absolute; top:20px; right: <?php echo 20 + ((int)$the_options[($ab_testing_enabled === "true" ? 'cookie_bar_border_radius' . $chosenBanner : ($the_options['cookie_usage_for'] === 'both' ? 'multiple_legislation_cookie_bar_border_radius1' : 'background_border_radius'))]) / 2;?>px; height: 20px; width: 20px; border-radius: 50%; color: <?php echo $the_options['cookie_usage_for'] == 'ccpa' ?  esc_html($the_options['button_donotsell_link_color' . $suffix]) : ((bool)$the_options['button_accept_all_as_button' . $suffix] === 'true' || (bool)$the_options['button_accept_all_as_button' . $suffix] === true || (bool)$the_options['button_accept_all_as_button' . $suffix] === 1 ? esc_html($the_options['button_accept_all_button_color' . $suffix]) : esc_html($the_options["button_accept_all_link_color" . $suffix]));?>;background-color: transparent;">
+                style="cursor: pointer; display: inline-flex; align-items: center; justify-content: center; position: absolute; top:20px; right: <?php echo 20 + ((int)$the_options[($ab_testing_enabled === "true" ? 'cookie_bar_border_radius' . $chosenBanner : 'background_border_radius')]) / 2;?>px; height: 20px; width: 20px; border-radius: 50%; color: <?php echo $the_options['cookie_usage_for'] == 'ccpa' ?  esc_html($the_options['button_donotsell_link_color' . $suffix]) : ((bool)$the_options['button_accept_all_as_button' . $suffix] === 'true' || (bool)$the_options['button_accept_all_as_button' . $suffix] === true || (bool)$the_options['button_accept_all_as_button' . $suffix] === 1 ? esc_html($the_options['button_accept_all_button_color' . $suffix]) : esc_html($the_options["button_accept_all_link_color" . $suffix]));?>;background-color: transparent;">
 					<svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20" xmlns="http://www.w3.org/2000/svg">
 						<path fill-rule="evenodd" clip-rule="evenodd" d="M5.29289 5.29289C5.68342 4.90237 6.31658 4.90237 6.70711 5.29289L12 10.5858L17.2929 5.29289C17.6834 4.90237 18.3166 4.90237 18.7071 5.29289C19.0976 5.68342 19.0976 6.31658 18.7071 6.70711L13.4142 12L18.7071 17.2929C19.0976 17.6834 19.0976 18.3166 18.7071 18.7071C18.3166 19.0976 17.6834 19.0976 17.2929 18.7071L12 13.4142L6.70711 18.7071C6.31658 19.0976 5.68342 19.0976 5.29289 18.7071C4.90237 18.3166 4.90237 17.6834 5.29289 17.2929L10.5858 12L5.29289 6.70711C4.90237 6.31658 4.90237 5.68342 5.29289 5.29289Z" fill="currentColor"/>
 					</svg>
@@ -273,85 +277,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 											<?php
 										}
 									} else {
-										//check if law is gdpr&ccpa (both)
-										if ( $the_options['cookie_usage_for'] === 'both'){
-											if ( ( $the_options['button_settings_display_cookies1'] === true || $the_options['button_settings_display_cookies1'] === 'true' ) ) {
-												?>
-												<div class="category-cookies-list-container">
-													<?php
-													if ( $category['total'] >= '1' ) {
-														?>
-														<table class="table table-striped">
-														<thead class="thead-dark">
-														<tr>
-															<th><?php echo esc_html( $cookie_data['name'] ); ?></th>
-															<th><?php echo esc_html( $cookie_data['domain'] ); ?></th>
-															<th><?php echo esc_html( $cookie_data['purpose'] ); ?></th>
-															<th><?php echo esc_html( $cookie_data['expiry'] ); ?></th>
-															<th><?php echo esc_html( $cookie_data['type'] ); ?></th>
-														</tr>
-														</thead>
-														<tbody>
-															<?php
-															foreach ( $category['data'] as $cookie ) {
-																?>
-																<tr><td>
-																	<?php
-																	if ( $cookie['name'] ) {
-																		echo esc_html( $cookie['name'] );
-																	} else {
-																		echo esc_html( '---' );
-																	}
-																	?>
-																	</td>
-																	<td>
-																	<?php
-																	if ( ! empty( $cookie['domain'] ) ) {
-																		echo esc_html( $cookie['domain'] );
-																	} else {
-																		echo esc_html( '---' );
-																	}
-																	?>
-																	</td>
-																	<td>
-																	<?php
-																	if ( ! empty( $cookie['description'] ) ) {
-																		echo esc_html( $cookie['description'] );
-																	} else {
-																		echo esc_html( '---' );
-																	}
-																	?>
-																	</td>
-																	<td>
-																	<?php
-																	if ( ! empty( $cookie['duration'] ) ) {
-																		echo esc_html( $cookie['duration'] );
-																	} else {
-																		echo esc_html( '---' );
-																	}
-																	?>
-																	</td>
-																	<td>
-																	<?php
-																	if ( ! empty( $cookie['type'] ) ) {
-																		echo esc_html( $cookie['type'] );
-																	} else {
-																		echo esc_html( '---' );
-																	}
-																	?>
-																	</td></tr>
-																<?php
-															}
-															?>
-														</tbody>
-													</table>
-														<?php
-													}
-													?>
-												</div>
-											<?php
-											}
-										}else{
+										
 											if ( ( $the_options['button_settings_display_cookies'] === true || $the_options['button_settings_display_cookies'] === 'true' ) ) {
 												?>
 												<div class="category-cookies-list-container">
@@ -428,7 +354,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 											</div>
 												<?php
 											}
-										}
+										
 									}
 									?>
 								</div>
@@ -905,42 +831,38 @@ if ( ! defined( 'ABSPATH' ) ) {
 			</div>
 			<div class="gdprmodal-footer" style="--popup_accent_color: <?php echo esc_html( '#' . ltrim($cookieSettingsPopupAccentColor, '#') ); ?>; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
 				<div class="gdpr-footer-left" style="display:flex; gap:10px; flex-wrap:wrap;">
-				<!-- DECLINE -->
-				<button id="cookie_action_reject" type="button" class="gdpr_action_button btn" data-gdpr_action="reject" data-dismiss="gdprmodal"
-					style="
+					<!-- DECLINE -->
+					<button id="cookie_action_reject" type="button" class="gdpr_action_button btn" data-gdpr_action="reject" data-dismiss="gdprmodal"
+						style="
 						background-color: <?php 
-							echo esc_html(
-							( $ab_options['ab_testing_enabled'] === true || $ab_options['ab_testing_enabled'] === 'true')
-							 	? ( $the_options[ 'button_accept_all_button_color' . $chosenBanner ] )
-							 	: ( $the_options['cookie_usage_for'] === 'both' ? $the_options['button_accept_all_button_color1'] : $the_options['button_accept_all_button_color'] )
-							); ?>;
+							echo $declinefinalColor; ?>;
 						color: <?php 
 							echo esc_html(
 								( $ab_options['ab_testing_enabled'] === true || $ab_options['ab_testing_enabled'] === 'true')
-						 		? ( $the_options[ 'button_accept_all_link_color' . $chosenBanner ] )
-						 		: ( $the_options['cookie_usage_for'] === 'both' ? $the_options['button_accept_all_link_color1'] : $the_options['button_accept_all_link_color'] )
+						 		? ( $the_options[ 'button_decline_link_color' . $chosenBanner ] )
+						 		: $the_options['button_decline_link_color'] 
 							); ?>;
 						border-style: <?php 
 							echo esc_html(( $ab_options['ab_testing_enabled'] === true || $ab_options['ab_testing_enabled'] === 'true')
-						 		? ( $the_options[ 'button_accept_all_btn_border_style' . $chosenBanner ] )
-						 		: ( $the_options['cookie_usage_for'] === 'both' ? $the_options['button_accept_all_btn_border_style1'] : $the_options['button_accept_all_btn_border_style'] )
+						 		? ( $the_options[ 'button_decline_button_border_style' . $chosenBanner ] )
+						 		:  $the_options['button_decline_button_border_style'] 
 						 	); ?>;
 						border-width: <?php 
 							echo esc_html(( $ab_options['ab_testing_enabled'] === true || $ab_options['ab_testing_enabled'] === 'true')
-						 		? ( $the_options[ 'button_accept_all_btn_border_width' . $chosenBanner ] . 'px' )	
-						 		: ( $the_options['cookie_usage_for'] === 'both' ? $the_options['button_accept_all_btn_border_width1'] : $the_options['button_accept_all_btn_border_width'] )
+						 		? ( $the_options[ 'button_decline_button_border_width' . $chosenBanner ] . 'px' )	
+						 		: $the_options['button_decline_button_border_width'] 
 						 	); ?>px;
 						border-color: <?php 
 							echo esc_html(( $ab_options['ab_testing_enabled'] === true || $ab_options['ab_testing_enabled'] === 'true')
-						 		? ( $the_options[ 'button_accept_all_btn_border_color' . $chosenBanner ] )
-						 		: ( $the_options['cookie_usage_for'] === 'both' ? $the_options['button_accept_all_btn_border_color1'] : $the_options['button_accept_all_btn_border_color'] )
+						 		? ( $the_options[ 'button_decline_button_border_color' . $chosenBanner ] )
+						 		: $the_options['button_decline_button_border_color'] 
 						 	); ?>;
 						border-radius: <?php 
 							echo esc_html(( $ab_options['ab_testing_enabled'] === true || $ab_options['ab_testing_enabled'] === 'true')
-						 		? ( $the_options[ 'button_accept_all_btn_border_radius' . $chosenBanner ] . 'px' )
-						 		: ( $the_options['cookie_usage_for'] === 'both' ? $the_options['button_accept_all_btn_border_radius1'] : $the_options['button_accept_all_btn_border_radius'] )
+						 		? ( $the_options[ 'button_decline_button_border_radius' . $chosenBanner ] . 'px' )
+						 		: $the_options['button_decline_button_border_radius'] 
 						 	); ?>px;
-						padding: 12px 29px;
+						padding: 12px 29px; text-transform: none;
 						/* margin-right: <?php echo esc_attr( $top_value ); ?>px; */
 					"><?php echo esc_html( $cookie_data['dash_button_decline_text'] ); ?></button>
 
@@ -948,38 +870,34 @@ if ( ! defined( 'ABSPATH' ) ) {
 					<button id="cookie_action_accept_all" type="button" class="gdpr_action_button btn" data-gdpr_action="accept_all" data-dismiss="gdprmodal"
 					style="
 						background-color: <?php 
-							echo esc_html(
-							( $ab_options['ab_testing_enabled'] === true || $ab_options['ab_testing_enabled'] === 'true')
-							 	? ( $the_options[ 'button_accept_all_button_color' . $chosenBanner ] )
-							 	: ( $the_options['cookie_usage_for'] === 'both' ? $the_options['button_accept_all_button_color1'] : $the_options['button_accept_all_button_color'] )
-							); ?>;
+							echo $AcceptAllfinalColor; ?>;
 						color: <?php 
 							echo esc_html(
 								( $ab_options['ab_testing_enabled'] === true || $ab_options['ab_testing_enabled'] === 'true')
 						 		? ( $the_options[ 'button_accept_all_link_color' . $chosenBanner ] )
-						 		: ( $the_options['cookie_usage_for'] === 'both' ? $the_options['button_accept_all_link_color1'] : $the_options['button_accept_all_link_color'] )
+						 		: $the_options['button_accept_all_link_color'] 
 							); ?>;
 						border-style: <?php 
 							echo esc_html(( $ab_options['ab_testing_enabled'] === true || $ab_options['ab_testing_enabled'] === 'true')
 						 		? ( $the_options[ 'button_accept_all_btn_border_style' . $chosenBanner ] )
-						 		: ( $the_options['cookie_usage_for'] === 'both' ? $the_options['button_accept_all_btn_border_style1'] : $the_options['button_accept_all_btn_border_style'] )
+						 		: $the_options['button_accept_all_btn_border_style'] 
 						 	); ?>;
 						border-width: <?php 
 							echo esc_html(( $ab_options['ab_testing_enabled'] === true || $ab_options['ab_testing_enabled'] === 'true')
 						 		? ( $the_options[ 'button_accept_all_btn_border_width' . $chosenBanner ] . 'px' )	
-						 		: ( $the_options['cookie_usage_for'] === 'both' ? $the_options['button_accept_all_btn_border_width1'] : $the_options['button_accept_all_btn_border_width'] )
+						 		: $the_options['button_accept_all_btn_border_width'] 
 						 	); ?>px;
 						border-color: <?php 
 							echo esc_html(( $ab_options['ab_testing_enabled'] === true || $ab_options['ab_testing_enabled'] === 'true')
 						 		? ( $the_options[ 'button_accept_all_btn_border_color' . $chosenBanner ] )
-						 		: ( $the_options['cookie_usage_for'] === 'both' ? $the_options['button_accept_all_btn_border_color1'] : $the_options['button_accept_all_btn_border_color'] )
+						 		: $the_options['button_accept_all_btn_border_color'] 
 						 	); ?>;
 						border-radius: <?php 
 							echo esc_html(( $ab_options['ab_testing_enabled'] === true || $ab_options['ab_testing_enabled'] === 'true')
 						 		? ( $the_options[ 'button_accept_all_btn_border_radius' . $chosenBanner ] . 'px' )
-						 		: ( $the_options['cookie_usage_for'] === 'both' ? $the_options['button_accept_all_btn_border_radius1'] : $the_options['button_accept_all_btn_border_radius'] )
+						 		: $the_options['button_accept_all_btn_border_radius'] 
 						 	); ?>px;
-						padding: 12px 29px;
+						padding: 12px 29px; text-transform: none;
 						/* margin-right: <?php echo esc_attr( $top_value ); ?>px; */
 					"><?php echo esc_html( $cookie_data['dash_button_accept_all_text'] ); ?></button>
 
@@ -991,38 +909,34 @@ if ( ! defined( 'ABSPATH' ) ) {
 					<button id="cookie_action_save" type="button" class="gdpr_action_button btn" data-gdpr_action="accept" data-dismiss="gdprmodal"
 					style="
 						background-color: <?php 
-							echo esc_html(
-							( $ab_options['ab_testing_enabled'] === true || $ab_options['ab_testing_enabled'] === 'true')
-							 	? ( $the_options[ 'button_accept_all_button_color' . $chosenBanner ] )
-							 	: ( $the_options['cookie_usage_for'] === 'both' ? $the_options['button_accept_all_button_color1'] : $the_options['button_accept_all_button_color'] )
-							); ?>;
+							echo $AcceptAllfinalColor; ?>;
 						color: <?php 
 							echo esc_html(
 								( $ab_options['ab_testing_enabled'] === true || $ab_options['ab_testing_enabled'] === 'true')
 						 		? ( $the_options[ 'button_accept_all_link_color' . $chosenBanner ] )
-						 		: ( $the_options['cookie_usage_for'] === 'both' ? $the_options['button_accept_all_link_color1'] : $the_options['button_accept_all_link_color'] )
+						 		: $the_options['button_accept_all_link_color'] 
 							); ?>;
 						border-style: <?php 
 							echo esc_html(( $ab_options['ab_testing_enabled'] === true || $ab_options['ab_testing_enabled'] === 'true')
 						 		? ( $the_options[ 'button_accept_all_btn_border_style' . $chosenBanner ] )
-						 		: ( $the_options['cookie_usage_for'] === 'both' ? $the_options['button_accept_all_btn_border_style1'] : $the_options['button_accept_all_btn_border_style'] )
+						 		:  $the_options['button_accept_all_btn_border_style'] 
 						 	); ?>;
 						border-width: <?php 
 							echo esc_html(( $ab_options['ab_testing_enabled'] === true || $ab_options['ab_testing_enabled'] === 'true')
 						 		? ( $the_options[ 'button_accept_all_btn_border_width' . $chosenBanner ] . 'px' )	
-						 		: ( $the_options['cookie_usage_for'] === 'both' ? $the_options['button_accept_all_btn_border_width1'] : $the_options['button_accept_all_btn_border_width'] )
+						 		: $the_options['button_accept_all_btn_border_width'] 
 						 	); ?>px;
 						border-color: <?php 
 							echo esc_html(( $ab_options['ab_testing_enabled'] === true || $ab_options['ab_testing_enabled'] === 'true')
 						 		? ( $the_options[ 'button_accept_all_btn_border_color' . $chosenBanner ] )
-						 		: ( $the_options['cookie_usage_for'] === 'both' ? $the_options['button_accept_all_btn_border_color1'] : $the_options['button_accept_all_btn_border_color'] )
+						 		:  $the_options['button_accept_all_btn_border_color'] 
 						 	); ?>;
 						border-radius: <?php 
 							echo esc_html(( $ab_options['ab_testing_enabled'] === true || $ab_options['ab_testing_enabled'] === 'true')
 						 		? ( $the_options[ 'button_accept_all_btn_border_radius' . $chosenBanner ] . 'px' )
-						 		: ( $the_options['cookie_usage_for'] === 'both' ? $the_options['button_accept_all_btn_border_radius1'] : $the_options['button_accept_all_btn_border_radius'] )
+						 		:  $the_options['button_accept_all_btn_border_radius'] 
 						 	); ?>px;
-						padding: 12px 29px;
+						padding: 12px 29px; text-transform: none;
 					"><?php echo esc_html( $cookie_data['save_button'] ); ?></button>
 				</div>
 
@@ -1050,34 +964,32 @@ if( $the_options['cookie_usage_for'] === "ccpa" || $the_options['cookie_usage_fo
 		<div class="gdprmodal-content"
 		style="
             background-color: <?php 
-				echo esc_html($the_options['cookie_usage_for'] === "both" 
-					? strtoupper($the_options['multiple_legislation_cookie_bar_color2'] . strtoupper( str_pad(dechex((int) floor($the_options['multiple_legislation_cookie_bar_opacity2'] * 255)), 2, '0', STR_PAD_LEFT) ))
-					: $finalColor
-				)?>;
+				echo  $finalColor
+				?>;
             color: <?php 
 				echo esc_html(( $ab_options['ab_testing_enabled'] === true || $ab_options['ab_testing_enabled'] === 'true')
 			 		? ( $the_options[ 'cookie_text_color' . $chosenBanner ] )
-			 		: ( $the_options['cookie_usage_for'] === 'both' ? $the_options['multiple_legislation_cookie_text_color2'] : $the_options['text'] )
+			 		: $the_options['cookie_text_color'] 
 				); ?>;
             border-style: <?php 
 				echo esc_html(( $ab_options['ab_testing_enabled'] === true || $ab_options['ab_testing_enabled'] === 'true')
 			 		? ( $the_options[ 'border_style' . $chosenBanner ] )
-			 		: ( $the_options['cookie_usage_for'] === 'both' ? $the_options['multiple_legislation_border_style2'] : $the_options['background_border_style'] )
+			 		: $the_options['background_border_style'] 
 			 	); ?>;
             border-width: <?php 
 				echo esc_html(( $ab_options['ab_testing_enabled'] === true || $ab_options['ab_testing_enabled'] === 'true')
 			 		? ( $the_options[ 'cookie_bar_border_width' . $chosenBanner ] . 'px' )
-			 		: ( $the_options['cookie_usage_for'] === 'both' ? $the_options['multiple_legislation_cookie_bar_border_width2'] : $the_options['background_border_width'] . 'px' )
+			 		: $the_options['background_border_width'] . 'px' 
 				); ?>;
             border-radius: <?php 
 				echo esc_html(( $ab_options['ab_testing_enabled'] === true || $ab_options['ab_testing_enabled'] === 'true')
 			 		? ( $the_options[ 'cookie_bar_border_radius' . $chosenBanner ] . 'px' )
-			 		: ( $the_options['cookie_usage_for'] === 'both' ? $the_options['multiple_legislation_cookie_bar_border_radius2'] : $the_options['background_border_radius'] . 'px')
+			 		: $the_options['background_border_radius'] . 'px'
 			 	); ?>;
             border-color: <?php 
 				echo esc_html(( $ab_options['ab_testing_enabled'] === true || $ab_options['ab_testing_enabled'] === 'true')
 			 		? ( $the_options[ 'cookie_border_color' . $chosenBanner ] )
-			 		: ( $the_options['cookie_usage_for'] === 'both' ? $the_options['multiple_legislation_cookie_border_color2'] : $the_options['background_border_color'] )
+			 		: $the_options['background_border_color'] 
 				); ?>;
         ">
 			<div class="gdprmodal-header">
@@ -1109,32 +1021,32 @@ if( $the_options['cookie_usage_for'] === "ccpa" || $the_options['cookie_usage_fo
 						background-color: <?php
 							echo esc_html(( $ab_options['ab_testing_enabled'] === true || $ab_options['ab_testing_enabled'] === 'true')
 							? ( $the_options[ 'button_cancel_button_color' . $chosenBanner ] )
-							: ( $the_options['cookie_usage_for'] === 'both' ? $the_options['button_cancel_button_color1'] : $the_options['button_cancel_button_color'] )
+							: $the_options['button_cancel_button_color'] 
 						); ?>;
 						color: <?php 
 							echo esc_html( ( $ab_options['ab_testing_enabled'] === true || $ab_options['ab_testing_enabled'] === 'true')
 							? ( $the_options[ 'button_cancel_link_color' . $chosenBanner ] )
-							: ( $the_options['cookie_usage_for'] === 'both' ? $the_options['button_cancel_link_color1'] : $the_options['button_cancel_link_color'] ) 
+							: $the_options['button_cancel_link_color'] 
 						); ?>;
 						border-style: <?php
 							echo esc_html(  ( $ab_options['ab_testing_enabled'] === true || $ab_options['ab_testing_enabled'] === 'true')
 							? ( $the_options[ 'button_cancel_button_border_style' . $chosenBanner ] )
-							: ( $the_options['cookie_usage_for'] === 'both' ? $the_options['button_cancel_button_border_style1'] : $the_options['button_cancel_button_border_style'] )
+							:  $the_options['button_cancel_button_border_style'] 
 						); ?>;
 						border-width: <?php 
 							echo esc_html( ( $ab_options['ab_testing_enabled'] === true || $ab_options['ab_testing_enabled'] === 'true')
 							? ( $the_options[ 'button_cancel_button_border_width' . $chosenBanner ] )
-							: ( $the_options['cookie_usage_for'] === 'both' ? $the_options['button_cancel_button_border_width1'] : $the_options['button_cancel_button_border_width'] )
+							: $the_options['button_cancel_button_border_width'] 
 						); ?>px;
 						border-color: <?php 
 							echo esc_html( ( $ab_options['ab_testing_enabled'] === true || $ab_options['ab_testing_enabled'] === 'true')
 							? ( $the_options[ 'button_cancel_button_border_color' . $chosenBanner ] )
-							: ( $the_options['cookie_usage_for'] === 'both' ? $the_options['button_cancel_button_border_color1'] : $the_options['button_cancel_button_border_color'] )
+							: $the_options['button_cancel_button_border_color'] 
 						); ?>;
 						border-radius: <?php 
 							echo esc_html( ( $ab_options['ab_testing_enabled'] === true || $ab_options['ab_testing_enabled'] === 'true')
 							? ( $the_options[ 'button_cancel_button_border_radius' . $chosenBanner ] )
-							: ( $the_options['cookie_usage_for'] === 'both' ? $the_options['button_cancel_button_border_radius1'] : $the_options['button_cancel_button_border_radius'] ) 
+							: $the_options['button_cancel_button_border_radius'] 
 						); ?>px;
 						padding: 12px 29px;
 						width: 100%;
@@ -1144,32 +1056,32 @@ if( $the_options['cookie_usage_for'] === "ccpa" || $the_options['cookie_usage_fo
 						background-color: <?php
 							echo esc_html(( $ab_options['ab_testing_enabled'] === true || $ab_options['ab_testing_enabled'] === 'true')
 							? ( $the_options[ 'button_confirm_button_color' . $chosenBanner ] )
-							: ( $the_options['cookie_usage_for'] === 'both' ? $the_options['button_confirm_button_color1'] : $the_options['button_confirm_button_color'] )
+							: $the_options['button_confirm_button_color'] 
 						); ?>;
 						color: <?php 
 							echo esc_html( ( $ab_options['ab_testing_enabled'] === true || $ab_options['ab_testing_enabled'] === 'true')
 							? ( $the_options[ 'button_confirm_link_color' . $chosenBanner ] )
-							: ( $the_options['cookie_usage_for'] === 'both' ? $the_options['button_confirm_link_color1'] : $the_options['button_confirm_link_color'] ) 
+							: $the_options['button_confirm_link_color'] 
 						); ?>;
 						border-style: <?php
 							echo esc_html(  ( $ab_options['ab_testing_enabled'] === true || $ab_options['ab_testing_enabled'] === 'true')
 							? ( $the_options[ 'button_confirm_button_border_style' . $chosenBanner ] )
-							: ( $the_options['cookie_usage_for'] === 'both' ? $the_options['button_confirm_button_border_style1'] : $the_options['button_confirm_button_border_style'] )
+							: $the_options['button_confirm_button_border_style'] 
 						); ?>;
 						border-width: <?php 
 							echo esc_html( ( $ab_options['ab_testing_enabled'] === true || $ab_options['ab_testing_enabled'] === 'true')
 							? ( $the_options[ 'button_confirm_button_border_width' . $chosenBanner ] )
-							: ( $the_options['cookie_usage_for'] === 'both' ? $the_options['button_confirm_button_border_width1'] : $the_options['button_confirm_button_border_width'] )
+							:  $the_options['button_confirm_button_border_width'] 
 						); ?>px;
 						border-color: <?php 
 							echo esc_html( ( $ab_options['ab_testing_enabled'] === true || $ab_options['ab_testing_enabled'] === 'true')
 							? ( $the_options[ 'button_confirm_button_border_color' . $chosenBanner ] )
-							: ( $the_options['cookie_usage_for'] === 'both' ? $the_options['button_confirm_button_border_color1'] : $the_options['button_confirm_button_border_color'] )
+							:  $the_options['button_confirm_button_border_color'] 
 						); ?>;
 						border-radius: <?php 
 							echo esc_html( ( $ab_options['ab_testing_enabled'] === true || $ab_options['ab_testing_enabled'] === 'true')
 							? ( $the_options[ 'button_confirm_button_border_radius' . $chosenBanner ] )
-							: ( $the_options['cookie_usage_for'] === 'both' ? $the_options['button_confirm_button_border_radius1'] : $the_options['button_confirm_button_border_radius'] ) 
+							:  $the_options['button_confirm_button_border_radius'] 
 						); ?>px;
 						padding: 12px 29px;
 						width: 100%;

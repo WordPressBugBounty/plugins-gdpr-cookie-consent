@@ -1046,6 +1046,8 @@ jQuery(document).ready(function () {
   jQuery(document).ready(function ($) {
     $(document).on("click", "#cookie_action_settings_preview", function () {
       $(".notice-container").css("display", "none");
+      $("#gdprmodal-gdpr-popup").css("display", "block");
+      $("#gdprmodal-ccpa-popup").css("display", "none");
       $(".gdpr_messagebar_detail").removeClass("hide-popup");
       if ("true" === $("#gdpr-cookie-consent-iabtcf-on").attr("value")) {
         $(".gdpr_messagebar_detail .gdpr-about-cookies").css("display", "none");
@@ -1200,25 +1202,31 @@ jQuery(document).ready(function () {
         }
       });
       $(".cookie-settings-popup-close").click(function () {
-        $(".notice-container").css("display", "block");
+        $(".notice-container").css("display", "flex");
+        $(".gdpr_messagebar_detail").addClass("hide-popup");
+      });
+      $(".cookie-settings-popup-close-ccpa").click(function () {
+        $(".notice-container").css("display", "flex");
         $(".gdpr_messagebar_detail").addClass("hide-popup");
       });
       $(".cookie-settings-popup-save").click(function () {
-        $(".notice-container").css("display", "block");
+        $(".notice-container").css("display", "flex");
         $(".gdpr_messagebar_detail").addClass("hide-popup");
       });
     });
 
     $(document).on("click", "#cookie_action_opt_out_preview", function () {
-      $(".notice-container").css("display", "none");
+      $(".notice-container").css("display", "flex");
       $(".gdpr_messagebar_detail").removeClass("hide-popup");
+      $("#gdprmodal-gdpr-popup").css("display", "none");
+      $("#gdprmodal-ccpa-popup").css("display", "block");
       
       $(".ccpa-popup-close").click(function () {
-        $(".notice-container").css("display", "block");
+        $(".notice-container").css("display", "flex");
         $(".gdpr_messagebar_detail").addClass("hide-popup");
       });
       $(".ccpa-popup-save").click(function () {
-        $(".notice-container").css("display", "block");
+        $(".notice-container").css("display", "flex");
         $(".gdpr_messagebar_detail").addClass("hide-popup");
       });
     });
