@@ -85,7 +85,7 @@ class Gdpr_Cookie_Consent {
 		if ( defined( 'GDPR_COOKIE_CONSENT_VERSION' ) ) {
 			$this->version = GDPR_COOKIE_CONSENT_VERSION;
 		} else {
-			$this->version = '4.3.2';
+			$this->version = '4.3.3';
 		}
 		add_action(
 			'current_screen',
@@ -1255,6 +1255,8 @@ class Gdpr_Cookie_Consent {
 			'popup_overlay'                          => true,
 			'about_message'                          => addslashes( ( 'Cookies are small text files that can be used by websites to make a user\'s experience more efficient. The law states that we can store cookies on your device if they are strictly necessary for the operation of this site. For all other types of cookies we need your permission. This site uses different types of cookies. Some cookies are placed by third party services that appear on our pages.' ) ),
 			'about_message_lgpd'                     => addslashes( ( 'Cookies are small text files that can be used by websites to make a user\'s experience more efficient. The law states that we can store cookies on your device if they are strictly necessary for the operation of this site. For all other types of cookies we need your permission. This site uses different types of cookies. Some cookies are placed by third party services that appear on our pages.' ) ),
+			'gcm_about_message'                      => addslashes( ( "For more information on how Google's third party cookies operate and handle your data, see: " ) ),
+			'gcm_privacy_policy_text'                => addslashes( ( "Google's Privacy Settings")),
 			'is_script_dependency_on'                => false,
 			'header_scripts'                         => '',
 			'body_scripts'                           => '',
@@ -1414,6 +1416,8 @@ class Gdpr_Cookie_Consent {
 			// Allow some HTML, but no JavaScript. Note that deliberately NOT stripping out line breaks here, that's done when sending JavaScript parameter elsewhere.
 			case 'about_message':
 			case 'about_message_lgpd':
+			case 'gcm_about_message':
+			case 'gcm_privacy_policy_text':
 			case 'notify_message':
 			case 'notify_message_lgpd':
 			case 'notify_message_eprivacy':

@@ -643,6 +643,8 @@ class Gdpr_Cookie_Consent_Public {
 			}
 			$about_message      = stripslashes( nl2br( $the_options['about_message'] ) );
 			$about_message_lgpd = stripslashes( nl2br( $the_options['about_message_lgpd'] ) );
+			$gcm_about_message  = stripslashes( nl2br( $the_options['gcm_about_message'] ) );
+			$gcm_privacy_policy_text  = stripslashes( nl2br( $the_options['gcm_privacy_policy_text'] ) );
 			$eprivacy_message   = stripslashes( $eprivacy_message );
 			$gdpr_message       = stripslashes( $gdpr_message );
 			$ccpa_message       = stripslashes( $ccpa_message );
@@ -951,6 +953,8 @@ class Gdpr_Cookie_Consent_Public {
 				$cookie_data['dash_button_accept_all_text'] = $the_options['button_accept_all_text'];
 				$cookie_data['dash_button_decline_text'] = $the_options['button_decline_text'];
 				$cookie_data['dash_about_message'] = $the_options['about_message'];
+				$cookie_data['dash_gcm_about_message'] = $the_options['gcm_about_message'];
+				$cookie_data['dash_gcm_privacy_policy_text'] = $the_options['gcm_privacy_policy_text'];
 				$cookie_data['dash_about_message_lgpd'] = $the_options['about_message_lgpd'];
 				$cookie_data['dash_notify_message'] = $the_options['notify_message'];
 				$cookie_data['dash_button_settings_text'] = $the_options['button_settings_text'];
@@ -1050,6 +1054,8 @@ class Gdpr_Cookie_Consent_Public {
 				$cookie_data['dash_button_accept_all_text'] = $the_options['button_accept_all_text'];
 				$cookie_data['dash_button_decline_text'] = $the_options['button_decline_text'];
 				$cookie_data['dash_about_message'] = $the_options['about_message'];
+				$cookie_data['dash_gcm_about_message'] = $the_options['gcm_about_message'];
+				$cookie_data['dash_gcm_privacy_policy_text'] = $the_options['gcm_privacy_policy_text'];
 				$cookie_data['dash_about_message_lgpd'] = $the_options['about_message_lgpd'];
 				$cookie_data['dash_notify_message'] = $the_options['notify_message'];
 				$cookie_data['dash_button_settings_text'] = $the_options['button_settings_text'];
@@ -1082,9 +1088,10 @@ class Gdpr_Cookie_Consent_Public {
 						$flag = false;
 						if (strpos($supported_language, $value) !== false) {
 							$flag = true;
-							$translations_file = get_site_url() . '/wp-content/plugins/gdpr-cookie-consent/public/translations/public-translations.json';
-							$translations      = wp_remote_get( $translations_file );
-							$translations      = json_decode( wp_remote_retrieve_body( $translations ), true );
+
+							$translations_file = plugin_dir_path(__FILE__) . 'translations/public-translations.json';
+							$translations = json_decode(file_get_contents($translations_file), true);
+
 							// Define an array of text keys to translate.
 							$text_keys_to_translate = array(
 								'about',
@@ -1107,6 +1114,8 @@ class Gdpr_Cookie_Consent_Public {
 								'dash_about_message',
 								'dash_about_message_iabtcf',
 								'dash_about_message_lgpd',
+								'dash_gcm_about_message',
+								'dash_gcm_privacy_policy_text',
 								'dash_notify_message',
 								'dash_notify_message_iabtcf',
 								'dash_button_settings_text',

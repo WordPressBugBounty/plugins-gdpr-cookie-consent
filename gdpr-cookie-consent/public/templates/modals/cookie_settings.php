@@ -126,7 +126,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 								<div class="gdpr-about-cookies"><?php echo $the_options['is_iabtcf_on'] ? esc_html__( $cookie_data['dash_about_message_iabtcf'], 'gdpr-cookie-consent' ) : esc_html__( $cookie_data['dash_about_message'], 'gdpr-cookie-consent' ); // phpcs:ignore ?></div>
 							<?php endif; 
 							if($the_options['is_gcm_on'] === 'true' || $the_options['is_gcm_on'] === true || $the_options['is_gcm_on'] === '1') : ?>
-								<div class="gdpr-about-cookies"><?php echo esc_html__("For more information on how Google's third party cookies operate and handle your data, see: ", 'gdpr-cookie-consent'); // phpcs:ignore ?><a style="color: <?php echo $the_options['cookie_usage_for'] == 'ccpa' ?  esc_html($the_options['button_donotsell_link_color' . $suffix]) : ((bool)$the_options['button_accept_all_as_button' . $suffix] === 'true' || (bool)$the_options['button_accept_all_as_button' . $suffix] === true || (bool)$the_options['button_accept_all_as_button' . $suffix] === 1 ? esc_html($the_options['button_accept_all_button_color' . $suffix]) : esc_html($the_options["button_accept_all_link_color" . $suffix]));?>;" href="https://business.safety.google/privacy" target="blank"><?php echo esc_html__("Google's Privacy Policy", 'gdpr-cookie-consent'); ?></a></div>
+							<div class="gdpr-about-cookies">
+								<?php echo esc_html($the_options['gcm_about_message']); ?>
+									<a  style="color: <?php echo $the_options['cookie_usage_for'] == 'ccpa' ?  esc_html($the_options['button_donotsell_link_color' . $suffix]) : ((bool)$the_options['button_accept_all_as_button' . $suffix] === 'true' || (bool)$the_options['button_accept_all_as_button' . $suffix] === true || (bool)$the_options['button_accept_all_as_button' . $suffix] === 1 ? esc_html($the_options['button_accept_all_button_color' . $suffix]) : esc_html($the_options["button_accept_all_link_color" . $suffix]));?>;"
+									href="https://business.safety.google/privacy" 
+									target="_blank">
+										<?php echo esc_html($the_options['gcm_privacy_policy_text']); ?>
+									</a>
+							</div>
 							<?php endif;
 						if ( $the_options['is_iabtcf_on']) :
 						?>

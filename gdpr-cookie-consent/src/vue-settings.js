@@ -332,6 +332,17 @@ var gen = new Vue({
       )
         ? this.stripSlashes(settings_obj.the_options["about_message"])
         : "Cookies are small text files that can be used by websites to make a user's experience more efficient. The law states that we can store cookies on your device if they are strictly necessary for the operation of this site. For all other types of cookies we need your permission. This site uses different types of cookies. Some cookies are placed by third party services that appear on our pages.",
+      gdpr_gcm_about_message: settings_obj.the_options.hasOwnProperty(
+        "gcm_about_message"
+      )
+      ? this.stripSlashes(settings_obj.the_options["gcm_about_message"])
+      : "For more information on how Google's third party cookies operate and handle your data, see: ",
+
+      gdpr_gcm_privacy_policy_text: settings_obj.the_options.hasOwnProperty(
+        "gcm_privacy_policy_text"
+      )
+      ? this.stripSlashes(settings_obj.the_options["gcm_privacy_policy_text"])
+      : "Google's Privacy Policy",
       lgpd_about_cookie_message: settings_obj.the_options.hasOwnProperty(
         "about_message_lgpd"
       )

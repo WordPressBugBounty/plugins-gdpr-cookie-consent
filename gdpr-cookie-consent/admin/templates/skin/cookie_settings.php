@@ -173,7 +173,12 @@ if ( ! defined( 'ABSPATH' ) ) {
                      <div class="gdpr-about-cookies"><?php echo esc_html( $the_options['about_message'] ); ?></div>
                      <div class="gdpr-about-cookies iabtcf"><?php echo esc_html( $the_options['about_message'] ); ?></div>
                      <div v-if="gcm_is_on" class="gdpr-about-cookies-gcm">
-                        <?php echo esc_html__("For more information on how Google's third party cookies operate and handle your data, see: ", "gdpr-cookie-consent"); ?><a :style="{'color': cookieSettingsPopupAccentColor}" href="https://business.safety.google/privacy" target="blank"><?php echo esc_html__("Google's Privacy Policy","gdpr-cookie-consent"); ?></a>
+                          <?php echo esc_html($the_options['gcm_about_message']); ?>
+                              <a :style="{'color': cookieSettingsPopupAccentColor}" 
+                                 href="https://business.safety.google/privacy" 
+                                 target="_blank">
+                                 <?php echo esc_html($the_options['gcm_privacy_policy_text']); ?>
+                              </a>
                      </div>
                      <ul class="gdpr-iab-navbar">
                         <li class="gdpr-iab-navbar-item" id="gdprIABTabCategory">
