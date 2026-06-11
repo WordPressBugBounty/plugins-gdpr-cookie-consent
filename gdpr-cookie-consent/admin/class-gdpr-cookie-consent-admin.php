@@ -4489,11 +4489,18 @@ class Gdpr_Cookie_Consent_Admin {
 
 	public function gdpr_track_wizard_completed($event, $args=array()) {
 		$url     = GDPR_APP_URL . '/wp-json/api/v1/plugin/app_wplp_track_wizard_completed';
-		$user_id = get_current_user_id();
+		// Get connected account email
+		$settings    = get_option( 'wpeka_api_framework_app_settings' );
+		$connected_email = isset( $settings['account']['email'] )
+							? sanitize_email( $settings['account']['email'] )
+							: '';
+
 		$user_email = '';
-		if ( ! empty( $args['user_email'] ) ) {
+		if ( ! empty( $args['user_email'] ) ) { //from saas
 			$user_email = sanitize_email( $args['user_email'] );
-		} else {
+		} elseif ( ! empty( $connected_email ) ) {
+        	$user_email = $connected_email; // from connected account in plugin
+    	} else {
 			$user_id = get_current_user_id();
 			if ( $user_id ) {
 				$user = get_userdata( $user_id );
