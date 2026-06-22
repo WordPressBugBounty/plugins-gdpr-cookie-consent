@@ -4,7 +4,7 @@ Donate link: https://wplegalpages.com/
 Tags: cookie banner, cookie consent, cookie notice, eu cookie law, gdpr
 Requires at least: 3.3.1
 Tested up to: 6.9
-Stable tag: 4.3.4
+Stable tag: 4.3.5
 Requires PHP: 7.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
@@ -195,6 +195,10 @@ Yes, the plugin supports multiple languages, ensuring that your cookie consent b
 11.Consent Log table
 
 == Change Log ==
+
+= 4.3.5 =
+* Introduced an AI-Powered Compliance Setup Wizard that helps users configure legal pages and cookie compliance settings based on their business type, website purpose, visitor locations, and applicable privacy laws.
+* AI now provides personalized compliance recommendations and automatically assists with setting up legal policies and cookie consent requirements for regulations such as GDPR and CCPA.
 
 = 4.3.4 =
 * Minor bugfixes and improvements
@@ -833,6 +837,10 @@ Yes, the plugin supports multiple languages, ensuring that your cookie consent b
 * Initial version
 
 == Upgrade Notice ==
+
+= 4.3.5 =
+* Introduced an AI-Powered Compliance Setup Wizard that helps users configure legal pages and cookie compliance settings based on their business type, website purpose, visitor locations, and applicable privacy laws.
+* AI now provides personalized compliance recommendations and automatically assists with setting up legal policies and cookie consent requirements for regulations such as GDPR and CCPA.
 
 = 4.3.4 =
 * Minor bugfixes and improvements

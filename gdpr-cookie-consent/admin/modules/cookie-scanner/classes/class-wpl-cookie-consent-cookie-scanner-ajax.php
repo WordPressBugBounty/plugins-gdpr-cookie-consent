@@ -139,7 +139,7 @@ class Gdpr_Cookie_Consent_Cookie_Scanner_Ajax extends Gdpr_Cookie_Consent_Cookie
 			wp_die( esc_attr__( 'You do not have sufficient permission to perform this operation', 'gdpr-cookie-consent' ) );
 		}
 
-		$response = $this->gdpr_start_cookie_scanning();
+		$response = $this->gdpr_start_cookie_scanning(-1);
 
 		$out = array(
 			'success' => $response['status'] === 'success' ? true : false,
@@ -163,7 +163,7 @@ class Gdpr_Cookie_Consent_Cookie_Scanner_Ajax extends Gdpr_Cookie_Consent_Cookie
 		);
 	}
 
-	public function gdpr_start_cookie_scanning( ) {
+	public function gdpr_start_cookie_scanning( $maxLen ) {
 		if(get_option('gdpr_scanning_action_hash')){
 			return array(
 				'status'  => 'error',
@@ -214,7 +214,9 @@ class Gdpr_Cookie_Consent_Cookie_Scanner_Ajax extends Gdpr_Cookie_Consent_Cookie
 				} 
 			}
 		}
+		if($maxLen !== -1) $pages_array = array_slice($pages_array, 0, $maxLen);
 		array_push($pages_array, get_home_url());
+
 		$scan_limit     = get_transient( 'gdpr_monthly_scan_limit_exhausted' );
 		$scan_limit_int = (int) $scan_limit; 
 		if(false === $scan_limit){
@@ -229,7 +231,7 @@ class Gdpr_Cookie_Consent_Cookie_Scanner_Ajax extends Gdpr_Cookie_Consent_Cookie
 
 		$body = array(
 			'site_url'            => rawurlencode( get_site_url() ),
-			'user_email'          => $this->settings->get_email(), 
+			'user_email' 	      => $maxLen === -1 ? $this->settings->get_email() : '', 
 			'pages'               => $pages_array,
 			'scan_limit'          => $scan_limit_int,
 			'gdpr_pages_scanned'  => $gdpr_pages_scanned,
@@ -273,13 +275,13 @@ class Gdpr_Cookie_Consent_Cookie_Scanner_Ajax extends Gdpr_Cookie_Consent_Cookie
 			set_transient( 'gdpr_scan_in_progress_ttl', 1, 60 * 60 ); //set transient expiry for 60 minutes
 			if ( ! wp_next_scheduled( 'gdpr_check_scan_results_event' ) ) {
 				add_filter( 'cron_schedules', function( $schedules ) {
-					$schedules['every_minute'] = array(
-						'interval' => 60,
-						'display'  => __( 'Every Minute', 'gdpr-cookie-consent' ),
+					$schedules['every_15_seconds'] = array(
+						'interval' => 15,
+						'display'  => __( 'Every 15 Seconds', 'gdpr-cookie-consent' ),
 					);
 					return $schedules;
 				});
-				wp_schedule_event( time() + 60, 'every_minute', 'gdpr_check_scan_results_event', array( count($pages_array) )  );
+				wp_schedule_event( time() + 15, 'every_15_seconds', 'gdpr_check_scan_results_event', array( count($pages_array) )  );
 			}
 			return array(
 				'status'          => 'success',
