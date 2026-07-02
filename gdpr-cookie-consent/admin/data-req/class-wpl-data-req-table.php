@@ -319,7 +319,7 @@ class WPL_Data_Req_Table extends WP_List_Table {
 	 * @since  3.0.0
 	 */
 	public function get_search() {
-		return ! empty( $_GET['s'] ) ? urldecode( trim( $_GET['s'] ) ) : false;
+		return ! empty( $_GET['s'] ) ? sanitize_text_field( wp_unslash( $_GET['s'] ) ) : false;
 	}
 
 
@@ -485,11 +485,11 @@ class WPL_Data_Req_Table extends WP_List_Table {
 		}
 		$sql = "SELECT * from {$wpdb->prefix}wpl_data_req WHERE 1=1 ";
 		if ( isset( $args['email'] ) && ! empty( $args['email'] ) && is_email( $args['email'] ) ) {
-			$sql .= " AND email like '" . '%' . sanitize_email( $args['email'] ) . '%' . "'";
+			$sql .= $wpdb->prepare( " AND email LIKE %s", '%' . $wpdb->esc_like( sanitize_email( $args['email'] ) ) . '%' );
 		}
 
 		if ( isset( $args['name'] ) && ! empty( $args['name'] ) ) {
-			$sql .= " AND name like '%" . sanitize_text_field( $args['name'] ) . "%'";
+			$sql .= $wpdb->prepare(" AND name LIKE %s", '%' . $wpdb->esc_like( $args['name'] ) . '%');
 		}
 
 		if ( isset( $args['resolved'] ) ) {

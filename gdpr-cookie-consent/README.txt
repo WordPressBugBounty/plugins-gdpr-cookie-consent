@@ -4,7 +4,7 @@ Donate link: https://wplegalpages.com/
 Tags: cookie banner, cookie consent, cookie notice, eu cookie law, gdpr
 Requires at least: 3.3.1
 Tested up to: 6.9
-Stable tag: 4.3.5
+Stable tag: 4.3.6
 Requires PHP: 7.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
@@ -195,6 +195,19 @@ Yes, the plugin supports multiple languages, ensuring that your cookie consent b
 11.Consent Log table
 
 == Change Log ==
+
+= 4.3.6 =
+* **New**
+    * Improved compatibility with **The Plus Addons for Elementor** Popup Builder / Offcanvas Widget to prevent conflicts with the cookie settings popup.
+
+* **Fixed**
+    * Fixed a security vulnerability reported by **Wordfence**.
+    * Fixed an incorrect dependency execution order in the **Script Blocker**, ensuring scripts are executed only after their required dependencies are loaded.
+    * Fixed an issue where **footer scripts** were not executed after a user provided cookie consent on the initial page load.
+
+* **Improved**
+    * Improved script loading reliability for consent-based script execution.
+    * Enhanced overall plugin stability, compatibility, and performance.
 
 = 4.3.5 =
 * Introduced an AI-Powered Compliance Setup Wizard that helps users configure legal pages and cookie compliance settings based on their business type, website purpose, visitor locations, and applicable privacy laws.
@@ -838,6 +851,19 @@ Yes, the plugin supports multiple languages, ensuring that your cookie consent b
 
 == Upgrade Notice ==
 
+= 4.3.6 =
+* **New**
+    * Improved compatibility with **The Plus Addons for Elementor** Popup Builder / Offcanvas Widget to prevent conflicts with the cookie settings popup.
+
+* **Fixed**
+    * Fixed a security vulnerability reported by **Wordfence**.
+    * Fixed an incorrect dependency execution order in the **Script Blocker**, ensuring scripts are executed only after their required dependencies are loaded.
+    * Fixed an issue where **footer scripts** were not executed after a user provided cookie consent on the initial page load.
+
+* **Improved**
+    * Improved script loading reliability for consent-based script execution.
+    * Enhanced overall plugin stability, compatibility, and performance.
+    
 = 4.3.5 =
 * Introduced an AI-Powered Compliance Setup Wizard that helps users configure legal pages and cookie compliance settings based on their business type, website purpose, visitor locations, and applicable privacy laws.
 * AI now provides personalized compliance recommendations and automatically assists with setting up legal policies and cookie consent requirements for regulations such as GDPR and CCPA.

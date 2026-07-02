@@ -153,7 +153,7 @@ GDPR_CCPA_COOKIE_EXPIRE =
 
     // Log results to the console.
     if (defaultPresent == -1) {
-      console.log("Debug: The default consent is missing. Make sure you have turned on support GCM, have atleast one default consent value set.");
+      console.log("Debug: The default consent is missing. Make sure you have turned on support GCM, have atleast one default consent value set. Check documentation at: https://wplegalpages.com/docs/wp-cookie-consent/how-to-guides/implementing-google-consent-mode-using-wp-cookie-consent");
     } else {
       console.log("Debug: The default consent successfully set to - ", window.dataLayer[defaultPresent][2]);
     }
@@ -161,11 +161,15 @@ GDPR_CCPA_COOKIE_EXPIRE =
 		if (updatePresent != -1) {
 		  console.log("Debug: The consent successfully updated to - ", window.dataLayer[updatePresent][2]);
 		}
+    if (firstTag == -1) {
+		  console.log("Debug: GTM seems to be missing on your site. Check if GTM is installed correctly. ");
+		}
     if(defaultPresent != -1 && firstTag != -1 && defaultPresent < firstTag){
       console.log("Debug: Default consent was set in correct order.")
     }
     else{
-      console.log("Debug: The default consent was not set in correct order. Make sure you have installed Google tag using scripts in script blocker section and GCM is turned on.")
+      console.log("Debug: The default consent was not set in correct order. Make sure everything is setup corretly.")
+      console.log("Debug: If Google Tag Gateway is enabled on your website, you don't need to change anything. Just run Google Consent Mode in Advanced Mode. Check documentation at : https://wplegalpages.com/docs/wplp-docs/guides/google-tag-gateway-and-google-consent-mode-in-wplp-cookie-consent")
     }
   }
 
@@ -1465,6 +1469,11 @@ banner.style.display = "none";
                     script.textContent = scriptContent;
                     document.body.appendChild(script);
                 }
+                function executeFooterScript(scriptContent) {
+                  var script = document.createElement("script");
+                  script.textContent = scriptContent;
+                  document.body.appendChild(script);
+                }
                 if (response.data.header_scripts) {
                     var tempDiv = document.createElement("div");
                     tempDiv.innerHTML = response.data.header_scripts;
@@ -1481,6 +1490,14 @@ banner.style.display = "none";
                         executeBodyScript(oldScript.innerHTML);
                     });
                 }
+                //Inject footer scripts
+                if (response.data.footer_scripts) {
+                  var tempDiv = document.createElement("div");
+                  tempDiv.innerHTML = response.data.footer_scripts;
+                  tempDiv.querySelectorAll("script").forEach(function (oldScript) {
+                      executeFooterScript(oldScript.innerHTML);
+                  });
+              }
               },
           });
           // Dispatch appropriate events based on settings
@@ -1594,6 +1611,12 @@ banner.style.display = "none";
                     script.textContent = scriptContent;
                     document.body.appendChild(script);
                 }
+
+                function executeFooterScript(scriptContent) {
+                  var script = document.createElement("script");
+                  script.textContent = scriptContent;
+                  document.body.appendChild(script);
+                }
                 if (response.data.header_scripts) {
                     var tempDiv = document.createElement("div");
                     tempDiv.innerHTML = response.data.header_scripts;
@@ -1609,6 +1632,14 @@ banner.style.display = "none";
                     tempDiv.querySelectorAll("script").forEach(function (oldScript) {
                         executeBodyScript(oldScript.innerHTML);
                     });
+                }
+                //Inject footer scripts
+                if (response.data.footer_scripts) {
+                  var tempDiv = document.createElement("div");
+                  tempDiv.innerHTML = response.data.footer_scripts;
+                  tempDiv.querySelectorAll("script").forEach(function (oldScript) {
+                      executeFooterScript(oldScript.innerHTML);
+                  });
                 }
               },
           });
@@ -1707,6 +1738,14 @@ banner.style.display = "none";
             $("#gdpr-popup").gdprmodal("hide");
           }
           GDPR.show_again_elm.slideUp(GDPR.settings.animate_speed_hide);
+            setTimeout(function() {
+                const backdrop = document.querySelector(".gdprmodal-backdrop");
+                const modal = document.querySelector(".gdprmodal");
+                
+                if (backdrop && modal && backdrop.parentElement !== modal.parentElement) {
+                    modal.parentElement.insertBefore(backdrop, modal);
+                }
+            }, 0);
         } else if (button_action == "close") {
             var law = GDPR.settings.cookie_usage_for;
 
@@ -1784,6 +1823,14 @@ banner.style.display = "none";
             GDPR.hideHeader();
           }
           $("#gdpr-ccpa-gdprmodal").gdprmodal("show");
+          setTimeout(function () {
+            const backdrops = document.querySelectorAll(".gdprmodal-backdrop");
+            const backdrop = backdrops[backdrops.length - 1]; // newest backdrop
+            const modal = document.querySelector("#gdpr-ccpa-gdprmodal");
+            if (backdrop && modal) {
+                modal.parentElement.insertBefore(backdrop, modal);
+            }
+        }, 0);
         } else if (button_action == "ccpa_close") {
           GDPR.displayHeader();
         } else if (button_action == "cancel") {
@@ -1964,6 +2011,18 @@ banner.style.display = "none";
               }
             
               $("#gdpr-gdprmodal").gdprmodal("show");
+              setTimeout(function () {
+                const backdrop = document.querySelector(".gdprmodal-backdrop");
+                const modal = document.querySelector("#gdpr-gdprmodal");
+
+                if (
+                    backdrop &&
+                    modal &&
+                    backdrop.parentElement !== modal.parentElement
+                ) {
+                    modal.parentElement.insertBefore(backdrop, modal);
+                }
+            }, 0);
               return false;
           }
           multiple_legislation_current_banner = "gdpr";
@@ -2013,6 +2072,13 @@ banner.style.display = "none";
         } else {
             $("#gdpr-ccpa-gdprmodal").gdprmodal("show");
         }
+        setTimeout(function () {
+          const backdrop = document.querySelector(".gdprmodal-backdrop");
+          const modal = document.querySelector("#gdpr-ccpa-gdprmodal");
+          if (backdrop && modal && backdrop.parentElement !== modal.parentElement) {
+              modal.parentElement.insertBefore(backdrop, modal);
+          }
+      }, 0);
     });
 
       jQuery(document).on(
@@ -2935,9 +3001,24 @@ banner.style.display = "none";
             var banner_delay = this.settings.auto_banner_initialize_delay;
             setTimeout(function () {
               $("#gdpr-popup").gdprmodal("show");
+               setTimeout(function () {
+                    const backdrop = document.querySelector(".gdprmodal-backdrop");
+                    const modal = document.querySelector("#gdpr-popup");
+                    if (backdrop && modal && backdrop.parentElement !== modal.parentElement) {
+                        modal.parentElement.insertBefore(backdrop, modal);
+                    }
+                }, 0);
             }, banner_delay);
           } else {
             $("#gdpr-popup").gdprmodal("show");
+            setTimeout(function () {
+              const backdrops = document.querySelectorAll(".gdprmodal-backdrop");
+              const backdrop = backdrops[backdrops.length - 1];
+              const modal = document.querySelector("#gdpr-popup");
+              if (backdrop && modal) {
+                  modal.parentElement.insertBefore(backdrop, modal);
+              }
+          }, 0);
           }
         }
       }

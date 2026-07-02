@@ -1542,11 +1542,12 @@ class Gdpr_Cookie_Consent_Public {
 		if($the_options['is_script_blocker_on'] && 'yes' === $viewed_cookie){
 			$header_scripts = isset($the_options['header_scripts']) ? "\r\n" . wp_unslash($the_options['header_scripts']) . "\r\n" : '';
 			$body_scripts = isset($the_options['body_scripts']) ? "\r\n" . wp_unslash($the_options['body_scripts']) . "\r\n" : '';
-			
+			$footer_scripts = isset($the_options['footer_scripts']) ? "\r\n" . wp_unslash($the_options['footer_scripts']) . "\r\n" : '';
 			// Return JSON response
 			wp_send_json_success([
 				'header_scripts' => $header_scripts,
 				'body_scripts'   => $body_scripts,
+				'footer_scripts' => $footer_scripts,
 			]);
 		}
 		else{
@@ -1651,23 +1652,24 @@ class Gdpr_Cookie_Consent_Public {
 			$escaped_script = wp_kses_post(wp_unslash($body_scripts));
 
 			if (is_array($dependee_script) && count($dependee_script) > 0){
-				foreach( $dependee_script as $dependee ){
-					if( $dependee === "Footer" ) { 
+				if ( in_array('Header', $dependee_script, true) && in_array('Footer', $dependee_script, true) ) {
+					// Body depends on BOTH Header and Footer
 						echo "<script>
-							(function waitForFooter() {
-								if (window.footerScriptsLoaded) {
+							(function waitForDependencies() {
+								if (window.headerScriptsLoaded && window.footerScriptsLoaded) {
 									try {
 										{$escaped_script}
 									} catch(e) {
 										console.error('Body script error:', e);
 									}
 									window.bodyScriptsLoaded = true;
-									} else {
-									setTimeout(waitForFooter, 50);
+								} else {
+									setTimeout(waitForDependencies, 50);
 								}
 							})();
-							</script>";
-					} else if ( $dependee === "Header" ) {
+						</script>";
+					} else if ( in_array('Header', $dependee_script, true) ) {
+						// Body depends only on Header
 						echo "<script>
 							(function waitForHeader() {
 								if (window.headerScriptsLoaded) {
@@ -1677,14 +1679,27 @@ class Gdpr_Cookie_Consent_Public {
 										console.error('Body script error:', e);
 									}
 									window.bodyScriptsLoaded = true;
-									} else {
+								} else {
 									setTimeout(waitForHeader, 50);
 								}
 							})();
-							</script>";
-					} else {
-						continue;
-					}
+						</script>";
+					} else if ( in_array('Footer', $dependee_script, true) ) {
+						// Body depends only on Footer
+						echo "<script>
+							(function waitForFooter() {
+								if (window.footerScriptsLoaded) {
+									try {
+										{$escaped_script}
+									} catch(e) {
+										console.error('Body script error:', e);
+									}
+									window.bodyScriptsLoaded = true;
+								} else {
+									setTimeout(waitForFooter, 50);
+								}
+							})();
+						</script>";
 				}
 			} else {
 				echo "<script>
