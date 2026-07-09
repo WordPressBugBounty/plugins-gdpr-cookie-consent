@@ -1953,10 +1953,10 @@ banner.style.display = "none";
           gdpr_user_preference_arr[key] = "yes";
           GDPR.allowed_categories.push(key);
         } else if (
-          key == "analytics" ||
+          (key == "analytics" ||
           key == "marketing" ||
           key == "unclassified" ||
-          key == "preferences"
+          key == "preferences") && (gdpr_user_preference_arr[key] !== 'yes')
         ) {
           gdpr_user_preference_arr[key] = "no";
           var length = GDPR.allowed_categories.length;
@@ -1965,6 +1965,14 @@ banner.style.display = "none";
               GDPR.allowed_categories.splice(i, 1);
             }
           }
+        } else if (
+          (key == "analytics" ||
+          key == "marketing" ||
+          key == "unclassified" ||
+          key == "preferences") && (gdpr_user_preference_arr[key] == 'yes')
+        ) {
+          GDPR.allowed_categories.push(key);
+          $(this).prop("checked", true);
         }
         gdpr_user_preference_val = JSON.stringify(gdpr_user_preference_arr);
         GDPR_Cookie.set(

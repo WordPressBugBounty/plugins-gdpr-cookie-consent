@@ -820,7 +820,7 @@ class Gdpr_Cookie_Consent_Cookie_Scanner_Ajax extends Gdpr_Cookie_Consent_Cookie
 	 */
 	public function stop_scan() {
 		check_ajax_referer( 'wpl_cookie_scanner', 'security' );
-		$scan_id  = (int) isset( $_POST['scan_id'] ) ? sanitize_text_field( wp_unslash( $_POST['scan_id'] ) ) : 0;
+		$scan_id  = isset( $_POST['scan_id'] ) ? (int) sanitize_text_field( wp_unslash( $_POST['scan_id'] ) ) : 0;
 		$data_arr = array( 'status' => 3 ); // updating scan status to stopped.
 		$this->update_scan_entry( $data_arr, $scan_id );
 		$cookies = $this->get_scan_cookies( $scan_id, 0, 1 ); // we just need total so `limit` argument is set as one.
@@ -843,9 +843,9 @@ class Gdpr_Cookie_Consent_Cookie_Scanner_Ajax extends Gdpr_Cookie_Consent_Cookie
 		global $wpdb;
 		check_ajax_referer( 'wpl_cookie_scanner', 'security' );
 		$mxdata     = $this->scan_page_maxdata;
-		$offset     = (int) isset( $_POST['offset'] ) ? sanitize_text_field( wp_unslash( $_POST['offset'] ) ) : 0;
-		$scan_id    = (int) isset( $_POST['scan_id'] ) ? sanitize_text_field( wp_unslash( $_POST['scan_id'] ) ) : 0;
-		$total      = (int) isset( $_POST['total'] ) ? sanitize_text_field( wp_unslash( $_POST['total'] ) ) : 0;
+		$offset     = isset( $_POST['offset'] ) ? (int) sanitize_text_field( wp_unslash( $_POST['offset'] ) ) : 0;
+		$scan_id    = isset( $_POST['scan_id'] ) ? (int) sanitize_text_field( wp_unslash( $_POST['scan_id'] ) ) : 0;
+		$total      = isset( $_POST['total'] ) ? (int) sanitize_text_field( wp_unslash( $_POST['total'] ) ) : 0;
 		$hash       = isset( $_POST['hash'] ) ? sanitize_text_field( wp_unslash( $_POST['hash'] ) ) : '';
 		$new_offset = $offset + $mxdata;
 		$out        = array(

@@ -8128,6 +8128,18 @@ class Gdpr_Cookie_Consent_Admin {
 	 * Function to save the scan schedule
 	 */
 	public function gdpr_cookie_consent_ajax_save_schedule_scan() {
+		// Verify Nonce.
+		if ( ! check_ajax_referer( 'wpl_save_script_nonce', '_wpnonce', false ) ) {
+			wp_send_json_error(
+				array( 'message' => 'Security Check Failed, Unauthorized access' ),
+				403
+			);
+		}
+
+		// Capability check
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error( 'Forbidden', 403 );
+		}
 		$schedule_data = array(
 			'schedule_scan_as' => sanitize_text_field($_POST['schedule_scan_as']),
 			'schedule_scan_date' => sanitize_text_field($_POST['schedule_scan_date']),
@@ -10891,8 +10903,14 @@ public function gdpr_support_request_handler() {
 		
 		global $wcam_lib_gdpr;
 
-		$data        = $payload['response'];
-		$no_of_scans = $payload['no_of_scans'] ?? '';
+		$data        	= $payload['response'];
+		$no_of_scans 	= $payload['no_of_scans'] ?? '';
+		$is_free_trial 	= $payload['is_free_trial'] ?? 0;
+
+
+		if ( $is_free_trial === 0 || $is_free_trial === '0' || $is_free_trial === false || $is_free_trial === 'false' ) {
+			delete_option( 'wplp_free_trial_data' );
+		}
 
 		if ( $no_of_scans !== '' ) {
 			update_option( 'gdpr_no_of_page_scan', $no_of_scans );
@@ -11561,6 +11579,7 @@ public function gdpr_support_request_handler() {
 				'is_iabtcf_on'                             => $this->convert_boolean( $the_options['is_iabtcf_on'] ),
 				'is_gacm_on'                               => $this->convert_boolean( $the_options['is_gacm_on'] ),
 				'is_gcm_on'                                => $this->convert_boolean( $the_options['is_gcm_on'] ),
+				'gtm_id'								   => $the_options['gtm_id'],
 				'gcm_defaults'                             => $the_options['gcm_defaults'],
 				'gcm_wait_for_update_duration'             => absint( $the_options['gcm_wait_for_update_duration'] ),
 				'is_gcm_url_passthrough'                   => $this->convert_boolean( $the_options['is_gcm_url_passthrough'] ),

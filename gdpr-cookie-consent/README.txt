@@ -4,7 +4,7 @@ Donate link: https://wplegalpages.com/
 Tags: cookie banner, cookie consent, cookie notice, eu cookie law, gdpr
 Requires at least: 3.3.1
 Tested up to: 6.9
-Stable tag: 4.3.6
+Stable tag: 4.3.7
 Requires PHP: 7.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
@@ -195,6 +195,12 @@ Yes, the plugin supports multiple languages, ensuring that your cookie consent b
 11.Consent Log table
 
 == Change Log ==
+
+
+= 4.3.7 =
+* **New**
+    * New: Added built-in Google Tag Manager (GTM) integration for Google Consent Mode, simply enter your GTM Container ID to automatically install GTM on your website without requiring manual code insertion or a third-party GTM plugin.
+
 
 = 4.3.6 =
 * **New**
@@ -850,6 +856,11 @@ Yes, the plugin supports multiple languages, ensuring that your cookie consent b
 * Initial version
 
 == Upgrade Notice ==
+
+= 4.3.7 =
+* **New**
+    * New: Added built-in Google Tag Manager (GTM) integration for Google Consent Mode, simply enter your GTM Container ID to automatically install GTM on your website without requiring manual code insertion or a third-party GTM plugin.
+
 
 = 4.3.6 =
 * **New**

@@ -93,6 +93,7 @@ class Gdpr_Cookie_Consent_Public {
 		$the_options = Gdpr_Cookie_Consent::gdpr_get_settings();
 		if($this->convert_boolean($the_options['is_gcm_on']) === true ){
 			add_action('wp_head', array( $this,'insert_custom_consent_script'), -9999);
+			add_action('wp_body_open',  array( $this,'insert_custom_consent_script_body'), -9999);
 		}
 		add_action( 'wp_ajax_gdpr_fetch_user_iab_consent', array( $this, 'wplcl_collect_user_iab_consent' ) );
 		add_action( 'wp_ajax_nopriv_gdpr_fetch_user_iab_consent', array( $this, 'wplcl_collect_user_iab_consent' ) );
@@ -278,6 +279,29 @@ class Gdpr_Cookie_Consent_Public {
 		</script>
 
 		<?php 
+		if(!empty($the_options['gtm_id'])){
+			?>
+				<!-- Google Tag Manager -->
+				<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+				new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+				j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+				'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+				})(window,document,'script','dataLayer',<?php echo wp_json_encode($the_options['gtm_id']); ?>);</script>
+				<!-- End Google Tag Manager -->
+			<?php
+		}
+	}
+
+	public function insert_custom_consent_script_body(){
+		$the_options = Gdpr_Cookie_Consent::gdpr_get_settings();
+		if(!empty($the_options['gtm_id'])){
+			?>
+				<!-- Google Tag Manager (noscript) -->
+				<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=<?php echo rawurlencode($the_options['gtm_id']); ?>"
+				height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+				<!-- End Google Tag Manager (noscript) -->
+			<?php
+		}
 	}
 
 	/**
@@ -1238,7 +1262,8 @@ class Gdpr_Cookie_Consent_Public {
 			$currentid                     = get_current_blog_id();
 			$the_options['select_sites']   = is_array( $the_options['select_sites'] ) ? $the_options['select_sites'] : array();
 			$the_options['select_sites'][] = $currentid;
-
+			$abTesting = $ab_options['ab_testing_enabled'] === true || $ab_options['ab_testing_enabled'] === 'true';
+	
 			$color = $abTesting
 				? $the_options['cookie_bar_color' . $chosenBanner]
 				: $the_options['background'];

@@ -520,7 +520,7 @@ jQuery(document).ready(function () {
       // Redirect to the plugins.php page
       window.location.href = pluginsPageURL;
       location.reload();
-    });  
+    }); 
   });
   // connection overlay in compliance settings.
   jQuery(document).ready(function () {
@@ -772,7 +772,6 @@ jQuery(document).ready(function () {
    * Store the Authentication Data
    * @param {*} data
    */
-
   function gdprPaidAuth(event) {
     // Prevent the default action of the event.
     event.preventDefault();

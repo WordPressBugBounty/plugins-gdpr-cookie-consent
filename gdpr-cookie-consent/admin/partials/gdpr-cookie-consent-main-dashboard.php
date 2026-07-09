@@ -162,7 +162,7 @@ $site_domain = wp_parse_url($site_url, PHP_URL_HOST);
 			<!-- tabs -->
 			<div class="wplp-compliance-main">
 				<div class="gdpr-cookie-consent-admin-tabs-section">
-					<div class="gdpr-cookie-consent-admin-tabs dashboard-tabs">
+					<div class="gdpr-cookie-consent-admin-tabs dashboard-tabs" >
 						<!-- Dashboard tab  -->
 						 <?php  if ($is_legalpages_active) {
 								$plugin_slug = 'wplegalpages/wplegalpages.php';
@@ -295,6 +295,23 @@ $site_domain = wp_parse_url($site_url, PHP_URL_HOST);
 						            <div class="wplp-trial-widget-progress-fill" style="width: <?php echo esc_attr(((7 - $trialEndsIn) / 7) * 100); ?>%;"></div>
 						        </div>
 						    </div>
+							<?php if (!($trialEndsIn > 0)) : ?>
+							    <button id="wplp_free_trial_expired_btn" class="primary-button" onclick="window.open('https://app.wplegalpages.com/pricing/', '_blank', 'noopener,noreferrer')">
+							        <span>Upgrade</span>
+									<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+							            <path d="M17.5 2.5V1.5H18.5V2.5H17.5ZM9.87377 11.5404C9.48325 11.931 8.85008 11.931 8.45956 11.5404C8.06904 11.1499 8.06904 10.5168 8.45956 10.1262L9.16667 10.8333L9.87377 11.5404ZM17.5 9.16667H16.5V2.5H17.5H18.5V9.16667H17.5ZM17.5 2.5V3.5H10.8333V2.5V1.5H17.5V2.5ZM17.5 2.5L18.2071 3.20711L9.87377 11.5404L9.16667 10.8333L8.45956 10.1262L16.7929 1.79289L17.5 2.5Z" fill="white"/>
+							            <path d="M16.667 12.5002C16.667 13.5858 16.667 14.1286 16.5281 14.5689C16.2338 15.5024 15.5026 16.2337 14.5691 16.528C14.1287 16.6668 13.5859 16.6668 12.5003 16.6668H9.33366C6.50523 16.6668 5.09102 16.6668 4.21234 15.7881C3.33366 14.9095 3.33366 13.4953 3.33366 10.6668V7.50016C3.33366 6.41455 3.33366 5.87175 3.47251 5.43138C3.76684 4.49789 4.49805 3.76667 5.43154 3.47235C5.87192 3.3335 6.41472 3.3335 7.50033 3.3335" stroke="white" stroke-width="2" stroke-linecap="round"/>
+							        </svg>
+							    </button>
+							<?php else: ?>
+								<button id="wplp_free_trial_upgrade_button" class="primary-button" onclick="window.open('https://app.wplegalpages.com/pricing/', '_blank', 'noopener,noreferrer')">
+									<span>Upgrade</span>
+									<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+										<path d="M17.5 2.5V1.5H18.5V2.5H17.5ZM9.87377 11.5404C9.48325 11.931 8.85008 11.931 8.45956 11.5404C8.06904 11.1499 8.06904 10.5168 8.45956 10.1262L9.16667 10.8333L9.87377 11.5404ZM17.5 9.16667H16.5V2.5H17.5H18.5V9.16667H17.5ZM17.5 2.5V3.5H10.8333V2.5V1.5H17.5V2.5ZM17.5 2.5L18.2071 3.20711L9.87377 11.5404L9.16667 10.8333L8.45956 10.1262L16.7929 1.79289L17.5 2.5Z" fill="white"/>
+										<path d="M16.667 12.5002C16.667 13.5858 16.667 14.1286 16.5281 14.5689C16.2338 15.5024 15.5026 16.2337 14.5691 16.528C14.1287 16.6668 13.5859 16.6668 12.5003 16.6668H9.33366C6.50523 16.6668 5.09102 16.6668 4.21234 15.7881C3.33366 14.9095 3.33366 13.4953 3.33366 10.6668V7.50016C3.33366 6.41455 3.33366 5.87175 3.47251 5.43138C3.76684 4.49789 4.49805 3.76667 5.43154 3.47235C5.87192 3.3335 6.41472 3.3335 7.50033 3.3335" stroke="white" stroke-width="2" stroke-linecap="round"/>
+									</svg>
+								</button>
+							<?php endif; ?>
 						</div>
 					<?php } ?>
 				</div>
@@ -369,7 +386,7 @@ $site_domain = wp_parse_url($site_url, PHP_URL_HOST);
 														
 									            <?php if (!($trialEndsIn > 0)) : ?>
 												    <button id="wplp_free_trial_expired_btn" class="primary-button" onclick="window.open('https://app.wplegalpages.com/pricing/', '_blank', 'noopener,noreferrer')">
-												        <span>View Plans</span>
+												        <span>Upgrade</span>
 														<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
 												            <path d="M17.5 2.5V1.5H18.5V2.5H17.5ZM9.87377 11.5404C9.48325 11.931 8.85008 11.931 8.45956 11.5404C8.06904 11.1499 8.06904 10.5168 8.45956 10.1262L9.16667 10.8333L9.87377 11.5404ZM17.5 9.16667H16.5V2.5H17.5H18.5V9.16667H17.5ZM17.5 2.5V3.5H10.8333V2.5V1.5H17.5V2.5ZM17.5 2.5L18.2071 3.20711L9.87377 11.5404L9.16667 10.8333L8.45956 10.1262L16.7929 1.79289L17.5 2.5Z" fill="white"/>
 												            <path d="M16.667 12.5002C16.667 13.5858 16.667 14.1286 16.5281 14.5689C16.2338 15.5024 15.5026 16.2337 14.5691 16.528C14.1287 16.6668 13.5859 16.6668 12.5003 16.6668H9.33366C6.50523 16.6668 5.09102 16.6668 4.21234 15.7881C3.33366 14.9095 3.33366 13.4953 3.33366 10.6668V7.50016C3.33366 6.41455 3.33366 5.87175 3.47251 5.43138C3.76684 4.49789 4.49805 3.76667 5.43154 3.47235C5.87192 3.3335 6.41472 3.3335 7.50033 3.3335" stroke="white" stroke-width="2" stroke-linecap="round"/>

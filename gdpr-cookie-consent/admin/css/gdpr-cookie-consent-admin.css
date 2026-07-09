@@ -10433,10 +10433,12 @@ div#gdpr-scan-history {
 
 .wplp-compliance-cookie-consent-tab-admin.open-tab + .gdpr-sub-tabs {
     display: flex;
-    max-height: 330px;
+    max-height: 500px;
+}
+.gdpr-cookie-consent-admin-tabs{
     overflow-y: auto;
     scrollbar-width: thin; /* Firefox */
-    scrollbar-color: #d1d5db transparent; /* Firefox */
+    scrollbar-color: #d1d5db transparent; /* Firefox */  
 }
 
 /* Chrome, Edge, Safari */
@@ -11494,7 +11496,7 @@ div#gdpr-scan-history {
     padding: 1.25rem;
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
+    gap: 0.5rem;
     width: 17rem;
     overflow: hidden;
     z-index: 10;

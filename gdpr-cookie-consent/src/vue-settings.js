@@ -13776,6 +13776,7 @@ var ckm = new Vue({
         type: "POST",
         data: {
           action: "gcc_save_schedule_scan",
+          _wpnonce: settings_obj.nonce,
           schedule_scan_as: this.schedule_scan_as,
           schedule_scan_date: this.schedule_scan_date,
           schedule_scan_time_value: this.schedule_scan_time_value,
@@ -13925,6 +13926,7 @@ var ckm = new Vue({
             type: "POST",
             data: {
               action: "gcc_save_schedule_scan",
+              _wpnonce: settings_obj.nonce,
               schedule_scan_as: "monthly",
               schedule_scan_date: formattedDate,
               schedule_scan_time_value: this.schedule_scan_time_value,

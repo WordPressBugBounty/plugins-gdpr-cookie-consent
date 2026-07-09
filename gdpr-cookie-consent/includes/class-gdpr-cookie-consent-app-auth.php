@@ -299,6 +299,7 @@ class GDPR_Cookie_Consent_App_Auth {
 		}
 	}
 
+
 	/**
 	 * Get the full URL to an API endpoint by passing the path.
 	 *
