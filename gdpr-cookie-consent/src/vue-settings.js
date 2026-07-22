@@ -5056,17 +5056,16 @@ var gen = new Vue({
       // Handle the selection
       image_frame.on("select", function () {
         var selection1 = image_frame.state().get("selection").first().toJSON();
-
         // Update Image 1 holder and hidden input
-        jQuery("#gdpr-cookie-bar-logo-holder").attr("src", selection1.url);
-        jQuery("#gdpr-cookie-bar-logo-url-holder").val(selection1.url);
+        jQuery("[name='gdpr-cookie-bar-logo-holder']").attr("src", selection1.url);
+        jQuery("[name='gdpr-cookie-bar-logo-url-holder']").val(selection1.url);
         alert("Please click on save changes to update the image on the banner");
       });
       this.is_logo_added = true;
     },
     deleteSelectedimage() {
-      jQuery("#gdpr-cookie-bar-logo-holder").removeAttr("src");
-      jQuery("#gdpr-cookie-bar-logo-url-holder").attr("value", "");
+      jQuery("[name='gdpr-cookie-bar-logo-holder']").removeAttr("src");
+      jQuery("[name='gdpr-cookie-bar-logo-url-holder']").attr("value", "");
       this.is_logo_removed = true;
     },
     openMediaModal1() {

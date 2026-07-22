@@ -58,6 +58,10 @@ GDPR_CCPA_COOKIE_EXPIRE =
    * practising this, we should strive to set a better example in our own work.
    */
 
+  // Check if the current window is not the top-level window  -- if the banner is loaded in iframe then don't show the banner - for editing page
+    if ( window.self !== window.top ) {
+          return;
+    }
   var GDPR_Cookie = {
     set: function (name, value, days) {
       var expires = "";
@@ -1458,45 +1462,101 @@ banner.style.display = "none";
                 action: "gdpr_fire_scripts",
                 security: log_obj.consent_logging_nonce,
               },
-              success: function (response) {
-                function executeScript(scriptContent) {
-                    var script = document.createElement("script");
-                    script.textContent = scriptContent;
-                    document.head.appendChild(script);
-                }
-                function executeBodyScript(scriptContent) {
-                    var script = document.createElement("script");
-                    script.textContent = scriptContent;
-                    document.body.appendChild(script);
-                }
-                function executeFooterScript(scriptContent) {
-                  var script = document.createElement("script");
-                  script.textContent = scriptContent;
-                  document.body.appendChild(script);
-                }
-                if (response.data.header_scripts) {
-                    var tempDiv = document.createElement("div");
-                    tempDiv.innerHTML = response.data.header_scripts;
-                    tempDiv.querySelectorAll("script").forEach(function (oldScript) {
-                        executeScript(oldScript.innerHTML);
-                    });
+               success: function (response) {
+                var data = response.data;
+
+                window.headerScriptsLoaded = false;
+                window.footerScriptsLoaded = false;
+                window.bodyScriptsLoaded = false;
+
+                function runScript(scriptContent, target) {
+                    if (!scriptContent) return;
+                    try {
+                        var script = document.createElement("script");
+                        script.textContent = scriptContent;
+                        target.appendChild(script);
+                    } catch (e) {
+                        console.error('Script error:', e);
+                    }
                 }
 
-                // Inject Body Scripts
-                if (response.data.body_scripts) {
+                function extractScripts(htmlString) {
+                    if (!htmlString) return [];
                     var tempDiv = document.createElement("div");
-                    tempDiv.innerHTML = response.data.body_scripts;
-                    tempDiv.querySelectorAll("script").forEach(function (oldScript) {
-                        executeBodyScript(oldScript.innerHTML);
+                    tempDiv.innerHTML = htmlString;
+                    var scripts = [];
+                    tempDiv.querySelectorAll("script").forEach(function (s) {
+                        scripts.push(s.innerHTML);
                     });
+                    return scripts;
                 }
-                //Inject footer scripts
-                if (response.data.footer_scripts) {
-                  var tempDiv = document.createElement("div");
-                  tempDiv.innerHTML = response.data.footer_scripts;
-                  tempDiv.querySelectorAll("script").forEach(function (oldScript) {
-                      executeFooterScript(oldScript.innerHTML);
-                  });
+
+                function waitFor(condFn, cb) {
+                    setTimeout(function check() {
+                        if (condFn()) {
+                            cb();
+                        } else {
+                            setTimeout(check, 50);
+                        }
+                    }, 0);
+                }
+
+                var headerScripts = extractScripts(data.header_scripts);
+                var bodyScripts   = extractScripts(data.body_scripts);
+                var footerScripts = extractScripts(data.footer_scripts);
+
+                function runHeader() {
+                    headerScripts.forEach(function (s) { runScript(s, document.head); });
+                    window.headerScriptsLoaded = true;
+                }
+                function runFooter() {
+                    footerScripts.forEach(function (s) { runScript(s, document.body); });
+                    window.footerScriptsLoaded = true;
+                }
+                function runBody() {
+                    bodyScripts.forEach(function (s) { runScript(s, document.body); });
+                    window.bodyScriptsLoaded = true;
+                }
+
+                var bodyWaitsHeader = (data.header_dependency === "Body Scripts");
+                var bodyWaitsFooter = (data.footer_dependency === "Body Scripts");
+                var headerWaitsFooter = (data.footer_dependency === "Header Scripts");
+                var footerWaitsHeader = (data.header_dependency === "Footer Scripts");
+
+                // --- Header (wp_head position) ---
+                if (headerWaitsFooter) {
+                    // Header has dependency — defer it
+                    waitFor(function () { return window.footerScriptsLoaded; }, runHeader);
+                } else {
+                    // No dependency — run immediately in wp_head position
+                    runHeader();
+                }
+
+                // --- Body (wp_body_open position) ---
+               if (bodyWaitsHeader && bodyWaitsFooter) {
+                  if (window.headerScriptsLoaded && window.footerScriptsLoaded) {
+                      runBody();
+                  } else {
+                      waitFor(function () { return window.headerScriptsLoaded && window.footerScriptsLoaded; }, runBody);
+                  }
+              } else if (bodyWaitsHeader) {
+                  if (window.headerScriptsLoaded) {
+                      runBody(); // Header already ran synchronously above — run Body now
+                  } else {
+                      waitFor(function () { return window.headerScriptsLoaded; }, runBody);
+                  }
+              } else if (bodyWaitsFooter) {
+                  waitFor(function () { return window.footerScriptsLoaded; }, runBody);
+              } else {
+                  runBody();
+              }
+                
+                // --- Footer (wp_footer position) ---
+                if (footerWaitsHeader) {
+                    waitFor(function () { return window.headerScriptsLoaded; }, runFooter);
+                } else {
+                    // No dependency — run immediately in wp_footer position
+                    runFooter();
               }
               },
           });
@@ -1601,45 +1661,99 @@ banner.style.display = "none";
                 security: log_obj.consent_logging_nonce,
               },
               success: function (response) {
-                function executeScript(scriptContent) {
-                    var script = document.createElement("script");
-                    script.textContent = scriptContent;
-                    document.head.appendChild(script);
-                }
-                function executeBodyScript(scriptContent) {
-                    var script = document.createElement("script");
-                    script.textContent = scriptContent;
-                    document.body.appendChild(script);
+                var data = response.data;
+
+                window.headerScriptsLoaded = false;
+                window.footerScriptsLoaded = false;
+                window.bodyScriptsLoaded = false;
+                function runScript(scriptContent, target) {
+                    if (!scriptContent) return;
+                    try {
+                        var script = document.createElement("script");
+                        script.textContent = scriptContent;
+                        target.appendChild(script);
+                    } catch (e) {
+                        console.error('Script error:', e);
+                    }
                 }
 
-                function executeFooterScript(scriptContent) {
-                  var script = document.createElement("script");
-                  script.textContent = scriptContent;
-                  document.body.appendChild(script);
-                }
-                if (response.data.header_scripts) {
+                function extractScripts(htmlString) {
+                    if (!htmlString) return [];
                     var tempDiv = document.createElement("div");
-                    tempDiv.innerHTML = response.data.header_scripts;
-                    tempDiv.querySelectorAll("script").forEach(function (oldScript) {
-                        executeScript(oldScript.innerHTML);
+                    tempDiv.innerHTML = htmlString;
+                    var scripts = [];
+                    tempDiv.querySelectorAll("script").forEach(function (s) {
+                        scripts.push(s.innerHTML);
                     });
+                    return scripts;
                 }
 
-                // Inject Body Scripts
-                if (response.data.body_scripts) {
-                    var tempDiv = document.createElement("div");
-                    tempDiv.innerHTML = response.data.body_scripts;
-                    tempDiv.querySelectorAll("script").forEach(function (oldScript) {
-                        executeBodyScript(oldScript.innerHTML);
-                    });
+                function waitFor(condFn, cb) {
+                    setTimeout(function check() {
+                        if (condFn()) {
+                            cb();
+                        } else {
+                            setTimeout(check, 50);
+                        }
+                    }, 0);
                 }
-                //Inject footer scripts
-                if (response.data.footer_scripts) {
-                  var tempDiv = document.createElement("div");
-                  tempDiv.innerHTML = response.data.footer_scripts;
-                  tempDiv.querySelectorAll("script").forEach(function (oldScript) {
-                      executeFooterScript(oldScript.innerHTML);
-                  });
+
+                var headerScripts = extractScripts(data.header_scripts);
+                var bodyScripts   = extractScripts(data.body_scripts);
+                var footerScripts = extractScripts(data.footer_scripts);
+
+                function runHeader() {
+                    headerScripts.forEach(function (s) { runScript(s, document.head); });
+                    window.headerScriptsLoaded = true;
+                }
+                function runFooter() {
+                    footerScripts.forEach(function (s) { runScript(s, document.body); });
+                    window.footerScriptsLoaded = true;
+                }
+                function runBody() {
+                    bodyScripts.forEach(function (s) { runScript(s, document.body); });
+                    window.bodyScriptsLoaded = true;
+                }
+
+                var bodyWaitsHeader = (data.header_dependency === "Body Scripts");
+                var bodyWaitsFooter = (data.footer_dependency === "Body Scripts");
+                var headerWaitsFooter = (data.footer_dependency === "Header Scripts");
+                var footerWaitsHeader = (data.header_dependency === "Footer Scripts");
+
+                // --- Header (wp_head position) ---
+                if (headerWaitsFooter) {
+                    // Header has dependency 
+                    waitFor(function () { return window.footerScriptsLoaded; }, runHeader);
+                } else {
+                    // No dependency — run immediately in wp_head position
+                    runHeader();
+                }
+
+                // --- Body (wp_body_open position) ---
+                if (bodyWaitsHeader && bodyWaitsFooter) {
+                  if (window.headerScriptsLoaded && window.footerScriptsLoaded) {
+                      runBody();
+                  } else {
+                      waitFor(function () { return window.headerScriptsLoaded && window.footerScriptsLoaded; }, runBody);
+                  }
+                } else if (bodyWaitsHeader) {
+                    if (window.headerScriptsLoaded) {
+                        runBody(); // Header already ran synchronously above — run Body now
+                    } else {
+                        waitFor(function () { return window.headerScriptsLoaded; }, runBody);
+                    }
+                } else if (bodyWaitsFooter) {
+                    waitFor(function () { return window.footerScriptsLoaded; }, runBody);
+                } else {
+                    runBody();
+                }
+                
+                // --- Footer (wp_footer position) ---
+                if (footerWaitsHeader) {
+                    waitFor(function () { return window.headerScriptsLoaded; }, runFooter);
+                } else {
+                    // No dependency — run immediately in wp_footer position
+                    runFooter();
                 }
               },
           });

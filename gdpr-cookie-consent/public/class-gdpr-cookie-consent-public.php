@@ -1568,11 +1568,17 @@ class Gdpr_Cookie_Consent_Public {
 			$header_scripts = isset($the_options['header_scripts']) ? "\r\n" . wp_unslash($the_options['header_scripts']) . "\r\n" : '';
 			$body_scripts = isset($the_options['body_scripts']) ? "\r\n" . wp_unslash($the_options['body_scripts']) . "\r\n" : '';
 			$footer_scripts = isset($the_options['footer_scripts']) ? "\r\n" . wp_unslash($the_options['footer_scripts']) . "\r\n" : '';
+			$is_script_dependency_on = ! empty( $the_options['is_script_dependency_on'] );
+			$header_dependency = $is_script_dependency_on && isset($the_options['header_dependency']) ? sanitize_text_field($the_options['header_dependency']) : '';
+			$footer_dependency = $is_script_dependency_on && isset($the_options['footer_dependency']) ? sanitize_text_field($the_options['footer_dependency']) : '';
+
 			// Return JSON response
 			wp_send_json_success([
 				'header_scripts' => $header_scripts,
 				'body_scripts'   => $body_scripts,
 				'footer_scripts' => $footer_scripts,
+				'header_dependency' => $header_dependency,
+    			'footer_dependency' => $footer_dependency,
 			]);
 		}
 		else{

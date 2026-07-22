@@ -4963,11 +4963,11 @@ class Gdpr_Cookie_Consent_Admin {
 	}
 
 
-	public function add_every_minute_cron_schedule( $schedules ) {
-        if ( ! isset( $schedules['every_minute'] ) ) {
-            $schedules['every_minute'] = array(
-                'interval' => 60,
-                'display'  => __( 'Every Minute','gdpr-cookie-consent' ),
+	public function add_scan_cron_schedule( $schedules ) {
+        if ( ! isset( $schedules['every_15_seconds'] ) ) {
+            $schedules['every_15_seconds'] = array(
+                'interval' => 15,
+                'display'  => __( 'Every 15 Seconds','gdpr-cookie-consent' ),
             );
         }
         return $schedules;
@@ -5881,25 +5881,28 @@ class Gdpr_Cookie_Consent_Admin {
 			// if ( $_POST['lang_changed'] == 'true' && isset( $_POST['select-banner-lan'] ) && in_array( $_POST['select-banner-lan'], $this->supported_languages ) ) {  //phpcs:ignore
 			// 	$the_options = $this->changeLanguage($the_options);				
 			// }
-			
 			if ( isset( $_POST['logo_removed'] ) && 'true' == $_POST['logo_removed'] ) {
 				update_option( GDPR_COOKIE_CONSENT_SETTINGS_LOGO_IMAGE_FIELD, '' );
+				$the_options['logo_is_on'] = false;
 			}
 			if ( isset( $_POST['logo_removed1'] ) && 'true' == $_POST['logo_removed1'] ) {
 				update_option( GDPR_COOKIE_CONSENT_SETTINGS_LOGO_IMAGE_FIELD1, '' );
+				$the_options['logo_is_on1'] = false;
 			}
 			if ( isset( $_POST['logo_removed2'] ) && 'true' == $_POST['logo_removed2'] ) {
 				update_option( GDPR_COOKIE_CONSENT_SETTINGS_LOGO_IMAGE_FIELD2, '' );
+				$the_options['logo_is_on2'] = false;
 			}
 			if ( isset( $_POST['logo_removedML1'] ) && 'true' == $_POST['logo_removedML1'] ) {
 				update_option( GDPR_COOKIE_CONSENT_SETTINGS_LOGO_IMAGE_FIELDML1, '' );
 			}
-
 			if ( isset( $_POST['gdpr-cookie-bar-logo-url-holder'] ) && ! empty( $_POST['gdpr-cookie-bar-logo-url-holder'] ) ) {
 				$url = esc_url_raw( wp_unslash( $_POST['gdpr-cookie-bar-logo-url-holder'] ) );
 				if ( filter_var( $url, FILTER_VALIDATE_URL ) ) {
 					update_option( GDPR_COOKIE_CONSENT_SETTINGS_LOGO_IMAGE_FIELD, $url );
 				}
+				$the_options['logo_is_on'] = true;
+				$the_options['use_uploaded_logo'] = true;
 			}
 
 			if ( isset( $_POST['gdpr-cookie-bar-logo-url-holder1'] ) && ! empty( $_POST['gdpr-cookie-bar-logo-url-holder1'] ) ) {
@@ -5907,6 +5910,8 @@ class Gdpr_Cookie_Consent_Admin {
 				if ( filter_var( $url, FILTER_VALIDATE_URL ) ) {
 					update_option( GDPR_COOKIE_CONSENT_SETTINGS_LOGO_IMAGE_FIELD1, $url );
 				}
+				$the_options['logo_is_on1'] = true;
+				$the_options['use_uploaded_logo1'] = true;
 			}
 
 			if ( isset( $_POST['gdpr-cookie-bar-logo-url-holder2'] ) && ! empty( $_POST['gdpr-cookie-bar-logo-url-holder2'] ) ) {
@@ -5914,6 +5919,8 @@ class Gdpr_Cookie_Consent_Admin {
 				if ( filter_var( $url, FILTER_VALIDATE_URL ) ) {
 					update_option( GDPR_COOKIE_CONSENT_SETTINGS_LOGO_IMAGE_FIELD2, $url );
 				}
+				$the_options['logo_is_on2'] = true;
+				$the_options['use_uploaded_logo2'] = true;
 			}
 
 			if ( isset( $_POST['gdpr-cookie-bar-logo-url-holderML1'] ) && ! empty( $_POST['gdpr-cookie-bar-logo-url-holderML1'] ) ) {

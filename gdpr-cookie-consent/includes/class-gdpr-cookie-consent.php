@@ -85,7 +85,7 @@ class Gdpr_Cookie_Consent {
 		if ( defined( 'GDPR_COOKIE_CONSENT_VERSION' ) ) {
 			$this->version = GDPR_COOKIE_CONSENT_VERSION;
 		} else {
-			$this->version = '4.3.7';
+			$this->version = '4.3.8';
 		}
 		add_action(
 			'current_screen',
@@ -220,7 +220,7 @@ class Gdpr_Cookie_Consent {
 		 */
 		$plugin_admin->admin_modules();
 		$this->loader->add_action( 'init', $plugin_admin, 'gdpr_register_block_type' );
-		$this->loader->add_filter( 'cron_schedules', $plugin_admin,'add_every_minute_cron_schedule');
+		$this->loader->add_filter( 'cron_schedules', $plugin_admin,'add_scan_cron_schedule');
 		
 		if ( ! self::is_request( 'admin' ) ) {
 			$this->loader->add_action( 'admin_bar_menu', $plugin_admin, 'gdpr_quick_toolbar_menu', 999 );

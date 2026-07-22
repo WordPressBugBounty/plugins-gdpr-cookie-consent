@@ -266,17 +266,18 @@ class WPL_Data_Req_Table extends WP_List_Table {
 		if ( ! current_user_can( 'manage_options' ) ) {
 		    wp_die( 'Unauthorized request.' );
 		}
-
+		
 		$ids = isset( $_GET['user_id'] ) ? $_GET['user_id'] : false;
 		$action = $this->current_action();
 		if ( ! $action ) {
 			// If no action was found, check for action2 (bottom dropdown)
 			$action = isset($_GET['action2']) && $_GET['action2'] != '-1' ? $_GET['action2'] : false;
 		}
-		if ( ! $ids ) {
+		if ( !$action || ! $ids ) {
 			return;
 		}
-
+		check_admin_referer( 'bulk-' . $this->_args['plural'] );
+		
 		if ( ! is_array( $ids ) ) {
 			$ids = array( $ids );
 		}

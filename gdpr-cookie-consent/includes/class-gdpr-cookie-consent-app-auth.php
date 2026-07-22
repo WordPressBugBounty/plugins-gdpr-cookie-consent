@@ -146,7 +146,7 @@ class GDPR_Cookie_Consent_App_Auth {
 		if ( ! $is_user_connected || $api_user_plan === 'free' ) {
 			$api_auth_url     = $this->get_api_url( 'pricing' );
 		}else{
-			$api_auth_url     = $this->get_api_url( 'my-account/active-plans/' );
+			$api_auth_url     = $this->get_api_url( 'app/active-plans/' );
 		}
 
 		$auth_url = add_query_arg(
@@ -424,7 +424,7 @@ class GDPR_Cookie_Consent_App_Auth {
 
 			$free_trial_data['localExpiry'] = $expiry !== false
 				? $expiry
-				: ( time() + 7 * DAY_IN_SECONDS );
+				: ( time() + 14 * DAY_IN_SECONDS );
 
 			update_option( 'wplp_free_trial_data', $free_trial_data );
 		} else {
