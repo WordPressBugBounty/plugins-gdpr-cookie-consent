@@ -780,10 +780,18 @@ a .export-btn:hover {
 }
 
 #gdprmodal-ccpa-popup {
-  height: 200px;
+  height: fit-content;
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+#gdprmodal-ccpa-popup .gdprmodal-body .gdprmodal_optout_check{
+  margin-top: 10px;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  font-size: 16px;
+  font-weight: 500;
 }
 
 #gdprmodal-ccpa-popup .gdprmodal-header {
@@ -793,6 +801,7 @@ a .export-btn:hover {
 
 #gdprmodal-ccpa-popup .gdprmodal-body {
   padding-top: 2.5rem;
+  padding-inline: 20px;
   width: 100%;
   overflow-y: hidden;
 }
@@ -801,9 +810,10 @@ a .export-btn:hover {
   margin: 0;
   padding: 0;
   text-align: center;
-  font-size: 22px;
+  font-size: 14px;
   font-weight: 400;
-  line-height: 25px;
+  line-height: 21px;
+  text-align: justify;
 }
 
 #gdprmodal-ccpa-popup .gdprmodal-footer {

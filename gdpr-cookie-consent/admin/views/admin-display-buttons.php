@@ -20,7 +20,7 @@ $buttons_sub_tab = array(
 	'reject-button'    => __( 'Decline Button', 'gdpr-cookie-consent' ),
 	'settings-button'  => __( 'Settings Button', 'gdpr-cookie-consent' ),
 	'read-more-button' => __( 'Read More Link', 'gdpr-cookie-consent' ),
-	'confirm-button'   => __( 'Confirm Button', 'gdpr-cookie-consent' ),
+	'confirm-button'   => __( 'Save Preferences Button', 'gdpr-cookie-consent' ),
 	'cancel-button'    => __( 'Cancel Button', 'gdpr-cookie-consent' ),
 	'donotsell-button' => __( 'Optout Link', 'gdpr-cookie-consent' ),
 );

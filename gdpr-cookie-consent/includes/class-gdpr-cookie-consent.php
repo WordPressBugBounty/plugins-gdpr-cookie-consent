@@ -85,7 +85,7 @@ class Gdpr_Cookie_Consent {
 		if ( defined( 'GDPR_COOKIE_CONSENT_VERSION' ) ) {
 			$this->version = GDPR_COOKIE_CONSENT_VERSION;
 		} else {
-			$this->version = '4.3.8';
+			$this->version = '4.3.9';
 		}
 		add_action(
 			'current_screen',
@@ -236,6 +236,7 @@ class Gdpr_Cookie_Consent {
 			$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
 			$this->loader->add_filter( 'plugin_action_links_' . GDPR_COOKIE_CONSENT_PLUGIN_BASENAME, $plugin_admin, 'admin_plugin_action_links' );
 			$this->loader->add_action( 'wp_ajax_gcc_save_admin_settings', $plugin_admin, 'gdpr_cookie_consent_ajax_save_settings', 10, 1 );
+			$this->loader->add_action( 'wp_ajax_gdpr_enable_banner', $plugin_admin, 'gdpr_enable_banner', 10, 1);
 			$this->loader->add_action( 'wp_ajax_gcc_save_advanced_settings', $plugin_admin, 'gdpr_cookie_consent_ajax_save_advanced_settings', 10, 1 );
 			$this->loader->add_action( 'wp_ajax_gcc_save_abtesting_settings', $plugin_admin, 'gdpr_cookie_consent_ajax_save_abtesting_settings', 10, 1 );
 			$this->loader->add_action( 'wp_ajax_gcc_save_script_blocker_settings', $plugin_admin, 'gdpr_cookie_consent_ajax_save_script_blocker_settings', 10, 1 );
@@ -895,7 +896,7 @@ class Gdpr_Cookie_Consent {
 			'button_donotsell_as_button'             => false,
 			'button_donotsell_is_on'                 => true,
 
-			'button_confirm_text'                    => 'Confirm',
+			'button_confirm_text'                    => 'Save My Preferences',
 			'button_confirm_button_color'            => '#176CAE',
 			'button_confirm_link_color'              => '#ffffff',
 			'button_confirm_as_button'               => true,
@@ -1022,7 +1023,7 @@ class Gdpr_Cookie_Consent {
 			'button_donotsell_as_button1'             => false,
 			'button_donotsell_is_on1'                 => true,
 
-			'button_confirm_text1'                    => 'Confirm',
+			'button_confirm_text1'                    => 'Save My Preferences',
 			'button_confirm_button_color1'            => '#176CAE',
 			'button_confirm_link_color1'              => '#ffffff',
 			'button_confirm_as_button1'               => true,
@@ -1131,7 +1132,7 @@ class Gdpr_Cookie_Consent {
 			'button_donotsell_as_button2'             => false,
 			'button_donotsell_is_on2'                 => true,
 
-			'button_confirm_text2'                    => 'Confirm',
+			'button_confirm_text2'                    => 'Save My Preferences',
 			'button_confirm_button_color2'            => '#176CAE',
 			'button_confirm_link_color2'              => '#ffffff',
 			'button_confirm_as_button2'               => true,
@@ -1238,11 +1239,11 @@ class Gdpr_Cookie_Consent {
 			'ccpa_show_again_div_id'                 => '#ccpa-cookie-consent-show-again',
 			'notify_animate_hide'                    => true,
 			'notify_animate_show'                    => false,
-			'notify_message'                         => addslashes( "This website uses cookies to improve your experience. We'll assume you're ok with this, but you can opt-out if you wish." ),
+			'notify_message'                         => addslashes( "We use cookies to optimize your experience, analyze traffic, and personalize ads. Please choose whether you accept our use of non-essential cookies." ),
 			'notify_message_lgpd'                    => addslashes( "This website uses cookies for technical and other purposes as specified in the cookie policy. We'll assume you're ok with this, but you can opt-out if you wish." ),
 			'notify_message_eprivacy'                => addslashes( "This website uses cookies to improve your experience. We'll assume you're ok with this, but you can opt-out if you wish." ),
-			'notify_message_ccpa'                    => addslashes( "In case of sale of your personal information, you may opt out by using the link" ),
-			'optout_text'                            => addslashes( 'Do you really wish to opt-out?' ),
+			'notify_message_ccpa'                    => addslashes( "We use tracking tools to provide targeted advertising. Under state law, you have the right to opt-out of the sharing or sale of your personal information." ),
+			'optout_text'                            => addslashes( 'We use third-party cookies that help us analyse how you use this website, store your preferences, and provide the content and advertisements that are relevant to you. However, you can opt out of these cookies by checking "Do Not Sell or Share My Personal Information" and clicking the "Save My Preferences" button. Once you opt out, you can opt in again at any time by unchecking "Do Not Sell or Share My Personal Information" and clicking the "Save My Preferences" button.' ),
 			'notify_div_id'                          => '#gdpr-cookie-consent-bar',
 			'notify_position_vertical'               => 'bottom', // 'top' = header | 'bottom' = footer.
 			'notify_position_horizontal'             => 'left', // 'left' = left | 'right' = right.

@@ -1018,9 +1018,18 @@ if( $the_options['cookie_usage_for'] === "ccpa" || $the_options['cookie_usage_fo
 				</button>
 			</div>
 
-			<div class="gdprmodal-body"><p style="line-height: 25px;"><?php echo esc_html__( $cookie_data['dash_optout_text'], 'gdpr-cookie-consent' ); //phpcs:ignore?>
-					</p>
+			<div class="gdprmodal-body">
+				<p style="line-height: 25px;">
+					<?php echo esc_html__( $cookie_data['dash_optout_text'], 'gdpr-cookie-consent' ); //phpcs:ignore?>
+				</p>
+				<div class="gdprmodal_optout_check">
+					<input type="checkbox" id="donot_sell_checkbox">
+					<span class="gdprmodal_optout_check_text">
+						<?php echo esc_html( $cookie_data['dash_button_donotsell_text'] ) ?>
+					</span>
+				</div>
 			</div>
+			
 			<div class="gdprmodal-footer" style="--popup_accent_color: <?php echo esc_html( '#' . ltrim($cookieSettingsPopupAccentColor, '#') ); ?>;">
 				<div class="gdprmodal-footer-buttons">
 					<button id="cookie_action_cancel" type="button" class="<?php echo esc_html( $the_options['button_cancel_classes'] ); ?>" data-gdpr_action="cancel" data-dismiss="gdprmodal"

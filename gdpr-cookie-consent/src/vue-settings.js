@@ -321,7 +321,7 @@ var gen = new Vue({
         : "",
       gdpr_message: settings_obj.the_options.hasOwnProperty("notify_message")
         ? this.stripSlashes(settings_obj.the_options["notify_message"])
-        : "This website uses cookies to improve your experience. We'll assume you're ok with this, but you can opt-out if you wish.",
+        : "We use cookies to optimize your experience, analyze traffic, and personalize ads. Please choose whether you accept our use of non-essential cookies.",
       lgpd_message: settings_obj.the_options.hasOwnProperty(
         "notify_message_lgpd"
       )
@@ -352,12 +352,12 @@ var gen = new Vue({
         "notify_message_ccpa"
       )
         ? this.stripSlashes(settings_obj.the_options["notify_message_ccpa"])
-        : "In case of sale of your personal information, you may opt out by using the link",
+        : "We use tracking tools to provide targeted advertising. Under state law, you have the right to opt-out of the sharing or sale of your personal information.",
       ccpa_optout_message: settings_obj.the_options.hasOwnProperty(
         "optout_text"
       )
         ? this.stripSlashes(settings_obj.the_options["optout_text"])
-        : "Do you really wish to opt-out?",
+        : 'We use third-party cookies that help us analyse how you use this website, store your preferences, and provide the content and advertisements that are relevant to you. However, you can opt out of these cookies by checking "Do Not Sell or Share My Personal Information" and clicking the "Save My Preferences" button. Once you opt out, you can opt in again at any time by unchecking "Do Not Sell or Share My Personal Information" and clicking the "Save My Preferences" button.',
       show_visitor_conditions:
         this.is_ccpa || (this.is_gdpr && "1" === settings_obj.is_pro_active)
           ? true
@@ -1316,7 +1316,7 @@ var gen = new Vue({
         "button_confirm_text"
       )
         ? settings_obj.the_options["button_confirm_text"]
-        : "Confirm",
+        : "Save My Preferences",
       confirm_text_color: settings_obj.the_options.hasOwnProperty(
         "button_confirm_link_color"
       )
@@ -1861,7 +1861,7 @@ var gen = new Vue({
         "button_confirm_text1"
       )
         ? settings_obj.the_options["button_confirm_text1"]
-        : "Confirm",
+        : "Save My Preferences",
       confirm_text_color1: settings_obj.the_options.hasOwnProperty(
         "button_confirm_link_color1"
       )
@@ -2359,7 +2359,7 @@ var gen = new Vue({
         "button_confirm_text2"
       )
         ? settings_obj.the_options["button_confirm_text2"]
-        : "Confirm",
+        : "Save My Preferences",
       confirm_text_color2: settings_obj.the_options.hasOwnProperty(
         "button_confirm_link_color2"
       )
@@ -3344,7 +3344,7 @@ var gen = new Vue({
           "Customize your consent preferences for Cookie Categories and advertising tracking preferences for Purposes & Features and Vendors below. You can give granular consent for each Third Party Vendor. Most vendors require consent for personal data processing, while some rely on legitimate interest. However, you have the right to object to their use of legitimate interest. The choices you make regarding the purposes and entities listed in this notice are saved in a cookie named wpl_tc_string for a maximum duration of 12 months.";
       } else {
         this.gdpr_message =
-          "This website uses cookies to improve your experience. We'll assume you're ok with this, but you can opt-out if you wish.";
+          "We use cookies to optimize your experience, analyze traffic, and personalize ads. Please choose whether you accept our use of non-essential cookies.";
         this.gdpr_about_cookie_message =
           "Cookies are small text files that can be used by websites to make a user's experience more efficient. The law states that we can store cookies on your device if they are strictly necessary for the operation of this site. For all other types of cookies we need your permission. This site uses different types of cookies. Some cookies are placed by third party services that appear on our pages.";
       }
@@ -4198,6 +4198,18 @@ var gen = new Vue({
         this.is_gdpr = true;
         this.is_eprivacy = false;
         this.is_lgpd = false;
+        this.button_accept_all_is_on = true;
+        this.button_decline_is_on = true;
+        this.button_settings_is_on = true;
+        this.button_accept_is_on = false;
+        this.button_accept_all_is_on1 = true;
+        this.button_decline_is_on1 = true;
+        this.button_settings_is_on1 = true;
+        this.button_accept_is_on1 = false;
+        this.button_accept_all_is_on2 = true;
+        this.button_decline_is_on2 = true;
+        this.button_settings_is_on2 = true;
+        this.button_accept_is_on2 = false;
         this.show_visitor_conditions = true;
         this.show_revoke_card = true;
         //visitors condition.
@@ -4234,6 +4246,18 @@ var gen = new Vue({
         this.gacm_is_on = false;
       } else if (value === "gdpr") {
         this.is_gdpr = true;
+        this.button_accept_all_is_on = true;
+        this.button_decline_is_on = true;
+        this.button_settings_is_on = true;
+        this.button_accept_is_on = false;
+        this.button_accept_all_is_on1 = true;
+        this.button_decline_is_on1 = true;
+        this.button_settings_is_on1 = true;
+        this.button_accept_is_on1 = false;
+        this.button_accept_all_is_on2 = true;
+        this.button_decline_is_on2 = true;
+        this.button_settings_is_on2 = true;
+        this.button_accept_is_on2 = false;
         this.is_ccpa = false;
         this.is_eprivacy = false;
         this.is_lgpd = false;
@@ -4274,7 +4298,7 @@ var gen = new Vue({
           "Customize your consent preferences for Cookie Categories and advertising tracking preferences for Purposes & Features and Vendors below. You can give granular consent for each Third Party Vendor. Most vendors require consent for personal data processing, while some rely on legitimate interest. However, you have the right to object to their use of legitimate interest. The choices you make regarding the purposes and entities listed in this notice are saved in a cookie named wpl_tc_string for a maximum duration of 12 months.";
       } else {
         this.gdpr_message =
-          "This website uses cookies to improve your experience. We'll assume you're ok with this, but you can opt-out if you wish.";
+          "We use cookies to optimize your experience, analyze traffic, and personalize ads. Please choose whether you accept our use of non-essential cookies.";
         this.gdpr_about_cookie_message =
           "Cookies are small text files that can be used by websites to make a user's experience more efficient. The law states that we can store cookies on your device if they are strictly necessary for the operation of this site. For all other types of cookies we need your permission. This site uses different types of cookies. Some cookies are placed by third party services that appear on our pages.";
       }
@@ -4411,7 +4435,7 @@ var gen = new Vue({
       this.settings_as_button = true;
       this.cookie_on_frontend = true;
       this.opt_out_text = "Do Not Sell My Personal Information";
-      this.confirm_text = "Confirm";
+      this.confirm_text = "Save My Preferences";
       this.cancel_text = "Cancel";
       this.accept_text1 = "Accept";
       this.accept_url1 = "#";
@@ -4433,7 +4457,7 @@ var gen = new Vue({
       this.settings_as_button1 = true;
       this.cookie_on_frontend1 = true;
       this.opt_out_text1 = "Do Not Sell My Personal Information";
-      this.confirm_text1 = "Confirm";
+      this.confirm_text1 = "Save My Preferences";
       this.cancel_text1 = "Cancel";
       this.accept_text2 = "Accept";
       this.accept_url2 = "#";
@@ -4455,7 +4479,7 @@ var gen = new Vue({
       this.settings_as_button2 = true;
       this.cookie_on_frontend2 = true;
       this.opt_out_text2 = "Do Not Sell My Personal Information";
-      this.confirm_text2 = "Confirm";
+      this.confirm_text2 = "Save My Preferences";
       this.cancel_text2 = "Cancel";
       this.cookie_is_on = true;
       this.is_eu_on = false;
@@ -4496,14 +4520,14 @@ var gen = new Vue({
       this.on_hide = true;
       this.on_load = false;
       this.gdpr_message =
-        "This website uses cookies to improve your experience. We'll assume you're ok with this, but you can opt-out if you wish.";
+        "We use cookies to optimize your experience, analyze traffic, and personalize ads. Please choose whether you accept our use of non-essential cookies.";
       this.lgpd_message =
         "This website uses cookies for technical and other purposes as specified in the cookie policy. We'll assume you're ok with this, but you can opt-out if you wish.";
       this.eprivacy_message =
         "This website uses cookies to improve your experience. We'll assume you're ok with this, but you can opt-out if you wish.";
       this.ccpa_message =
-        "In case of sale of your personal information, you may opt out by using the link";
-      this.ccpa_optout_message = "Do you really wish to opt-out?";
+        "We use tracking tools to provide targeted advertising. Under state law, you have the right to opt-out of the sharing or sale of your personal information.";
+      this.ccpa_optout_message = 'We use third-party cookies that help us analyse how you use this website, store your preferences, and provide the content and advertisements that are relevant to you. However, you can opt out of these cookies by checking "Do Not Sell or Share My Personal Information" and clicking the "Save My Preferences" button. Once you opt out, you can opt in again at any time by unchecking "Do Not Sell or Share My Personal Information" and clicking the "Save My Preferences" button.';
       this.cookie_position = "bottom";
       this.cookie_widget_position = "left";
       this.cookie_text_color = "#000000";
@@ -5740,7 +5764,7 @@ var app = new Vue({
         : "",
       gdpr_message: settings_obj.the_options.hasOwnProperty("notify_message")
         ? this.stripSlashes(settings_obj.the_options["notify_message"])
-        : "This website uses cookies to improve your experience. We'll assume you're ok with this, but you can opt-out if you wish.",
+        : "We use cookies to optimize your experience, analyze traffic, and personalize ads. Please choose whether you accept our use of non-essential cookies.",
       lgpd_message: settings_obj.the_options.hasOwnProperty(
         "notify_message_lgpd"
       )
@@ -5760,12 +5784,12 @@ var app = new Vue({
         "notify_message_ccpa"
       )
         ? this.stripSlashes(settings_obj.the_options["notify_message_ccpa"])
-        : "In case of sale of your personal information, you may opt out by using the link",
+        : "We use tracking tools to provide targeted advertising. Under state law, you have the right to opt-out of the sharing or sale of your personal information.",
       ccpa_optout_message: settings_obj.the_options.hasOwnProperty(
         "optout_text"
       )
         ? this.stripSlashes(settings_obj.the_options["optout_text"])
-        : "Do you really wish to opt-out?",
+        : 'We use third-party cookies that help us analyse how you use this website, store your preferences, and provide the content and advertisements that are relevant to you. However, you can opt out of these cookies by checking "Do Not Sell or Share My Personal Information" and clicking the "Save My Preferences" button. Once you opt out, you can opt in again at any time by unchecking "Do Not Sell or Share My Personal Information" and clicking the "Save My Preferences" button.',
       show_visitor_conditions:
         this.is_ccpa || (this.is_gdpr && "1" === settings_obj.is_pro_active)
           ? true
@@ -6530,7 +6554,7 @@ var app = new Vue({
         "button_confirm_text"
       )
         ? settings_obj.the_options["button_confirm_text"]
-        : "Confirm",
+        : "Save My Preferences",
       confirm_text_color: settings_obj.the_options.hasOwnProperty(
         "button_confirm_link_color"
       )
@@ -6926,7 +6950,7 @@ var app = new Vue({
         "button_confirm_text1"
       )
         ? settings_obj.the_options["button_confirm_text1"]
-        : "Confirm",
+        : "Save My Preferences",
       confirm_text_color1: settings_obj.the_options.hasOwnProperty(
         "button_confirm_link_color1"
       )
@@ -7329,7 +7353,7 @@ var app = new Vue({
         "button_confirm_text2"
       )
         ? settings_obj.the_options["button_confirm_text2"]
-        : "Confirm",
+        : "Save My Preferences",
       confirm_text_color2: settings_obj.the_options.hasOwnProperty(
         "button_confirm_link_color2"
       )
@@ -8037,7 +8061,7 @@ var app = new Vue({
           "Customize your consent preferences for Cookie Categories and advertising tracking preferences for Purposes & Features and Vendors below. You can give granular consent for each Third Party Vendor. Most vendors require consent for personal data processing, while some rely on legitimate interest. However, you have the right to object to their use of legitimate interest. The choices you make regarding the purposes and entities listed in this notice are saved in a cookie named wpl_tc_string for a maximum duration of 12 months.";
       } else {
         this.gdpr_message =
-          "This website uses cookies to improve your experience. We'll assume you're ok with this, but you can opt-out if you wish.";
+          "We use cookies to optimize your experience, analyze traffic, and personalize ads. Please choose whether you accept our use of non-essential cookies.";
         this.gdpr_about_cookie_message =
           "Cookies are small text files that can be used by websites to make a user's experience more efficient. The law states that we can store cookies on your device if they are strictly necessary for the operation of this site. For all other types of cookies we need your permission. This site uses different types of cookies. Some cookies are placed by third party services that appear on our pages.";
       }
@@ -8589,6 +8613,18 @@ var app = new Vue({
         this.is_gdpr = true;
         this.is_eprivacy = false;
         this.is_lgpd = false;
+        this.button_accept_all_is_on = true;
+        this.button_decline_is_on = true;
+        this.button_settings_is_on = true;
+        this.button_accept_is_on = false;
+        this.button_accept_all_is_on1 = true;
+        this.button_decline_is_on1 = true;
+        this.button_settings_is_on1 = true;
+        this.button_accept_is_on1 = false;
+        this.button_accept_all_is_on2 = true;
+        this.button_decline_is_on2 = true;
+        this.button_settings_is_on2 = true;
+        this.button_accept_is_on2 = false;
         this.show_visitor_conditions = true;
         this.show_revoke_card = true;
         //visitors condition.
@@ -8627,6 +8663,18 @@ var app = new Vue({
         this.is_ccpa = false;
         this.is_eprivacy = false;
         this.is_lgpd = false;
+        this.button_accept_all_is_on = true;
+        this.button_decline_is_on = true;
+        this.button_settings_is_on = true;
+        this.button_accept_is_on = false;
+        this.button_accept_all_is_on1 = true;
+        this.button_decline_is_on1 = true;
+        this.button_settings_is_on1 = true;
+        this.button_accept_is_on1 = false;
+        this.button_accept_all_is_on2 = true;
+        this.button_decline_is_on2 = true;
+        this.button_settings_is_on2 = true;
+        this.button_accept_is_on2 = false;
         this.show_revoke_card = true;
         this.show_visitor_conditions = true;
         this.selectedRadioWorldWide = "yes";
@@ -8795,7 +8843,7 @@ var app = new Vue({
       this.settings_border_radius = "0";
       this.opt_out_text = "Do Not Sell My Personal Information";
       this.opt_out_text_color = "#359bf5";
-      this.confirm_text = "Confirm";
+      this.confirm_text = "Save My Preferences";
       this.confirm_background_color = "#18a300";
       this.confirm_text_color = "#ffffff";
       this.confirm_opacity = "1";
@@ -8849,14 +8897,14 @@ var app = new Vue({
       this.on_hide = true;
       this.on_load = false;
       this.gdpr_message =
-        "This website uses cookies to improve your experience. We'll assume you're ok with this, but you can opt-out if you wish.";
+        "We use cookies to optimize your experience, analyze traffic, and personalize ads. Please choose whether you accept our use of non-essential cookies.";
       this.lgpd_message =
         "This website uses cookies for technical and other purposes as specified in the cookie policy. We'll assume you're ok with this, but you can opt-out if you wish.";
       this.eprivacy_message =
         "This website uses cookies to improve your experience. We'll assume you're ok with this, but you can opt-out if you wish.";
       this.ccpa_message =
-        "In case of sale of your personal information, you may opt out by using the link";
-      this.ccpa_optout_message = "Do you really wish to opt-out?";
+        "We use tracking tools to provide targeted advertising. Under state law, you have the right to opt-out of the sharing or sale of your personal information.";
+      this.ccpa_optout_message = 'We use third-party cookies that help us analyse how you use this website, store your preferences, and provide the content and advertisements that are relevant to you. However, you can opt out of these cookies by checking "Do Not Sell or Share My Personal Information" and clicking the "Save My Preferences" button. Once you opt out, you can opt in again at any time by unchecking "Do Not Sell or Share My Personal Information" and clicking the "Save My Preferences" button.';
       this.cookie_position = "bottom";
       this.cookie_widget_position = "left";
       this.cookie_widget_position1 = "left";
@@ -9355,7 +9403,7 @@ var adv = new Vue({
         : "",
       gdpr_message: settings_obj.the_options.hasOwnProperty("notify_message")
         ? this.stripSlashes(settings_obj.the_options["notify_message"])
-        : "This website uses cookies to improve your experience. We'll assume you're ok with this, but you can opt-out if you wish.",
+        : "We use cookies to optimize your experience, analyze traffic, and personalize ads. Please choose whether you accept our use of non-essential cookies.",
       lgpd_message: settings_obj.the_options.hasOwnProperty(
         "notify_message_lgpd"
       )
@@ -9375,12 +9423,12 @@ var adv = new Vue({
         "notify_message_ccpa"
       )
         ? this.stripSlashes(settings_obj.the_options["notify_message_ccpa"])
-        : "In case of sale of your personal information, you may opt out by using the link",
+        : "We use tracking tools to provide targeted advertising. Under state law, you have the right to opt-out of the sharing or sale of your personal information.",
       ccpa_optout_message: settings_obj.the_options.hasOwnProperty(
         "optout_text"
       )
         ? this.stripSlashes(settings_obj.the_options["optout_text"])
-        : "Do you really wish to opt-out?",
+        : 'We use third-party cookies that help us analyse how you use this website, store your preferences, and provide the content and advertisements that are relevant to you. However, you can opt out of these cookies by checking "Do Not Sell or Share My Personal Information" and clicking the "Save My Preferences" button. Once you opt out, you can opt in again at any time by unchecking "Do Not Sell or Share My Personal Information" and clicking the "Save My Preferences" button.',
       show_visitor_conditions:
         this.is_ccpa || (this.is_gdpr && "1" === settings_obj.is_pro_active)
           ? true
@@ -9971,7 +10019,7 @@ var adv = new Vue({
         "button_confirm_text"
       )
         ? settings_obj.the_options["button_confirm_text"]
-        : "Confirm",
+        : "Save My Preferences",
       confirm_text_color: settings_obj.the_options.hasOwnProperty(
         "button_confirm_link_color"
       )
@@ -10516,7 +10564,7 @@ var adv = new Vue({
         "button_confirm_text1"
       )
         ? settings_obj.the_options["button_confirm_text1"]
-        : "Confirm",
+        : "Save My Preferences",
       confirm_text_color1: settings_obj.the_options.hasOwnProperty(
         "button_confirm_link_color1"
       )
@@ -11014,7 +11062,7 @@ var adv = new Vue({
         "button_confirm_text2"
       )
         ? settings_obj.the_options["button_confirm_text2"]
-        : "Confirm",
+        : "Save My Preferences",
       confirm_text_color2: settings_obj.the_options.hasOwnProperty(
         "button_confirm_link_color2"
       )
@@ -12079,7 +12127,7 @@ var adv = new Vue({
       this.settings_as_button = true;
       this.cookie_on_frontend = true;
       this.opt_out_text = "Do Not Sell My Personal Information";
-      this.confirm_text = "Confirm";
+      this.confirm_text = "Save My Preferences";
       this.cancel_text = "Cancel";
       this.accept_text1 = "Accept";
       this.accept_url1 = "#";
@@ -12101,7 +12149,7 @@ var adv = new Vue({
       this.settings_as_button1 = true;
       this.cookie_on_frontend1 = true;
       this.opt_out_text1 = "Do Not Sell My Personal Information";
-      this.confirm_text1 = "Confirm";
+      this.confirm_text1 = "Save My Preferences";
       this.cancel_text1 = "Cancel";
       this.accept_text2 = "Accept";
       this.accept_url2 = "#";
@@ -12123,7 +12171,7 @@ var adv = new Vue({
       this.settings_as_button2 = true;
       this.cookie_on_frontend2 = true;
       this.opt_out_text2 = "Do Not Sell My Personal Information";
-      this.confirm_text2 = "Confirm";
+      this.confirm_text2 = "Save My Preferences";
       this.cancel_text2 = "Cancel";
       this.cookie_is_on = true;
       this.is_eu_on = false;
@@ -12161,14 +12209,14 @@ var adv = new Vue({
       this.on_hide = true;
       this.on_load = false;
       this.gdpr_message =
-        "This website uses cookies to improve your experience. We'll assume you're ok with this, but you can opt-out if you wish.";
+        "We use cookies to optimize your experience, analyze traffic, and personalize ads. Please choose whether you accept our use of non-essential cookies.";
       this.lgpd_message =
         "This website uses cookies for technical and other purposes as specified in the cookie policy. We'll assume you're ok with this, but you can opt-out if you wish.";
       this.eprivacy_message =
         "This website uses cookies to improve your experience. We'll assume you're ok with this, but you can opt-out if you wish.";
       this.ccpa_message =
-        "In case of sale of your personal information, you may opt out by using the link";
-      this.ccpa_optout_message = "Do you really wish to opt-out?";
+        "We use tracking tools to provide targeted advertising. Under state law, you have the right to opt-out of the sharing or sale of your personal information.";
+      this.ccpa_optout_message = 'We use third-party cookies that help us analyse how you use this website, store your preferences, and provide the content and advertisements that are relevant to you. However, you can opt out of these cookies by checking "Do Not Sell or Share My Personal Information" and clicking the "Save My Preferences" button. Once you opt out, you can opt in again at any time by unchecking "Do Not Sell or Share My Personal Information" and clicking the "Save My Preferences" button.';
       this.cookie_position = "bottom";
       this.cookie_widget_position = "left";
       this.cookie_text_color = "#000000";

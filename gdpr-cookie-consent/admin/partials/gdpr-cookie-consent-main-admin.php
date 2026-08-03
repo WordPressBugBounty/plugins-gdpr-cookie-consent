@@ -254,12 +254,12 @@ $site_domain = wp_parse_url($site_url, PHP_URL_HOST);
 							<div class="gdpr-cookie-consent-admin-tabs gdpr-sub-tabs">
 						
 								<!-- Create Banner tab  -->
-								<div class="gdpr-cookie-consent-admin-tab gdpr-cookie-consent-admin-cookie-banner-tab" data-tab="create_cookie_banner">
-								<?php echo esc_html('Create&nbsp;Cookie&nbsp;Banner','gdpr-cookie-consent'); ?>
-								</div>
+								<!-- <div class="gdpr-cookie-consent-admin-tab gdpr-cookie-consent-admin-cookie-banner-tab" data-tab="create_cookie_banner">
+								<?php //echo esc_html('Create&nbsp;Cookie&nbsp;Banner','gdpr-cookie-consent'); ?>
+								</div> -->
 								<!-- Cookie Settings tab  -->
 								<div class="gdpr-cookie-consent-admin-tab gdpr-cookie-consent-admin-cookie-settings-tab" data-tab="cookie_settings">
-									<?php echo esc_html('Cookie&nbsp;Settings','gdpr-cookie-consent'); ?>
+									<?php echo esc_html('Banner&nbsp;Settings','gdpr-cookie-consent'); ?>
 								</div>
 
 								<!-- Cookie Manager tab  -->
@@ -682,9 +682,9 @@ $site_domain = wp_parse_url($site_url, PHP_URL_HOST);
 						<div class="gdpr-cookie-consent-admin-tabs-inner-content">
 
 							<!-- create cookie content  -->
-							<div class="gdpr-cookie-consent-admin-create-cookie-content gdpr-cookie-consent-admin-tab-content" id="create_cookie_banner">
-								<?php require_once plugin_dir_path( __FILE__ ) . 'gdpr-create-cookie-banner-tab-template.php'; ?>
-							</div>
+							<!-- <div class="gdpr-cookie-consent-admin-create-cookie-content gdpr-cookie-consent-admin-tab-content" id="create_cookie_banner">
+								<?php //require_once plugin_dir_path( __FILE__ ) . 'gdpr-create-cookie-banner-tab-template.php'; ?>
+							</div> -->
 							<!-- cookie settings content -->
 							<div class="gdpr-cookie-consent-admin-cookie-settings-content gdpr-cookie-consent-admin-tab-content" id="cookie_settings">
 								<?php require_once plugin_dir_path( __FILE__ ) . 'gdpr-cookie-settings-tab-template.php'; ?>

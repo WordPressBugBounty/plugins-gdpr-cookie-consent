@@ -83,7 +83,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 
             <div class="gdprmodal-body">
                <div class="gdpr-details-content">
-                  <p><?php esc_html_e( 'Do you really wish to opt-out?','gdpr-cookie-consent' ); ?></p>
+                  <p><?php esc_html_e( 'We use third-party cookies that help us analyse how you use this website, store your preferences, and provide the content and advertisements that are relevant to you. However, you can opt out of these cookies by checking "Do Not Sell or Share My Personal Information" and clicking the "Save My Preferences" button. Once you opt out, you can opt in again at any time by unchecking "Do Not Sell or Share My Personal Information" and clicking the "Save My Preferences" button.', 'gdpr-cookie-consent' ); ?></p>
+               </div>
+               <div class="gdprmodal_optout_check">
+                  <input type="checkbox" >
+                  <span class="gdprmodal_optout_check_text">
+                     <?php echo esc_html_e( 'Do not sell my personal information', 'gdpr-cookie-consent' ); ?>
+                  </span>
                </div>
             </div>
 
@@ -110,7 +116,7 @@ if ( ! defined( 'ABSPATH' ) ) {
                   ? this[`confirm_border_radius${active_test_banner_tab}`] + 'px'
                   : confirm_border_radius + 'px',
                   'padding': '12px 29px',
-                  }" >Confirm</button>
+                  }" >Save My Prefernces</button>
 
                   <button type="button" class="ccpa-popup-save" data-gdpr_action="decline" data-dismiss="gdprmodal"
                :style="{

@@ -4,7 +4,7 @@ Donate link: https://wplegalpages.com/
 Tags: cookie consent, cookie banner, consent management, cookie scanner, script blocking
 Requires at least: 3.3.1
 Tested up to: 7.0.2
-Stable tag: 4.3.8
+Stable tag: 4.3.9
 Requires PHP: 7.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
@@ -216,6 +216,14 @@ Yes. The plugin is translation-ready and works with popular multilingual plugins
 11. Consent Log table
 
 == Change Log ==
+
+= 4.3.9 =
+* **New**
+    * Improved the dashboard UI to provide a smoother and more intuitive onboarding experience.
+
+* **Improvements**
+    * Updated the GDPR cookie banner to better align with the latest GDPR compliance guidelines.
+    * Enhanced the CCPA opt-out banner for improved usability and compliance.
 
 = 4.3.8 =
 * **Improvements**
@@ -885,6 +893,14 @@ Yes. The plugin is translation-ready and works with popular multilingual plugins
 * Initial version
 
 == Upgrade Notice ==
+
+= 4.3.9 =
+* **New**
+    * Improved the dashboard UI to provide a smoother and more intuitive onboarding experience.
+
+* **Improvements**
+    * Updated the GDPR cookie banner to better align with the latest GDPR compliance guidelines.
+    * Enhanced the CCPA opt-out banner for improved usability and compliance.
 
 = 4.3.8 =
 * **Improvements**
