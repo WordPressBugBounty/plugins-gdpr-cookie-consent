@@ -29,6 +29,44 @@ jQuery(document).ready(function () {
       $(this).toggleClass("open-tab");
     })
   });
+  jQuery(function ($) {
+    $(document).on('click', '.gdpr-vendor-details-toggle', function (event) {
+      event.preventDefault();
+
+      const $toggle = $(this);
+      const detailsId = $toggle.attr('aria-controls');
+      const $details = $('#' + detailsId);
+
+      if (!$details.length) {
+        return;
+      }
+
+      const isExpanded = $toggle.attr('aria-expanded') === 'true';
+      const shouldExpand = !isExpanded;
+
+      $toggle.attr('aria-expanded', shouldExpand ? 'true' : 'false');
+
+      $details.stop(true, true).slideToggle(200, function () {
+        $details.prop('hidden', !shouldExpand);
+      });
+
+      $toggle
+        .find('.gdpr-vendor-details-toggle-text')
+        .text(
+          shouldExpand
+            ? $toggle.data('less-text')
+            : $toggle.data('more-text')
+        );
+
+      $toggle
+        .find('.gdpr-details-down-icon')
+        .prop('hidden', shouldExpand);
+
+      $toggle
+        .find('.gdpr-details-up-icon')
+        .prop('hidden', !shouldExpand);
+    });
+  });
 
   
   // Hide all tab contents initially except the first one

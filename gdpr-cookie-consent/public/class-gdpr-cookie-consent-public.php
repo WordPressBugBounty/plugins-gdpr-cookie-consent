@@ -198,8 +198,8 @@ class Gdpr_Cookie_Consent_Public {
 		$wait_for_update = (int) $the_options['gcm_wait_for_update_duration'];
 		$gcm_defaults = json_decode($the_options['gcm_defaults'] ?? '[]') ?? [];
 		foreach ($gcm_defaults as $config) :
-			$regions = array_map('trim', explode(',', $config->region));
-			$regionParam = ($config->region === 'All') ? '' : 'region: ["' . implode('","', $regions) . '"]';
+			$regions = array_map('trim', explode(',', sanitize_text_field($config->region)));
+			$regionParam = ($config->region === 'All') ? '' : 'region: ' . wp_json_encode( $regions );
     ?>
     <script>
         window.dataLayer = window.dataLayer || [];
@@ -207,7 +207,7 @@ class Gdpr_Cookie_Consent_Public {
             dataLayer.push(arguments);
         }
         gtag("consent", "default", {
-			<?php echo $regionParam !== '' ? wp_kses_data( $regionParam ) . ',' : ''; ?>
+			<?php echo $regionParam !== '' ? $regionParam . ',' : ''; ?>
 			ad_storage: "<?php echo esc_js( $config->ad_storage ); ?>",
 			ad_user_data: "<?php echo esc_js( $config->ad_user_data ); ?>",
 			ad_personalization: "<?php echo esc_js( $config->ad_personalization ); ?>",
@@ -1212,6 +1212,9 @@ class Gdpr_Cookie_Consent_Public {
 				.gdpr_messagebar_detail .category-group .category-item .inner-description-container .group-toggle .checkbox input:checked+label,
 				.gdpr_messagebar_detail .category-group .toggle-group .checkbox input:checked+label {
 					background: <?php echo ( $ab_options['ab_testing_enabled'] === true || $ab_options['ab_testing_enabled'] === 'true' ) ? esc_attr( $the_options['button_accept_all_button_color' . $chosenBanner] ) : esc_attr( $the_options['button_accept_all_button_color'] ); ?> !important;
+				}
+				.gdpr_messagebar_detail .category-group .toggle-group .checkbox input:checked+label::after {
+					background: <?php echo ( $ab_options['ab_testing_enabled'] === true || $ab_options['ab_testing_enabled'] === 'true' ) ? esc_attr( $the_options['button_accept_all_link_color' . $chosenBanner] ) : esc_attr( $the_options['button_accept_all_link_color'] ); ?> !important;
 				}
 			</style>
 			<?php

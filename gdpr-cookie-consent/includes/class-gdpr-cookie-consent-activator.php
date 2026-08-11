@@ -95,7 +95,7 @@ class Gdpr_Cookie_Consent_Activator {
 			$prev_gdpr_option['button_1_text']              = 'Accept';
 			$prev_gdpr_option['notify_message']             = addslashes( 'We use cookies to optimize your experience, analyze traffic, and personalize ads. Please choose whether you accept our use of non-essential cookies.' );
 			$prev_gdpr_option['opacity']                    = '0.80';
-			$prev_gdpr_option['template']                   = 'default';
+			$prev_gdpr_option['template']                   = 'new_default';
 			$prev_gdpr_option['banner_template']            = 'banner-default';
 			$prev_gdpr_option['popup_template']             = 'popup-default';
 			$prev_gdpr_option['widget_template']            = 'widget-default';
