@@ -146,6 +146,9 @@ class Gdpr_Cookie_Consent_Geo_Ip {
 		$user_ip      = $this->wplgip_get_user_ip();
 		$country_code = '';
 		if ( $user_ip && 'UNKNOWN' !== $user_ip && ! empty( $database_path ) ) {
+			if ( ! is_readable( $database_path ) ) {
+				return false;
+			}
 			try {
 				$reader = new Reader( $database_path );
 				try {
@@ -154,7 +157,7 @@ class Gdpr_Cookie_Consent_Geo_Ip {
 				} catch ( \GeoIp2\Exception\AddressNotFoundException $e ) {
 					return false;
 				}
-			} catch ( \MaxMind\Db\Reader\InvalidDatabaseException $e ) {
+			} catch ( \Exception $e ) {
 				return false;
 			}
 			if ( in_array( $country_code, Gdpr_Cookie_Consent::get_eu_countries(), true ) ) {
@@ -184,6 +187,9 @@ class Gdpr_Cookie_Consent_Geo_Ip {
 		$country_code = '';
 		$state_code   = '';
 		if ( $user_ip && 'UNKNOWN' !== $user_ip && ! empty( $database_path ) ) {
+			if ( ! is_readable( $database_path ) ) {
+				return false;
+			}
 			try {
 				$reader = new Reader( $database_path );
 				try {
@@ -196,12 +202,42 @@ class Gdpr_Cookie_Consent_Geo_Ip {
 				} catch ( \GeoIp2\Exception\AddressNotFoundException $e ) {
 					return false;
 				}
-			} catch ( \MaxMind\Db\Reader\InvalidDatabaseException $e ) {
+			} catch ( \Exception $e ) {
 				return false;
 			}
 			return $country_code;
 		}
 		return false;
+	}
+
+	/**
+	 * Full geo record for the current visitor.
+	 */
+	public function wpl_get_geo_data() {
+		$uploads_dir = wp_upload_dir();
+		//This product includes GeoLite2 data created by MaxMind, available from https://www.maxmind.com. The data is licensed under the Creative Commons Attribution-ShareAlike 4.0 International License.
+		$database_path = trailingslashit( $uploads_dir['basedir'] ) . 'gdpr_uploads/GeoLite2-City.mmdb';
+		$user_ip       = $this->wplgip_get_user_ip();
+
+		if ( ! $user_ip || 'UNKNOWN' === $user_ip || ! is_readable( $database_path ) ) {
+			return false;
+		}
+
+		try {
+			$reader = new Reader( $database_path );
+			$record = $reader->city( $user_ip );
+		} catch ( \Exception $e ) {
+			return false;
+		}
+
+		$sub_divisions = $record->subdivisions;
+
+		return array(
+			'ip'      => $user_ip,
+			'country' => $record->country->isoCode,
+			'state'   => ( $sub_divisions && isset( $sub_divisions[0] ) ) ? $sub_divisions[0]->isoCode : '',
+			'city'    => $record->city->name,
+		);
 	}
 
 	/**

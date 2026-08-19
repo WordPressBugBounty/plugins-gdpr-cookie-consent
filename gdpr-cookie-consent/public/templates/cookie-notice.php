@@ -89,6 +89,8 @@ if ( 'popup' === $the_options['cookie_bar_as'] ) {
 	$notice_container_styles .= "backdrop-filter: blur(" . ($ab_testing_enabled === "true" ? $the_options['cookie_bar_blur' . $chosenBanner] : $the_options["cookie_bar_blur"])*20 . "px);";
 	$notice_container_styles .= "box-shadow: " . ($ab_testing_enabled === "true" ? $the_options['cookie_bar_shadow_size' . $chosenBanner] : $the_options["cookie_bar_shadow_size"]) . "px " . ($ab_testing_enabled === "true" ? $the_options['cookie_bar_shadow_size' . $chosenBanner] : $the_options["cookie_bar_shadow_size"]) . "px " . ($ab_testing_enabled === "true" ? $the_options['cookie_bar_shadow_size' . $chosenBanner] * 2 : $the_options["cookie_bar_shadow_size"] * 2) . "px " . hex_to_rgba($ab_testing_enabled === "true" ? $the_options['cookie_bar_shadow_color' . $chosenBanner] : $the_options["cookie_bar_shadow_color"], 0.5) . ";";
 	
+	$content_law = isset( $content_law ) ? $content_law : $the_options['cookie_usage_for'];
+
 	$suffix =  ($ab_testing_enabled === "true" ? $chosenBanner : '');
 	$banner_layouts = json_decode($the_options['banner_layouts'], true);
 	$banner_structure = json_decode($the_options['banner_structure'], true);
@@ -114,7 +116,8 @@ if ( 'popup' === $the_options['cookie_bar_as'] ) {
 				return filter_var( $the_options['button_accept_is_on' . $suffix], FILTER_VALIDATE_BOOLEAN );
 
 			case 'decline':
-				return filter_var( $the_options['button_decline_is_on' . $suffix], FILTER_VALIDATE_BOOLEAN );
+				return ! in_array( $the_options['cookie_usage_for'], array( 'pipeda', 'au_app' ), true )
+					&& filter_var( $the_options['button_decline_is_on' . $suffix], FILTER_VALIDATE_BOOLEAN );
 
 			case 'settings':
 				return $the_options['cookie_usage_for'] !== 'eprivacy'
@@ -179,7 +182,7 @@ if ( 'popup' === $the_options['cookie_bar_as'] ) {
 	$accept_style_attr .= "font-size: {$the_options['button_font_size' . $suffix]}px;";
 	$accept_style_attr .= "font-weight: {$the_options['button_text_weight' . $suffix]};";
 	$button_accept_button_width = $the_options['button_accept_button_width' . $suffix] === 'full' ? '100%' : 'fit-content';
-	$accept_style_attr .= "width: {button_accept_button_width};";
+	$accept_style_attr .= "width: {$button_accept_button_width};";
 	$accept_style_attr .= "min-width: {$the_options['button_accept_button_min_width' . $suffix]}px;";
 
 
@@ -246,7 +249,8 @@ if ( 'popup' === $the_options['cookie_bar_as'] ) {
 	$render_cookie_button = function( $button ) use ( $the_options, $suffix, $cookie_data, $decline_style_attr, $settings_style_attr, $accept_style_attr, $accept_all_style_attr ) {
 		switch ( $button ) {
 			case 'decline':
-				if ( filter_var( $the_options['button_decline_is_on' . $suffix] ?? false, FILTER_VALIDATE_BOOLEAN ) ) : ?>
+				if ( ! in_array( $the_options['cookie_usage_for'], array( 'pipeda', 'au_app' ), true )
+					&& filter_var( $the_options['button_decline_is_on' . $suffix] ?? false, FILTER_VALIDATE_BOOLEAN ) ) : ?>
 					<a id="cookie_action_reject" class="<?php echo esc_html( $the_options['button_decline_classes'] ); ?>" tabindex="0" aria-label="Reject"
 						<?php
 						if ( 'CONSTANT_OPEN_URL' === $the_options['button_decline_action' . $suffix] ) {
@@ -403,10 +407,8 @@ if ( 'popup' === $the_options['cookie_bar_as'] ) {
 		} ?>
 		<?php
 		if(filter_var( $the_options['heading_is_on' . $suffix] ?? false, FILTER_VALIDATE_BOOLEAN )) {
-			if ( ($the_options['cookie_usage_for'] === 'gdpr' || $the_options['cookie_usage_for'] === 'both' ) && strlen($the_options['bar_heading_text']) > 0) : ?>
-				<h3 class = "<?php if($the_options['cookie_usage_for'] === 'both') echo 'gdpr_heading';?>" style = "<?php echo esc_attr($heading_style_attr); ?>" ><?php echo esc_html($the_options['bar_heading_text'] ?? ''); ?></h3>
-			<?php elseif (( $the_options['cookie_usage_for'] === 'lgpd' ) && strlen($the_options['bar_heading_lgpd_text']) > 0) : ?>
-				<h3 style = "<?php echo esc_attr($heading_style_attr); ?>" ><?php echo esc_html($the_options['bar_heading_lgpd_text'] ?? ''); ?></h3>
+			if ( strlen($the_options['bar_heading_text']) > 0) : ?>
+				<h3 style = "<?php echo esc_attr($heading_style_attr); ?>" ><?php echo esc_html($the_options['bar_heading_text'] ?? ''); ?></h3>
 			<?php endif; 
 		} ?>
 	</div>
@@ -419,7 +421,15 @@ if ( 'popup' === $the_options['cookie_bar_as'] ) {
 				
 					
 				<p style="<?php echo esc_attr($text_style_attr); ?>"  class = "<?php if($the_options['cookie_usage_for'] === 'both') echo 'gdpr';?>">
-					<?php if ( $the_options['cookie_usage_for'] === 'gdpr'  || $the_options['cookie_usage_for'] === 'both' ) : ?>
+					<?php
+					// Laws still awaiting their own copy render scaffolding text in place
+					// of the message body — see Gdpr_Cookie_Consent::get_law_placeholder_message().
+					// Empty for every law that has real copy, so the ladder below is
+					// unchanged for GDPR, LGPD and ePrivacy.
+					?>
+					<?php if ( ! empty( $law_placeholder_message ) ) : ?>
+						<span><?php echo esc_html( $law_placeholder_message ); ?></span>
+					<?php elseif ( $the_options['cookie_usage_for'] === 'gdpr'  || $the_options['cookie_usage_for'] === 'both' ) : ?>
 						<span>
 							<?php
 							echo wp_kses(
@@ -504,6 +514,131 @@ if ( 'popup' === $the_options['cookie_bar_as'] ) {
 							);
 							?>
 						</span>
+						<?php elseif ( $the_options['cookie_usage_for'] === 'us_state_laws' ) : ?>
+						<span>
+							<?php
+							echo wp_kses(
+								$cookie_data['dash_notify_message_us_state'] ?? '',
+								[
+									'a'      => [],
+									'br'     => [],
+									'em'     => [],
+									'strong' => [],
+									'span'   => [],
+									'p'      => [],
+									'i'      => [],
+									'img'    => [
+										'src'   => [],
+										'alt'   => [],
+										'title'=> [],
+									],
+									'b'      => [],
+									'div'    => [],
+									'label'  => [],
+								]
+							);
+							?>
+						</span>
+						<?php elseif ( $the_options['cookie_usage_for'] === 'uk_gdpr' ) : ?>
+						<span>
+							<?php
+							echo wp_kses(
+								$cookie_data['dash_notify_message_uk_gdpr'] ?? '',
+								[
+									'a'      => [],
+									'br'     => [],
+									'em'     => [],
+									'strong' => [],
+									'span'   => [],
+									'p'      => [],
+									'i'      => [],
+									'img'    => [
+										'src'   => [],
+										'alt'   => [],
+										'title'=> [],
+									],
+									'b'      => [],
+									'div'    => [],
+									'label'  => [],
+								]
+							);
+							?>
+						</span>
+						<?php elseif ( $the_options['cookie_usage_for'] === 'sa_pdpl' ) : ?>
+						<span>
+							<?php
+							echo wp_kses(
+								$cookie_data['dash_notify_message_pdpl'] ?? '',
+								[
+									'a'      => [],
+									'br'     => [],
+									'em'     => [],
+									'strong' => [],
+									'span'   => [],
+									'p'      => [],
+									'i'      => [],
+									'img'    => [
+										'src'   => [],
+										'alt'   => [],
+										'title'=> [],
+									],
+									'b'      => [],
+									'div'    => [],
+									'label'  => [],
+								]
+							);
+							?>
+						</span>
+						<?php elseif ( $the_options['cookie_usage_for'] === 'pipeda' ) : ?>
+						<span>
+							<?php
+							echo wp_kses(
+								$cookie_data['dash_notify_message_pipeda'] ?? '',
+								[
+									'a'      => [],
+									'br'     => [],
+									'em'     => [],
+									'strong' => [],
+									'span'   => [],
+									'p'      => [],
+									'i'      => [],
+									'img'    => [
+										'src'   => [],
+										'alt'   => [],
+										'title'=> [],
+									],
+									'b'      => [],
+									'div'    => [],
+									'label'  => [],
+								]
+							);
+							?>
+						</span>
+						<?php elseif ( $the_options['cookie_usage_for'] === 'au_app' ) : ?>
+						<span>
+							<?php
+							echo wp_kses(
+								$cookie_data['dash_notify_message_app'] ?? '',
+								[
+									'a'      => [],
+									'br'     => [],
+									'em'     => [],
+									'strong' => [],
+									'span'   => [],
+									'p'      => [],
+									'i'      => [],
+									'img'    => [
+										'src'   => [],
+										'alt'   => [],
+										'title'=> [],
+									],
+									'b'      => [],
+									'div'    => [],
+									'label'  => [],
+								]
+							);
+							?>
+						</span>
 						<?php elseif ( $the_options['cookie_usage_for'] === 'eprivacy' ) : ?>
 						<span>
 							<?php
@@ -530,13 +665,13 @@ if ( 'popup' === $the_options['cookie_bar_as'] ) {
 							?>
 						</span>
 					<?php endif; ?>
-					<?php if ( $the_options['cookie_usage_for'] === 'ccpa') : ?>
+					<?php if ( in_array( $the_options['cookie_usage_for'], array( 'ccpa', 'us_state_laws' ), true ) ) : ?>
 						<a style="<?php echo esc_attr($opt_out_style_attr); ?>" data-toggle="gdprmodal" href="#" class="<?php echo esc_html( $the_options['button_donotsell_classes'] ); ?>" data-gdpr_action="donotsell" id="cookie_donotsell_link"
-						>	
+						>
 							<?php echo esc_html($cookie_data['dash_button_donotsell_text'], 'gdpr-cookie-consent' ); ?>
 						</a>
-							
-					<?php elseif( $the_options['cookie_usage_for'] !== 'ccpa' &&  ! empty( $the_options['button_readmore_is_on'] ) ) : ?>
+
+					<?php elseif( ! in_array( $the_options['cookie_usage_for'], array( 'ccpa', 'us_state_laws' ), true ) &&  ! empty( $the_options['button_readmore_is_on'] ) ) : ?>
 						<a style="<?php echo esc_attr($readmore_style_attr); ?>" id="cookie_action_link" href="<?php echo esc_html( $the_options['button_readmore_url_link'] ); ?>" 
 						<?php if ( ! empty( $the_options['button_readmore_new_win'] ) ) { ?>
 							target="_blank"
@@ -584,7 +719,7 @@ if ( 'popup' === $the_options['cookie_bar_as'] ) {
 			</p>
 		<?php endif; ?>
 		</div>
-		<?php if ( $the_options['cookie_usage_for'] !== 'ccpa' ) : ?>
+		<?php if ( ! in_array( $the_options['cookie_usage_for'], array( 'ccpa', 'us_state_laws' ), true ) ) : ?>
 			<div class="gdpr group-description-buttons cookie_notice_buttons" style="margin-top: <?php echo esc_attr($banner_layouts['c2']['direction'] ?? 'row') == 'col' ? '5px' : '0px'; ?>; display: flex; flex-direction: <?php echo esc_attr($banner_layouts['c4']['direction'] ?? 'row') == 'col' ? 'column' : 'row'; ?>; <?php echo "gap: " . ($ab_testing_enabled === "true" ? $the_options['cookie_bar_spacing' . $chosenBanner] * ($the_options['template'] === 'default' ? 0.75 : 2) : $the_options["cookie_bar_spacing"] * ($the_options['template'] === 'default' ? 0.75 : 2)) . "px;"; echo $banner_layouts['c2']['direction'] == 'row' ? 'width: 40%' : '' ;?>">
 				<div class="left_buttons" style="display: <?php echo count($visible_c5_items) > 0 ? 'flex' : 'none'; ?>; flex-direction: <?php echo esc_attr($banner_layouts['c5']['direction'] ?? 'row') == 'col' ? 'column' : 'row'; ?>; <?php echo "gap: " . ($ab_testing_enabled === "true" ? $the_options['cookie_bar_spacing' . $chosenBanner] : $the_options["cookie_bar_spacing"]) * ($the_options['template'] === 'default' ? 0.75 : 2) . "px;"; ?> <?php echo $banner_layouts['c5']['direction'] === 'row' ? 'align-items: center; justify-content: ' . ($banner_layouts['c5']['justify'] ===  'between' ? 'space-between' : ($banner_layouts['c5']['justify'] ?? '')) : 'align-items: ' . ($banner_layouts['c5']['justify'] ?? '') ?>">
 					<?php 

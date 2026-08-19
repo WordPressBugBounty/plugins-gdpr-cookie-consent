@@ -143,7 +143,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 								</c-col>
 								</c-row>
 								<c-row  v-show="show_revoke_card">
-									<c-col class="col-sm-4"><label><?php esc_attr_e( 'Reload After Decline', 'gdpr-cookie-consent' ); ?> <tooltip text="<?php esc_html_e( 'If enabled web page will be refreshed automatically once cookie settings are declined.', 'gdpr-cookie-consent' ); ?>"></tooltip></label></c-col>
+									<c-col class="col-sm-4"><label><?php esc_attr_e( 'Reload After Reject All', 'gdpr-cookie-consent' ); ?> <tooltip text="<?php esc_html_e( 'If enabled web page will be refreshed automatically once cookie settings are declined.', 'gdpr-cookie-consent' ); ?>"></tooltip></label></c-col>
 									<c-col class="col-sm-8">
 										<c-switch v-bind="labelIcon" v-model="decline_reload" id="gdpr-cookie-consent-decline-reload" variant="3d"  color="success" :checked="decline_reload" v-on:update:checked="onSwitchDeclineReload"></c-switch>
 										<input type="hidden" name="gcc-decline-reload" v-model="decline_reload">
@@ -239,7 +239,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 									</c-col>
 								</c-row>
 								<c-row>
-									<c-col class="col-sm-4"><label><?php esc_attr_e( 'Hide Credits', 'gdpr-cookie-consent' ); ?> <tooltip text="<?php esc_html_e( 'If you are happy with the product and want to share credit with the developer, you can display credits under the Cookie Settings.', 'gdpr-cookie-consent' ); ?>"></tooltip>  <span class="probadge bg-badge"><?php esc_attr_e( 'Pro', 'gdpr-cookie-consent' ); ?></span></label></c-col>
+									<c-col class="col-sm-4"><label><?php esc_attr_e( 'Hide Credits', 'gdpr-cookie-consent' ); ?> <tooltip text="<?php esc_html_e( 'If you are happy with the product and want to share credit with the developer, you can display credits under the Preferences.', 'gdpr-cookie-consent' ); ?>"></tooltip>  <span class="probadge bg-badge"><?php esc_attr_e( 'Pro', 'gdpr-cookie-consent' ); ?></span></label></c-col>
 									<c-col class="col-sm-8">
 										<div class="gdpr-disabled-show-credits">
 										<?php 

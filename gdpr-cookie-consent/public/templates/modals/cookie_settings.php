@@ -136,11 +136,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 			<div class="gdprmodal-body classic classic-nvg" style="scrollbar-color: <?php echo esc_html( $cookieSettingsPopupAccentColor ); ?> transparent;">
 				<div class="gdpr-details-content">
 					<div class="gdpr-groups-container">
-                 		<?php if ( $the_options['cookie_usage_for']==='gdpr' ) :?>
+                 		<?php
+							$content_law = isset( $content_law ) ? $content_law : $the_options['cookie_usage_for'];
+							?>
+                 		<?php if ( $content_law==='gdpr' ) :?>
 								<div class="gdpr-about-cookies"><?php echo $the_options['is_iabtcf_on'] ? esc_html__( $cookie_data['dash_about_message_iabtcf'], 'gdpr-cookie-consent' ) : esc_html__( $cookie_data['dash_about_message'], 'gdpr-cookie-consent' ); // phpcs:ignore ?></div>
-							<?php elseif (  $the_options['cookie_usage_for']==='lgpd') :?>
+							<?php elseif (  $content_law==='lgpd') :?>
 								<div class="gdpr-about-cookies"><?php echo esc_html__( $cookie_data['dash_about_message_lgpd'], 'gdpr-cookie-consent' ); // phpcs:ignore ?></div>
-							<?php elseif ( $the_options['cookie_usage_for']==='both' ) :?>
+							<?php elseif ( $content_law==='both' ) :?>
 								<div class="gdpr-about-cookies"><?php echo $the_options['is_iabtcf_on'] ? esc_html__( $cookie_data['dash_about_message_iabtcf'], 'gdpr-cookie-consent' ) : esc_html__( $cookie_data['dash_about_message'], 'gdpr-cookie-consent' ); // phpcs:ignore ?></div>
 							<?php endif; 
 							if($the_options['is_gcm_on'] === 'true' || $the_options['is_gcm_on'] === true || $the_options['is_gcm_on'] === '1') : ?>
@@ -977,7 +980,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 <?php } 
 
-if( $the_options['cookie_usage_for'] === "ccpa" || $the_options['cookie_usage_for'] === "both" ) { ?>
+if( $the_options['cookie_usage_for'] === "ccpa" || $the_options['cookie_usage_for'] === "us_state_laws" ) { ?>
 
 <div class="gdprmodal gdprfade" id="gdpr-ccpa-gdprmodal" role="dialog" data-keyboard="false" data-backdrop="<?php echo esc_html( $cookie_data['backdrop'] ); ?>">
 	<div class="gdprmodal-dialog gdprmodal-dialog-centered">
@@ -1056,7 +1059,7 @@ if( $the_options['cookie_usage_for'] === "ccpa" || $the_options['cookie_usage_fo
 					</p>
 				<?php endif; ?>
 				<div class="gdprmodal-footer-buttons">
-					<button id="cookie_action_cancel" type="button" class="<?php echo esc_html( $the_options['button_cancel_classes'] ); ?>" data-gdpr_action="cancel" data-dismiss="gdprmodal"
+					<?php if( $us_state_law_variant !== 'default_opt_out' ) { ?><button id="cookie_action_cancel" type="button" class="<?php echo esc_html( $the_options['button_cancel_classes'] ); ?>" data-gdpr_action="cancel" data-dismiss="gdprmodal"
 					style="
 						background-color: <?php
 							echo esc_html(( $ab_options['ab_testing_enabled'] === true || $ab_options['ab_testing_enabled'] === 'true')
@@ -1090,7 +1093,7 @@ if( $the_options['cookie_usage_for'] === "ccpa" || $the_options['cookie_usage_fo
 						); ?>px;
 						padding: 12px 29px;
 						width: 100%;
-					"><?php echo esc_html__( $the_options['button_cancel_text1'], 'gdpr-cookie-consent' );//phpcs:ignore ?></button>
+					"><?php echo esc_html__( $the_options['button_cancel_text1'], 'gdpr-cookie-consent' );//phpcs:ignore ?></button> <?php } ?>
 					<button id="cookie_action_confirm" type="button" class="<?php echo esc_html( $the_options['button_confirm_classes'] ); ?>" data-gdpr_action="confirm" data-dismiss="gdprmodal"
 					style="
 						background-color: <?php

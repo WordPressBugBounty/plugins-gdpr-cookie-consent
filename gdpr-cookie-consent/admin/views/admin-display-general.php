@@ -192,7 +192,7 @@ $general_sub_tab = apply_filters( 'gdprcookieconsent_general_sub_tabs', $general
 					</td>
 				</tr>
 				<tr valign="top" gdpr_frm_tgl-id="gdpr_usage_option" gdpr_frm_tgl-val="gdpr" gdpr_frm_tgl-val1="eprivacy">
-					<th scope="row"><label for="decline_reload_field"><?php esc_attr_e( 'Reload after Decline', 'gdpr-cookie-consent' ); ?></label></th>
+					<th scope="row"><label for="decline_reload_field"><?php esc_attr_e( 'Reload after Reject All', 'gdpr-cookie-consent' ); ?></label></th>
 					<td>
 						<input type="radio" id="decline_reload_yes" name="decline_reload_field" class="styled gdpr_bar_on" value="true" <?php echo ( true === $the_options['decline_reload'] ) ? ' checked="checked"' : ''; ?> /><?php esc_attr_e( 'On', 'gdpr-cookie-consent' ); ?>
 						<input type="radio" id="decline_reload_no" name="decline_reload_field" class="styled" value="false" <?php echo ( false === $the_options['decline_reload'] ) ? ' checked="checked" ' : ''; ?> /><?php esc_attr_e( 'Off', 'gdpr-cookie-consent' ); ?>

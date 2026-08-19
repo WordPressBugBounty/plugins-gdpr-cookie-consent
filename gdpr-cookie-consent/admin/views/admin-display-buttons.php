@@ -17,7 +17,7 @@ if ( ! defined( 'WPINC' ) ) {
 }
 $buttons_sub_tab = array(
 	'accept-button'    => __( 'Accept Button', 'gdpr-cookie-consent' ),
-	'reject-button'    => __( 'Decline Button', 'gdpr-cookie-consent' ),
+	'reject-button'    => __( 'Reject All Button', 'gdpr-cookie-consent' ),
 	'settings-button'  => __( 'Settings Button', 'gdpr-cookie-consent' ),
 	'read-more-button' => __( 'Read More Link', 'gdpr-cookie-consent' ),
 	'confirm-button'   => __( 'Save Preferences Button', 'gdpr-cookie-consent' ),

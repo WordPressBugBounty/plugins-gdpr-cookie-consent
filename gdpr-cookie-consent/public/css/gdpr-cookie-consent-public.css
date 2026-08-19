@@ -54,6 +54,7 @@
 #gdpr-cookie-consent-bar 
   .cookie_notice_buttons{
     display: flex;
+    align-items: center;
   }
 #gdpr-cookie-consent-bar 
   .cookie_notice_buttons .left_buttons,
@@ -302,7 +303,7 @@
 #gdpr-ccpa-gdprmodal .gdprmodal-content {
   padding: 1rem 2rem;
   text-align: center;
-  height: 350px;
+  height: fit-content;
   box-sizing: border-box;
 	width:680px;
 }
@@ -1143,11 +1144,8 @@ Bootstrap CSS for frontend UI
   font-weight: 700;
   margin-bottom: 0;
 }
-#gdpr-cookie-consent-bar.ccpa{
-  padding-top:25px !important;
-}
 @media(min-width: 550px){
-  #gdpr-cookie-consent-bar.ccpa{
+  #gdpr-cookie-consent-bar.us_state_laws{
     padding-bottom: 35px !important;
   }
 }

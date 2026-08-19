@@ -444,13 +444,11 @@ jQuery(document).ready(function () {
    * Add an event listener to listen for messages sent from the server.
    */
   window.addEventListener("message", function (event) {
-    console.log("Received message from server:", event.data);
     // Check if the event is originated on server and not successful
     if (event.isTrusted && event.origin === gdpr_localize_data.gdpr_app_url) {
       if (!event.data.success) {
         const scanBtn = jQuery(".scan-now-btn");
         const popup = jQuery("#popup-site-excausted");
-        console.log("popup", popup);
         const cancelButton = jQuery(".popup-image");
 
         popup.fadeIn();
@@ -589,16 +587,16 @@ jQuery(document).ready(function () {
       }
     );
 
-    // GDPR hover function
+    //Region hover message
     jQuery("#gdpr-visitors-condition-radio-btn-disabled-gdpr").hover(
       function () {
         gdprTimer = setTimeout(function () {
-          jQuery(".gdpr-eu_visitors_message-gdpr").css("display", "block");
+          jQuery(".gdpr-law_region_visitors_message-gdpr").css("display", "block");
         }, 250); // 250ms delay
       },
       function () {
         clearTimeout(gdprTimer); // Clear the timer to prevent delayed show
-        jQuery(".gdpr-eu_visitors_message-gdpr").css("display", "none");
+        jQuery(".gdpr-law_region_visitors_message-gdpr").css("display", "none");
       }
     );
 
@@ -1717,13 +1715,11 @@ document.addEventListener('DOMContentLoaded', function () {
   document.addEventListener('DOMContentLoaded', function () {
     var closeBtns = document.querySelectorAll('.connect-info-close');
 
-    console.log('closeBtns found:', closeBtns.length);
 
     closeBtns.forEach(function (btn) {
       btn.addEventListener('click', function () {
         var targetId = btn.getAttribute('data-target');
         var container = document.getElementById(targetId);
-        console.log('closing', targetId, container);
         if (container) {
           container.style.display = 'none';
         }
