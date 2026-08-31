@@ -408,8 +408,18 @@ class Gdpr_Cookie_Consent_Consent_Logs {
 	 */
 	public static function format_data($data)
 	{
+		$data = (string) $data;
 		$enc  = mb_detect_encoding($data, 'UTF-8, ISO-8859-1', true);
-		$data = ($enc == 'UTF-8') ? $data : utf8_encode($data);
+		$data = ( $enc === 'UTF-8' ) ? $data : mb_convert_encoding( $data, 'UTF-8', 'ISO-8859-1' );
+
+		// Check if the data starts with =, +, -, @, tab or carriage return, indicating a potential formula.
+		// Values such as the logged IP address originate from request headers, so wrapping
+		// the column in quotes alone does not stop a spreadsheet from evaluating it.
+		if ( preg_match( '/^[=+\-@\t\r]/', $data ) ) {
+			// If a potential formula is detected, prepend the data with a single quote.
+			$data = "'" . $data;
+		}
+
 		return $data;
 	}
 
@@ -509,7 +519,7 @@ class Gdpr_Cookie_Consent_Consent_Logs {
 		$wpl_total_page_views = get_option('wpl_total_page_views');
 		if($wpl_total_page_views === false){
 			add_option("wpl_total_page_views", 0);
-			$wpl_page_views = 0;
+			$wpl_total_page_views = 0;
 		}
     	// Check if the key exists in the $wpl_page_views array
 		if (isset($wpl_page_views[$key])) {
