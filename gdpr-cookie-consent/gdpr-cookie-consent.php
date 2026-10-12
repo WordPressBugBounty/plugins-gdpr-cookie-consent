@@ -10,7 +10,7 @@
  * Plugin Name:       Cookie Banner for GDPR / CCPA - WPLP Cookie Consent
  * Plugin URI:        https://wplegalpages.com/
  * Description:       Cookie Consent will help you put up a subtle banner in the footer of your website to showcase compliance status regarding the EU Cookie law.
- * Version:           4.4.6
+ * Version:           4.4.7
  * Author:            WPLP Compliance Platform
  * Author URI:        https://wplegalpages.com
  * License:           GPLv3
@@ -31,7 +31,7 @@ define( 'GDPR_COOKIE_CONSENT_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
 /**
  * Currently plugin version.
  */
-define( 'GDPR_COOKIE_CONSENT_VERSION', '4.4.6' );
+define( 'GDPR_COOKIE_CONSENT_VERSION', '4.4.7' );
 define( 'GDPR_COOKIE_CONSENT_PLUGIN_DEVELOPMENT_MODE', false );
 define( 'GDPR_COOKIE_CONSENT_PLUGIN_BASENAME', plugin_basename( __FILE__ ) );
 define( 'GDPR_COOKIE_CONSENT_PLUGIN_PATH', plugin_dir_path( __FILE__ ) );
@@ -50,6 +50,8 @@ define( 'GDPR_COOKIE_CONSENT_SETTINGS_REVOKE_ICON2', GDPR_COOKIE_CONSENT_DB_KEY_
 define( 'GDPR_COOKIE_CONSENT_SETTINGS_VENDOR', 'vendordata' );
 define( 'GDPR_COOKIE_CONSENT_SETTINGS_GACM_VENDOR', 'gacmvendordata' );
 define( 'GDPR_COOKIE_CONSENT_SETTINGS_VENDOR_CONSENT', 'iabtcfConsent' );
+// Bump this whenever a release changes the IAB vendor JSON, so sites with IAB on rebuild their stored vendor data.
+define( 'GDPR_COOKIE_CONSENT_IAB_VENDOR_DATA_VERSION', '1' );
 define( 'GDPR_COOKIE_CONSENT_PLUGIN_FILENAME', __FILE__ );
 define( 'GDPR_POLICY_DATA_POST_TYPE', 'gdprpolicies' );
 define( 'GDPR_CSV_DELIMITER', ',' );

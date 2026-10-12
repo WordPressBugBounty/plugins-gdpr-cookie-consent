@@ -231,8 +231,13 @@ class Gdpr_Cookie_Consent_Consent_Logs {
 	?>
 		<script type="text/javascript">
 			jQuery(document).ready(function($) {
-				var s = jQuery('#post-search-input').val();
-				jQuery("<a  href='<?php echo admin_url('admin-post.php?action=export.csv'); ?>&s=" + s + "' id='export_consent_logs' class='add-new-h2'><?php echo $scan_export_menu; ?></a>").insertAfter(".wrap h1");
+				var s = jQuery('#post-search-input').val() || '';
+				jQuery('<a>', {
+					href: <?php echo wp_json_encode( esc_url_raw( add_query_arg( '_wpnonce', wp_create_nonce( 'wplcl_export_csv' ), admin_url( 'admin-post.php?action=export.csv' ) ) ) ); ?> + '&s=' + encodeURIComponent(s),
+					id: 'export_consent_logs',
+					'class': 'add-new-h2',
+					text: <?php echo wp_json_encode( $scan_export_menu ); ?>
+				}).insertAfter(".wrap h1");
 			});
 		</script>
 		<?php
@@ -250,6 +255,7 @@ class Gdpr_Cookie_Consent_Consent_Logs {
 		if ( ! current_user_can( 'manage_options' ) ) {
     	    wp_die( __( 'Unauthorized', 'gdpr-cookie-consent' ), 403 );
     	}
+		check_admin_referer( 'wplcl_export_csv' );
 
 		global $wpdb;
 
@@ -293,8 +299,7 @@ class Gdpr_Cookie_Consent_Consent_Logs {
 			)
 		);
 		if (isset($_GET['s']) && !empty($_GET['s'])) {
-			$search                   = $_GET['s'];
-			$search                   = trim($search);
+			$search                   = sanitize_text_field( wp_unslash( $_GET['s'] ) );
 			$wplcl_args['meta_query'] = array(
 				'relation' => 'OR',
 				array(
@@ -626,7 +631,7 @@ class Gdpr_Cookie_Consent_Consent_Logs {
 								}
 								if ( strpos( $key, 'wpl_tc_string' ) !== false) {
 									if($settings['is_iabtcf_on'] === "true" || $settings['is_iabtcf_on'] === true || $settings['is_iabtcf_on'] === 1){
-										$wpl_cookie_details['wpl_tc_string'] = $val;
+										$wpl_cookie_details['wpl_tc_string'] = preg_match( '/^[A-Za-z0-9_\-.]*$/', $val ) ? $val : '';
 									}
 									else{
 										$wpl_cookie_details['wpl_tc_string'] = "";
@@ -635,7 +640,7 @@ class Gdpr_Cookie_Consent_Consent_Logs {
 								}
 								if ( strpos( $key, 'IABTCF_AddtlConsent' ) !== false) {
 									if($settings['is_gacm_on'] === "true" || $settings['is_gacm_on'] === true || $settings['is_gacm_on'] === 1 || $settings['is_gacm_on'] === "1"){
-										$wpl_cookie_details['Additional_Consent_String'] = $val;
+										$wpl_cookie_details['Additional_Consent_String'] = preg_match( '/^[0-9]+~[A-Za-z0-9.~]*$/', $val ) ? $val : '';
 									}
 									else{
 										$wpl_cookie_details['Additional_Consent_String'] = "";
@@ -884,34 +889,53 @@ class Gdpr_Cookie_Consent_Consent_Logs {
 	 */
 	public function wpl_get_user_ip()
 	{
-		$ipaddress = '';
-		if (isset($_SERVER['HTTP_CLIENT_IP'])) {
-			$ipaddress = filter_var($_SERVER['HTTP_CLIENT_IP'], FILTER_VALIDATE_IP);
-		} elseif (isset($_SERVER['HTTP_X_FORWARDED_FOR']) && count( array_map('trim', explode(',', $_SERVER['HTTP_X_FORWARDED_FOR'] ) )) > 0) {
-			$xForwardedFor = $_SERVER['HTTP_X_FORWARDED_FOR'];
-			$ipList = array_map('trim', explode(',', $xForwardedFor));
+		$ipaddress = 'UNKNOWN';
+		if ( isset( $_SERVER['REMOTE_ADDR'] ) ) {
+			$remote = filter_var(
+				wp_unslash( $_SERVER['REMOTE_ADDR'] ),
+				FILTER_VALIDATE_IP
+			);
 
-			$ipaddress = filter_var($ipList[0], FILTER_VALIDATE_IP);
-		} elseif (isset($_SERVER['HTTP_X_FORWARDED']) && count( array_map('trim', explode(',', $_SERVER['HTTP_X_FORWARDED'] ) )) > 0) {
-			$xForwarded = $_SERVER['HTTP_X_FORWARDED'];
-			$ipList = array_map('trim', explode(',', $xForwarded));
+			if ( $remote ) {
+				$ipaddress = $remote;
 
-			$ipaddress = filter_var($ipList[0], FILTER_VALIDATE_IP);
-		} elseif (isset($_SERVER['HTTP_FORWARDED_FOR']) && count( array_map('trim', explode(',', $_SERVER['HTTP_FORWARDED_FOR'] ) )) > 0) {
-			$forwardedFor = $_SERVER['HTTP_FORWARDED_FOR'];
-			$ipList = array_map('trim', explode(',', $forwardedFor));
+				$trusted_proxies = (array) apply_filters(
+					'gdpr_cookie_consent_trusted_proxies',
+					array()
+				);
 
-			$ipaddress = filter_var($ipList[0], FILTER_VALIDATE_IP);
-		} elseif (isset($_SERVER['HTTP_FORWARDED']) && count( array_map('trim', explode(',', $_SERVER['HTTP_FORWARDED'] ) )) > 0) {
-			$forwarded = $_SERVER['HTTP_FORWARDED'];
-			$ipList = array_map('trim', explode(',', $forwarded));
+				if (
+					! empty( $trusted_proxies )
+					&& isset( $_SERVER['HTTP_X_FORWARDED_FOR'] )
+					&& $this->wpl_ip_matches( $remote, $trusted_proxies )
+				) {
+					$ip_list = array_reverse(
+						array_map(
+							'trim',
+							explode(
+								',',
+								wp_unslash( $_SERVER['HTTP_X_FORWARDED_FOR'] )
+							)
+						)
+					);
 
-			$ipaddress = filter_var($ipList[0], FILTER_VALIDATE_IP);
-		} elseif (isset($_SERVER['REMOTE_ADDR'])) {
-			$ipaddress = filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP);
-		} else {
-			$ipaddress = 'UNKNOWN';
+					foreach ( $ip_list as $candidate ) {
+						$candidate = filter_var( $candidate, FILTER_VALIDATE_IP );
+
+						if ( ! $candidate ) {
+							break;
+						}
+
+						$ipaddress = $candidate;
+
+						if ( ! $this->wpl_ip_matches( $candidate, $trusted_proxies ) ) {
+							break;
+						}
+					}
+				}
+			}
 		}
+
 		if ( class_exists( 'Gdpr_Cookie_Consent' ) ) {
 			$the_options = Gdpr_Cookie_Consent::gdpr_get_settings();
 		}
@@ -924,6 +948,40 @@ class Gdpr_Cookie_Consent_Consent_Logs {
 			$ipaddress = $this->wpl_anonymize_ip( $ipaddress, $level );
 		}
 		return esc_html($ipaddress);
+	}
+	private function wpl_ip_matches( $ip, array $list ) {
+		$ip_bin = inet_pton( $ip );
+		if ( false === $ip_bin ) {
+			return false;
+		}
+		foreach ( $list as $entry ) {
+			$parts = explode( '/', trim( (string) $entry ), 2 );
+			if ( ! filter_var( $parts[0], FILTER_VALIDATE_IP ) ) {
+				continue;
+			}
+			$net   = inet_pton( $parts[0] );
+			if ( false === $net || strlen( $net ) !== strlen( $ip_bin ) ) {
+				continue;
+			}
+			$max_bits = strlen( $net ) * 8;
+			$bits     = isset( $parts[1] ) ? (int) $parts[1] : $max_bits;
+			if ( $bits < 0 || $bits > $max_bits ) {
+				continue;
+			}
+			$bytes = intdiv( $bits, 8 );
+			if ( substr( $ip_bin, 0, $bytes ) !== substr( $net, 0, $bytes ) ) {
+				continue;
+			}
+			$rem = $bits % 8;
+			if ( 0 === $rem ) {
+				return true;
+			}
+			$mask = ( 0xFF << ( 8 - $rem ) ) & 0xFF;
+			if ( ( ord( $ip_bin[ $bytes ] ) & $mask ) === ( ord( $net[ $bytes ] ) & $mask ) ) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/**

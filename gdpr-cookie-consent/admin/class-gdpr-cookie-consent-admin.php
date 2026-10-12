@@ -115,6 +115,7 @@ class Gdpr_Cookie_Consent_Admin {
 			add_action( 'admin_post_gdpr_delete', [ $this, 'wpl_data_req_process_delete' ] );
 			add_action( 'admin_init', array( $this, 'gcc_migrate_geo_targeting_options') );
 			add_action( 'admin_notices', array( $this, 'gdpr_both_law_retired_notice') );
+			add_action( 'admin_notices', array( $this, 'gdpr_iab_vendor_refresh_notice') );
 			add_action( 'admin_init', array( $this, 'gdpr_migrate_old_template_names_once') );
 			add_action( 'admin_init', array( $this, 'gdpr_add_banner_builder_settings_once')                                                                             );
 			add_action('admin_init', function() {
@@ -1335,6 +1336,10 @@ class Gdpr_Cookie_Consent_Admin {
 	 * @return void
 	 */
 	public function wp_settings_gcm_advertiser_mode() {
+			check_ajax_referer( 'gdpr-cookie-consent', '_ajax_nonce' );
+			if ( ! current_user_can( 'manage_options' ) ) {
+				wp_send_json_error( array( 'message' => __( 'Unauthorized', 'gdpr-cookie-consent' ) ), 403 );
+			}
 			$pro_is_activated  = get_option( 'wpl_pro_active', false );
 			$installed_plugins = get_plugins();
 			$pro_installed     = isset( $installed_plugins['wpl-cookie-consent/wpl-cookie-consent.php'] ) ? true : false;
@@ -2160,8 +2165,15 @@ class Gdpr_Cookie_Consent_Admin {
 			);
 		}
 
-		// Check if $_GET['scan_url'] is set
-		$scan_url_value = isset( $_GET['scan_url'] ) ? $_GET['scan_url'] : '';
+		// Only accept a scan URL coming from the signed "Scan this Page" admin bar link.
+		$scan_url_value = '';
+		if (
+			isset( $_GET['scan_url'], $_GET['scan_url_nonce'] )
+			&& current_user_can( 'manage_options' )
+			&& wp_verify_nonce( sanitize_key( wp_unslash( $_GET['scan_url_nonce'] ) ), 'gdpr_single_page_scan' )
+		) {
+			$scan_url_value = esc_url_raw( wp_unslash( $_GET['scan_url'] ) );
+		}
 
 		// Check if the key exists in the options table
 		if ( get_option( 'gdpr_single_page_scan_url' ) !== false ) {
@@ -2269,7 +2281,14 @@ class Gdpr_Cookie_Consent_Admin {
 			'id'     => 'gdpr-quick-menu-item-1',
 			'title'  => 'Scan this Page',
 			'parent' => 'gdpr-quick-menu',
-			'href'   => admin_url( 'admin.php?page=gdpr-cookie-consent&scan_url=' ) . get_permalink() . '#cookie_manager',
+			'href'   => add_query_arg(
+				array(
+					'page'           => 'gdpr-cookie-consent',
+					'scan_url'       => rawurlencode( get_permalink() ),
+					'scan_url_nonce' => wp_create_nonce( 'gdpr_single_page_scan' ),
+				),
+				admin_url( 'admin.php' )
+			) . '#cookie_manager',
 		);
 
 		$wp_admin_bar->add_node( $args );
@@ -3604,6 +3623,7 @@ class Gdpr_Cookie_Consent_Admin {
 				'nonce'   						   => wp_create_nonce( 'wpl_save_script_nonce' ), // Generate nonce
 				'rest_nonce'					   => wp_create_nonce( 'wp_rest' ), // REST API cookie-auth nonce (X-WP-Nonce).
 				'gcc_enable_iab_nonce'			   => wp_create_nonce( 'gcc_enable_iab' ),
+				'iab_vendor_refresh_needed'		   => $this->gdpr_iab_vendor_refresh_needed(),
 				'the_options'                      => $settings,
 				'templates'     				   => $this -> templates_json,
 				'default_template_json'			   => get_option('gdpr_default_template_object'),
@@ -3756,6 +3776,34 @@ class Gdpr_Cookie_Consent_Admin {
 		</div>
 		<?php
 		delete_option( 'gdpr_both_law_retired_notice' );
+	}
+
+	/**
+	 * Whether the stored IAB vendor data was built for an older vendor JSON and needs rebuilding.
+	 *
+	 * @return bool
+	 */
+	public function gdpr_iab_vendor_refresh_needed() {
+		$the_options = Gdpr_Cookie_Consent::gdpr_get_settings();
+		$is_iab_on   = isset( $the_options['is_iabtcf_on'] ) && ( true === $the_options['is_iabtcf_on'] || 'true' === $the_options['is_iabtcf_on'] || 1 === $the_options['is_iabtcf_on'] );
+		return $is_iab_on && get_option( 'gdpr_iab_vendor_data_version' ) !== GDPR_COOKIE_CONSENT_IAB_VENDOR_DATA_VERSION;
+	}
+
+	/**
+	 * Ask the admin to open the settings page so the stored IAB vendor data gets rebuilt.
+	 */
+	public function gdpr_iab_vendor_refresh_notice() {
+		if ( ! current_user_can( 'manage_options' ) || ! $this->gdpr_iab_vendor_refresh_needed() ) {
+			return;
+		}
+		?>
+		<div class="notice notice-warning">
+			<p>
+				<?php esc_html_e( 'WP Cookie Consent: the IAB TCF vendor list has been updated. Open the Cookie Consent settings page to refresh your stored vendor data.', 'gdpr-cookie-consent' ); ?>
+				<a href="<?php echo esc_url( admin_url( 'admin.php?page=gdpr-cookie-consent' ) ); ?>"><?php esc_html_e( 'Open settings', 'gdpr-cookie-consent' ); ?></a>
+			</p>
+		</div>
+		<?php
 	}
 	
 	/**
@@ -7338,6 +7386,7 @@ class Gdpr_Cookie_Consent_Admin {
 		}
 		$received_data = json_decode(wp_unslash($_POST['data']));
 		update_option(GDPR_COOKIE_CONSENT_SETTINGS_VENDOR, $received_data);
+		update_option( 'gdpr_iab_vendor_data_version', GDPR_COOKIE_CONSENT_IAB_VENDOR_DATA_VERSION );
 
 		wp_send_json_success(
 			array(
@@ -11753,18 +11802,74 @@ public function gdpr_support_request_handler() {
 	 * @return string The detected IP address of the user.
 	 */
 	public function gdpr_get_user_ip() {
-		if ( ! empty( $_SERVER['HTTP_CLIENT_IP'] ) ) {
-			return $_SERVER['HTTP_CLIENT_IP'];
-		} elseif ( ! empty( $_SERVER['HTTP_X_FORWARDED_FOR'] ) && count( array_map('trim', explode(',', $_SERVER['HTTP_X_FORWARDED_FOR'] ) )) > 0 ) {
-			$xForwardedFor = $_SERVER['HTTP_X_FORWARDED_FOR'];
-			$ipList = array_map('trim', explode(',', $xForwardedFor));
+		$ipaddress = 'UNKNOWN';
 
-			$ipaddress = filter_var($ipList[0], FILTER_VALIDATE_IP);
-			return $ipaddress;
-		} else {
-			return $_SERVER['REMOTE_ADDR'];
+		if ( isset( $_SERVER['REMOTE_ADDR'] ) ) {
+			$remote = filter_var( wp_unslash( $_SERVER['REMOTE_ADDR'] ), FILTER_VALIDATE_IP );
+
+			if ( $remote ) {
+				$ipaddress = $remote;
+
+				$trusted_proxies = (array) apply_filters( 'gdpr_cookie_consent_trusted_proxies', array() );
+
+				if (
+					! empty( $trusted_proxies )
+					&& isset( $_SERVER['HTTP_X_FORWARDED_FOR'] )
+					&& $this->gdpr_ip_matches( $remote, $trusted_proxies )
+				) {
+					$ip_list = array_reverse( array_map( 'trim', explode( ',', wp_unslash( $_SERVER['HTTP_X_FORWARDED_FOR'] ) ) ) );
+
+					foreach ( $ip_list as $candidate ) {
+						$candidate = filter_var( $candidate, FILTER_VALIDATE_IP );
+						if ( ! $candidate ) {
+							break;
+						}
+						$ipaddress = $candidate;
+						if ( ! $this->gdpr_ip_matches( $candidate, $trusted_proxies ) ) {
+							break;
+						}
+					}
+				}
+			}
 		}
+
+		return $ipaddress;
 	}
+
+		private function gdpr_ip_matches( $ip, array $list ) {
+			$ip_bin = inet_pton( $ip );
+			if ( false === $ip_bin ) {
+				return false;
+			}
+			foreach ( $list as $entry ) {
+				$parts = explode( '/', trim( (string) $entry ), 2 );
+				if ( ! filter_var( $parts[0], FILTER_VALIDATE_IP ) ) {
+					continue;
+				}
+				$net   = inet_pton( $parts[0] );
+				if ( false === $net || strlen( $net ) !== strlen( $ip_bin ) ) {
+					continue;
+				}
+				$max_bits = strlen( $net ) * 8;
+				$bits     = isset( $parts[1] ) ? (int) $parts[1] : $max_bits;
+				if ( $bits < 0 || $bits > $max_bits ) {
+					continue;
+				}
+				$bytes = intdiv( $bits, 8 );
+				if ( substr( $ip_bin, 0, $bytes ) !== substr( $net, 0, $bytes ) ) {
+					continue;
+				}
+				$rem = $bits % 8;
+				if ( 0 === $rem ) {
+					return true;
+				}
+				$mask = ( 0xFF << ( 8 - $rem ) ) & 0xFF;
+				if ( ( ord( $ip_bin[ $bytes ] ) & $mask ) === ( ord( $net[ $bytes ] ) & $mask ) ) {
+					return true;
+				}
+			}
+			return false;
+		}
 
 	/**
 	 * Retrieves the user's country code based on their IP address using the country.is API.
